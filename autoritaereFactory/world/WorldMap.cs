@@ -56,6 +56,18 @@ namespace autoritaereFactory.world
                 ch.buildings.Add(build);
             }
         }
+        public void RemoveEntity(Building build)
+        {
+            int chunkX = build.x / Chunk.chunkSize;
+            int chunkY = build.y / Chunk.chunkSize;
+
+            foreach (Chunk ch in chunkList)
+            {
+                if (ch.x != chunkX || ch.y != chunkY)
+                    continue;
+                ch.buildings.Remove(build);
+            }
+        }
         public List<Building> GetEntityInPos(int posX,int posY)
         {
             return GetEntityInArea(posX,posY,posX,posY);
