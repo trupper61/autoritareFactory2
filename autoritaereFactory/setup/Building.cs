@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace autoritaereFactory.setup
 {
-    class Building
+    public class Building
     {
         public int x, y,width,height;
     }

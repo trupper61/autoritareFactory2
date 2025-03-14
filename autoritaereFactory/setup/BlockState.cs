@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace autoritaereFactory.setup
 {
-    class BlockState
+    public struct BlockState
     {
     }
 }

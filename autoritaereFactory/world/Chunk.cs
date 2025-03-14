@@ -7,7 +7,7 @@ using autoritaereFactory.setup;
 
 namespace autoritaereFactory.world
 {
-    internal class Chunk
+    public class Chunk
     {
         public const int chunkSize = 32;
         public int x, y;
@@ -15,7 +15,13 @@ namespace autoritaereFactory.world
         BlockState[,] blockState;
         public Chunk()
         {
-            blockState = new BlockState[chunkSize,chunkSize]; 
+            blockState = new BlockState[chunkSize, chunkSize];
+        }
+        public Chunk(int posX,int posY)
+        {
+            blockState = new BlockState[chunkSize, chunkSize];
+            x = posX;
+            y = posY;
         }
         public BlockState GetSubChunk(int innerX, int innerY)
         {
