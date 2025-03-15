@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Fabrik1Console;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,7 +17,6 @@ namespace autoritaereFactory
         public Form1()
         {
             InitializeComponent();
-            WorldMap wrld = new WorldMap(6,6);
         }
     }
 }
