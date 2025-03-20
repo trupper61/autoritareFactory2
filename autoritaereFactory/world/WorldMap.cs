@@ -11,10 +11,12 @@ namespace autoritaereFactory.world
 {
     public class WorldMap
     {
+        public static WorldMap theWorld;
         List<Chunk> chunkList;
         int chunkXcount, chunkYcount;
         public WorldMap(int sizeX,int sizeY)
         {
+            theWorld = this;
             chunkXcount = sizeX;
             chunkYcount = sizeY;
             chunkList = new List<Chunk>();
@@ -24,13 +26,17 @@ namespace autoritaereFactory.world
         {
             return GetEntityInArea(posX, posY, posX + width, posY + height);
         }
-
+        public List<Building> GetEntityInPos(int posX, int posY)
+        {
+            return GetEntityInArea(posX, posY, posX, posY);
+        }
         // from and including start till and including end
         public List<Building> GetEntityInArea(int startX,int startY,int endX,int endY)
         {
             // get the effected chunks!
-            int chunkX = startX / Chunk.chunkSize;
-            int chunkY = startY / Chunk.chunkSize;
+            // check upper left chunk to be shoure!
+            int chunkX = startX / Chunk.chunkSize - 1;
+            int chunkY = startY / Chunk.chunkSize - 1;
             int chunkXe = startX / Chunk.chunkSize;
             int chunkYe = startY / Chunk.chunkSize;
             List<Building> entitys = new List<Building>();
@@ -50,7 +56,7 @@ namespace autoritaereFactory.world
                 }
             }
 
-            return null;
+            return entitys; // fix from "null"
         }
         // use AddEntityAt, but override the position of the building
         public void AddEntityAt(Building build, int posX, int posY)
@@ -113,10 +119,7 @@ namespace autoritaereFactory.world
                 ch.buildings.Remove(build);
             }
         }
-        public List<Building> GetEntityInPos(int posX,int posY)
-        {
-            return GetEntityInArea(posX,posY,posX,posY);
-        }
+
         public BlockState? GetBlockState(int posX, int posY)
         {
             int chunkX = posX / Chunk.chunkSize;
@@ -130,6 +133,18 @@ namespace autoritaereFactory.world
                 return ch.GetSubChunk(subChunkX, subChunkY);
             }
             return null;
+        }
+        // iterate over every building in the "loaded" world
+        public void IterateAll()
+        {
+            const int timerDelay = 100; // in ms
+            foreach(Chunk ch in chunkList)
+            {
+                foreach(Building bd in ch.buildings)
+                {
+                    bd.Update();
+                }
+            }
         }
     }
 }
