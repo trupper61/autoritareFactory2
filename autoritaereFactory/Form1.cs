@@ -17,6 +17,7 @@ namespace autoritaereFactory
         public Form1()
         {
             InitializeComponent();
+            WorldMap wrld = new WorldMap(6,6);
         }
     }
 }
