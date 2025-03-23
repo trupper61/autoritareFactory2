@@ -38,8 +38,8 @@ namespace autoritaereFactory.world
             // check upper left chunk to be shoure!
             int chunkX = startX / Chunk.chunkSize - 1;
             int chunkY = startY / Chunk.chunkSize - 1;
-            int chunkXe = startX / Chunk.chunkSize;
-            int chunkYe = startY / Chunk.chunkSize;
+            int chunkXe = endX / Chunk.chunkSize;
+            int chunkYe = endY / Chunk.chunkSize;
             List<Fabrikgebeude> entitys = new List<Fabrikgebeude>();
             // build a list of building inside the area
             foreach (Chunk ch in chunkList)
@@ -146,6 +146,30 @@ namespace autoritaereFactory.world
                     bd.Iteration();
                 }
             }
+        }
+        public List<Chunk> GetChuckBox(int posX, int posY, int sizeX, int sizeY)
+        {
+            return GetChuckArea(posX, posY, posX + sizeX, posY + sizeY);
+        }
+        public List<Chunk> GetChuckArea(int startX, int startY, int endX, int endY)
+        {
+            // get the effected chunks!
+            // check upper left chunk to be shoure!
+            int chunkX = startX / Chunk.chunkSize - 1;
+            int chunkY = startY / Chunk.chunkSize - 1;
+            int chunkXe = endX / Chunk.chunkSize;
+            int chunkYe = endY / Chunk.chunkSize;
+            List<Chunk> chunks = new List<Chunk>();
+            // build a list of building inside the area
+            foreach (Chunk ch in chunkList)
+            {
+                if (ch.x < chunkX || ch.y < chunkY) continue;
+                if (ch.x > chunkXe || ch.y > chunkYe) continue;
+
+                chunks.Add(ch);
+            }
+
+            return chunks; // fix from "null"
         }
     }
 }
