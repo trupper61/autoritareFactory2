@@ -10,11 +10,13 @@ namespace factordictatorship
     {
         private static int gebeude_ID = 0;
         private int gebeudeID = 0;
-        public int GebeudeID { get { return gebeudeID; } }//ist eine id bei der jedes gebeude eine eigene hat
         private int positionX;
-        public int PosiX { get { return positionX; } }//ist die Position des Feldes oben Links in der Ecke vom gebeude
         private int positionY;
+        public int GebeudeID { get { return gebeudeID; } }//ist eine id bei der jedes gebeude eine eigene hat
+        public int PositionX { get { return positionX; } }//ist die Position des Feldes oben Links in der Ecke vom gebeude
         public int PositionY { get { return positionY; } }
+        public int SizeX { get { return längeInXRichtung; } }
+        public int SizeY { get { return längeInYRichtung; } }
         internal int längeInXRichtung;
         public int LängeInXRichtung { get { return längeInXRichtung; } }
         internal int längeInYRichtung;

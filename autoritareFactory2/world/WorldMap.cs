@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using autoritaereFactory.setup;
+using factordictatorship;
 using static System.Windows.Forms.AxHost;
 
 namespace autoritaereFactory.world
@@ -22,16 +23,16 @@ namespace autoritaereFactory.world
             chunkList = new List<Chunk>();
         }
         // from and including start with the size (including)
-        public List<Building> GetEntityInBox(int posX, int posY, int width, int height)
+        public List<Fabrikgebeude> GetEntityInBox(int posX, int posY, int width, int height)
         {
             return GetEntityInArea(posX, posY, posX + width, posY + height);
         }
-        public List<Building> GetEntityInPos(int posX, int posY)
+        public List<Fabrikgebeude> GetEntityInPos(int posX, int posY)
         {
             return GetEntityInArea(posX, posY, posX, posY);
         }
         // from and including start till and including end
-        public List<Building> GetEntityInArea(int startX, int startY, int endX, int endY)
+        public List<Fabrikgebeude> GetEntityInArea(int startX, int startY, int endX, int endY)
         {
             // get the effected chunks!
             // check upper left chunk to be shoure!
@@ -39,43 +40,43 @@ namespace autoritaereFactory.world
             int chunkY = startY / Chunk.chunkSize - 1;
             int chunkXe = startX / Chunk.chunkSize;
             int chunkYe = startY / Chunk.chunkSize;
-            List<Building> entitys = new List<Building>();
+            List<Fabrikgebeude> entitys = new List<Fabrikgebeude>();
             // build a list of building inside the area
             foreach (Chunk ch in chunkList)
             {
                 if (ch.x < chunkX || ch.y < chunkY) continue;
                 if (ch.x > chunkXe || ch.y > chunkYe) continue;
 
-                foreach (Building building in ch.buildings)
+                foreach (Fabrikgebeude building in ch.buildings)
                 {
-                    if (building.x > endX) continue;
-                    if (building.y > endY) continue;
-                    if (building.x + building.width < startX) continue;
-                    if (building.y + building.height < startX) continue;
+                    if (building.PositionX > endX) continue;
+                    if (building.PositionY > endY) continue;
+                    if (building.PositionX + building.SizeX < startX) continue;
+                    if (building.PositionY + building.SizeY < startY) continue;
                     entitys.Add(building);
                 }
             }
 
             return entitys; // fix from "null"
         }
-        // use AddEntityAt, but override the position of the building
-        public void AddEntityAt(Building build, int posX, int posY)
+        /* / use AddEntityAt, but override the position of the building
+        public void AddEntityAt(Fabrikgebeude build, int posX, int posY)
         {
             build.x = posX;
             build.y = posY;
             AddEntityAt(build);
-        }
+        }*/
         // return true if succesful and false for a "out of bounce" place...
-        public bool AddEntityAt(Building build)
+        public bool AddEntityAt(Fabrikgebeude build)
         {
-            int chunkX = build.x / Chunk.chunkSize;
-            int chunkY = build.y / Chunk.chunkSize;
+            int chunkX = build.PositionX / Chunk.chunkSize;
+            int chunkY = build.PositionY / Chunk.chunkSize;
             // out of bounce checks!
             if (chunkX < 0 || chunkY < 0)
                 return false;
             if (chunkX > chunkXcount || chunkY > chunkYcount)
                 return false;
-            if (!IsBoxInside(build.x, build.y, build.width, build.height))
+            if (!IsBoxInside(build.PositionX, build.PositionY, build.SizeX, build.SizeY))
                 return false;
             // find the right chunk
             foreach (Chunk ch in chunkList)
@@ -107,10 +108,10 @@ namespace autoritaereFactory.world
                 return false;
             return true;
         }
-        public void RemoveEntity(Building build)
+        public void RemoveEntity(Fabrikgebeude build)
         {
-            int chunkX = build.x / Chunk.chunkSize;
-            int chunkY = build.y / Chunk.chunkSize;
+            int chunkX = build.PositionX / Chunk.chunkSize;
+            int chunkY = build.PositionY / Chunk.chunkSize;
 
             foreach (Chunk ch in chunkList)
             {
@@ -140,9 +141,9 @@ namespace autoritaereFactory.world
             const int timerDelay = 100; // in ms
             foreach (Chunk ch in chunkList)
             {
-                foreach (Building bd in ch.buildings)
+                foreach (Fabrikgebeude bd in ch.buildings)
                 {
-                    bd.Update();
+                    bd.Iteration();
                 }
             }
         }
