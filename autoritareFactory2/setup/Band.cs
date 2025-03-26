@@ -13,7 +13,7 @@ namespace factordictatorship.setup
         public List<Resource> resource { get; } 
         public int ItemAnzahlMax; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment; //Anzahl an Items, die sich gerade auf dem Band befinden.
-        public int BandGeschwindigkeit; //Wie schnell es Items von einem auf das andere Band befördern kann.
+        public int BandGeschwindigkeit; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde)
 
         public Band(int bandGe, int itemAnMax) 
         {
