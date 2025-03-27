@@ -10,17 +10,21 @@ namespace autoritaereFactory
 {
     public abstract class Resource
     {
-        public string Name { get; private set; }
+        public  ResourceType Type{ get; private set; }
         public int Amount { get; private set; }
 
         // spätere ideen:
         //public Point Position { get; set; } Position im Feld
         //public PictureBox Texture { get; set; } Picturebox als Texturfeld
 
-        public Resource(string name, int amount)
+        public Resource(ResourceType type, int amount)
         {
-            Name = name;
+            Type = type;
             Amount = amount;
         }
+    }
+    public enum ResourceType
+    {
+        Iron
     }
 }
