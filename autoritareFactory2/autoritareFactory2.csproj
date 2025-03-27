@@ -47,11 +47,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Fabrikgebeude.cs" />
-    <Compile Include="Form1.cs">
+    <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="world.Designer.cs">
+      <DependentUpon>world.cs</DependentUpon>
     </Compile>
     <Compile Include="Konstrucktor.cs" />
     <Compile Include="Miner.cs" />
@@ -60,7 +60,6 @@
     <Compile Include="resource\iron.cs" />
     <Compile Include="resource\resource.cs" />
     <Compile Include="setup\Band.cs" />
-    <Compile Include="setup\Building.cs" />
     <Compile Include="Rezepte.cs" />
     <Compile Include="world\BlockState.cs" />
     <Compile Include="world\Chunk.cs" />

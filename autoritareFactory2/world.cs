@@ -11,9 +11,9 @@ using System.Windows.Forms;
 
 namespace factordictatorship
 {
-    public partial class Form1 : Form
+    public partial class world : Form
     {
-        public Form1()
+        public world()
         {
             InitializeComponent();
             WorldMap wrld = new WorldMap(8,8);

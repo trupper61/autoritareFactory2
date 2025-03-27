@@ -8,20 +8,24 @@ using System.Threading.Tasks;
 
 namespace factordictatorship.setup
 {
-    public class Band : Building
+    public class Band : Fabrikgebeude
     {
         public List<Resource> resource { get; } 
         public int ItemAnzahlMax; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde)
 
-        public Band(int bandGe, int itemAnMax) 
+        public Band (int bandGe, int itemAnMax, int positionX, int positionY)
+            :base(positionX, positionY) 
         {
             BandGeschwindigkeit = bandGe;
             ItemAnzahlMax = itemAnMax;
             ItemAnzahlMoment = 0;
         }
-
+        public override void Iteration()
+        {
+            throw new NotImplementedException();
+        }
         public void ErkenneRescourcen() 
         {
             if(resource != null) 

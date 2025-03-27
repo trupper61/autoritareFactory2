@@ -1,6 +1,6 @@
 ﻿namespace factordictatorship
 {
-    partial class Form1
+    partial class world
     {
         /// <summary>
         /// Erforderliche Designervariable.
