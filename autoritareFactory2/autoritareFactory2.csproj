@@ -59,6 +59,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="resource\iron.cs" />
     <Compile Include="resource\resource.cs" />
+    <Compile Include="setup\Band.cs" />
+    <Compile Include="setup\Building.cs" />
     <Compile Include="Rezepte.cs" />
     <Compile Include="world\BlockState.cs" />
     <Compile Include="world\Chunk.cs" />
