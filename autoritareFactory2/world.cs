@@ -49,17 +49,13 @@ namespace factordictatorship
         {
             wlrdDrawer.Update(sender, e);
         }
+        // this is a fix for not working "OnKey"-Events
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
         private static extern short GetKeyState(int keyCode);
         public bool IsKeyPressed(Keys k)
         {
-            
+            // don't check if not focused
             return ContainsFocus && (GetKeyState((int)k) & 0x8000) > 0;
-            if (keyHit.TryGetValue(k, out bool b))
-            {
-                return b;
-            }
-            return false;
         }
 
 

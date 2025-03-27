@@ -1,4 +1,5 @@
-﻿using System;
+﻿using autoritaereFactory.setup;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -10,7 +11,10 @@ namespace factordictatorship.Resources
 {
     public class ResourceHandler
     {
-        public static Image[] tileSet = { LoadImage("grass.png") , LoadImage("iron.png") };
+        public static Dictionary<GroundResource,Image> tileSet = new Dictionary<GroundResource, Image>(){
+            { GroundResource.Grass , LoadImage("grass.png") },
+            { GroundResource.Grass2 , LoadImage("grass2.png") },
+            { GroundResource.Iron, LoadImage("iron.png") } };
         public const int imageSize = 16;
         private static Image LoadImage(string path)
         {

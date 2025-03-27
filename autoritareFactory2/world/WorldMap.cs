@@ -13,6 +13,7 @@ namespace autoritaereFactory.world
 {
     public class WorldMap
     {
+        int seed = (new Random()).Next();
         public static WorldMap theWorld;
         List<Chunk> chunkList;
         public int chunkXcount, chunkYcount;
@@ -88,7 +89,7 @@ namespace autoritaereFactory.world
                 return true;
             }
             // if there is no right chunk...
-            Chunk newChunk = new Chunk(chunkX, chunkY);
+            Chunk newChunk = new Chunk(chunkX, chunkY, seed);
             newChunk.buildings.Add(build);
             chunkList.Add(newChunk);
             return true;
@@ -106,7 +107,7 @@ namespace autoritaereFactory.world
                     continue;
                 return false;
             }
-            Chunk newChunnk = new Chunk(chunkX, chunkY);
+            Chunk newChunnk = new Chunk(chunkX, chunkY, seed);
             chunkList.Add(newChunnk);
             return true;
         }

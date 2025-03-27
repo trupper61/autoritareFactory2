@@ -8,7 +8,8 @@ namespace autoritaereFactory.setup
 {
     public enum GroundResource
     {
-        Grass,
-        Iron,
+        Grass = 0,
+        Grass2 = 1,
+        Iron = 2,
     }
 }
