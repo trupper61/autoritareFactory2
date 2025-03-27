@@ -72,7 +72,11 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="world.resx">
+      <DependentUpon>world.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -86,6 +90,26 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\grass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\factory.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\belt.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iron.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iron-ore.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\iron-transport.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\miner.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
