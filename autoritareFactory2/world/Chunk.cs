@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using autoritaereFactory.setup;
+using factordictatorship;
 
 namespace autoritaereFactory.world
 {
@@ -12,8 +13,8 @@ namespace autoritaereFactory.world
     {
         public const int chunkSize = 32;
         public int x, y;
-        public List<Building> buildings;
-        BlockState[,] blockState;
+        public List<Fabrikgebeude> buildings;
+        readonly BlockState[,] blockState;
         public Chunk()
         {
             blockState = new BlockState[chunkSize, chunkSize];

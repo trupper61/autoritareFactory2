@@ -8,6 +8,6 @@ namespace autoritaereFactory
 {
     public class Iron : Resource
     {
-        public Iron(int initAmount) : base("Iron", initAmount) { } // initAmount als wie viel an der Quelle ist
+        public Iron(int initAmount) : base(ResourceType.Iron, initAmount) { } // initAmount als wie viel an der Quelle ist
     }
 }

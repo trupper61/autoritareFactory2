@@ -16,7 +16,7 @@ namespace factordictatorship
         public Form1()
         {
             InitializeComponent();
-            WorldMap wrld = new WorldMap(6, 6);
+            WorldMap wrld = new WorldMap(8,8);
         }
     }
 }
