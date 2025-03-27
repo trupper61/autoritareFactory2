@@ -51,8 +51,8 @@ namespace factordictatorship.setup
 
         public void NehmeResourcenVonBand() 
         {
-            //Wenn die Rescourcen auf dem Band relevant für das Gebäude sind, weiter.
             //Wenn Gebäudeeingang rechts vom Förderband, und das Gebäude noch nicht voll (Max 100 Resscourcen), dann
+            //Wenn die Rescourcen auf dem Band relevant für das Gebäude sind, weiter.
             //entnehme Rescource und Füge sie in die Liste des Konstruktorgebäude-Objektes 'benötigteResscourcen' hinzu.
             //Entferne die jeweiligen Rescourcen aus der Liste des Förderbandes
 
