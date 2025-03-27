@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using autoritaereFactory.setup;
 using factordictatorship;
 using static System.Windows.Forms.AxHost;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace autoritaereFactory.world
 {
@@ -14,7 +15,7 @@ namespace autoritaereFactory.world
     {
         public static WorldMap theWorld;
         List<Chunk> chunkList;
-        int chunkXcount, chunkYcount;
+        public int chunkXcount, chunkYcount;
         public WorldMap(int sizeX, int sizeY)
         {
             theWorld = this;
@@ -92,6 +93,23 @@ namespace autoritaereFactory.world
             chunkList.Add(newChunk);
             return true;
         }
+        public bool GenerateChunk(int chunkX,int chunkY)
+        {
+            if (chunkX < 0 || chunkY < 0)
+                return false;
+            if (chunkX > chunkXcount || chunkY > chunkYcount)
+                return false;
+            // find the right chunk
+            foreach (Chunk ch in chunkList)
+            {
+                if (ch.x != chunkX || ch.y != chunkY)
+                    continue;
+                return false;
+            }
+            Chunk newChunnk = new Chunk(chunkX, chunkY);
+            chunkList.Add(newChunnk);
+            return true;
+        }
         // check for out of bounce!
         public bool IsBoxInside(int posX, int posY, int width, int height)
         {
@@ -121,7 +139,7 @@ namespace autoritaereFactory.world
             }
         }
 
-        public BlockState? GetBlockState(int posX, int posY)
+        public GroundResource? GetBlockState(int posX, int posY)
         {
             int chunkX = posX / Chunk.chunkSize;
             int chunkY = posY / Chunk.chunkSize;
@@ -170,6 +188,17 @@ namespace autoritaereFactory.world
             }
 
             return chunks; // fix from "null"
+        }
+        // 
+        public Chunk GetSpecificChunk(int chunkX,int chunkY)
+        {
+            // build a list of building inside the area
+            foreach (Chunk ch in chunkList)
+            {
+                if (ch.x == chunkX && ch.y == chunkY)
+                    return ch;
+            }
+            return null; // fix from "null"
         }
     }
 }

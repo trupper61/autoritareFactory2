@@ -8,16 +8,7 @@ namespace autoritaereFactory.setup
 {
     public enum GroundResource
     {
-        Nothing,
-        Stone,
+        Grass,
         Iron,
-    }
-    public struct BlockState
-    {
-        public GroundResource ressource;
-        // get the new "resource"
-        /*public Resource GenerateNewRessource() {
-            return GenerateNewRessource();
-        }*/
     }
 }

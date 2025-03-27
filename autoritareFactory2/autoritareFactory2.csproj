@@ -46,7 +46,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="drawing\WorldDrawer.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="drawing\WorldPartImage.cs" />
     <Compile Include="Fabrikgebeude.cs" />
+    <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
