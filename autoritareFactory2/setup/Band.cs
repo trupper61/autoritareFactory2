@@ -10,17 +10,18 @@ namespace factordictatorship.setup
 {
     public class Band : Fabrikgebeude
     {
-        public List<Resource> resource { get; } 
-        public int ItemAnzahlMax; //Anzahl an Items, die ein Band maximal halten kann.
+        public List<Resource> resource { get; }
+        public int anzahlEisen;
+        public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment; //Anzahl an Items, die sich gerade auf dem Band befinden.
-        public int BandGeschwindigkeit; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde)
+        public int BandGeschwindigkeit = 5; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde)
 
-        public Band (int bandGe, int itemAnMax, int positionX, int positionY)
+        public Band (int bandGe, int itemAnMax, List<Resource> resources, int anzEisen,int positionX, int positionY)
             :base(positionX, positionY) 
         {
-            BandGeschwindigkeit = bandGe;
+            anzEisen = anzahlEisen;
+            resources = resource;
             ItemAnzahlMax = itemAnMax;
-            ItemAnzahlMoment = 0;
         }
         public override void Iteration()
         {
@@ -32,6 +33,10 @@ namespace factordictatorship.setup
             {
                 foreach (Resource r in resource) 
                 {
+                    if(r.Type == ResourceType.Iron) 
+                    {
+                        anzahlEisen++;
+                    }
                     ItemAnzahlMoment++;
                 }
             }
