@@ -50,31 +50,28 @@ namespace factordictatorship.setup
         }
 
         //Relevantes gebäude übergibt sich selbst. Diese Methode muss in der Klasse Konstruktor ausgeführt werden
-        public void NehmeResourcenVonBand(Fabrikgebeude gebauede, Band band) 
+        public void NehmeResourcenVonBand(Konstrucktor gebauede, Band band) 
         {
             //Wenn Gebäudeeingang rechts vom Förderband, und das Gebäude noch nicht voll (Max 100 Resscourcen), dann
 
-            if(gebauede.PositionX - 1 == band.PositionX)
+            if (null == null) //Platzhalter | Wenn die Anzahl der Rescourcen in der Liste nicht über oder gleich 100, weiter 
             {
-                if(null == null) //Platzhalter | Wenn die Anzahl der Rescourcen in der Liste nicht über oder gleich 100, weiter 
+                //Wenn die Rescourcen auf dem Band relevant für das Gebäude sind, weiter.
+                if (null == null) //Platzhalter
                 {
-                    //Wenn die Rescourcen auf dem Band relevant für das Gebäude sind, weiter.
-                    if(null == null) //Platzhalter
+                    foreach (Resource r in band.resource)
                     {
-                        foreach (Resource r in band.resource)
+                        if (r.Type == gebauede.TypBenotigteRecurse1)
                         {
-                            if (r.Type == ResourceType.Iron)
-                            {
-                                band.anzahlEisen--;
-                                //Rescourcen werden zu der Liste hinzugefügt
-                            }
-                            band.ItemAnzahlMoment--;
+                            band.anzahlEisen--;
+                            
                         }
+                        band.ItemAnzahlMoment--;
                     }
                 }
             }
-            
-            
+
+
             //entnehme Rescource und Füge sie in die Liste des Konstruktorgebäude-Objektes 'benötigteResscourcen' hinzu.
             //Entferne die jeweiligen Rescourcen aus der Liste des Förderbandes
         }

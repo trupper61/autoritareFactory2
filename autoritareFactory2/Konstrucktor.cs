@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace factordictatorship
 {
-    internal class Konstrucktor : Fabrikgebeude
+    public class Konstrucktor : Fabrikgebeude
     {
         private ResourceType typBenotigteRecurse1;
         public ResourceType TypBenotigteRecurse1 { get { return typBenotigteRecurse1; } }
