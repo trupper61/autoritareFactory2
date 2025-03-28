@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace factordictatorship
 {
-    internal class Miner : Fabrikgebeude
+    public class Miner : Fabrikgebeude
     {
         private int Zähler;//beschränkt die anzahl Resurcen pro minute
         private string Recurse;//nur bisher String 
