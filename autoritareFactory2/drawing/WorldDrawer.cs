@@ -3,6 +3,7 @@ using factordictatorship.Resources;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace factordictatorship.drawing
 {
-    public class WorldDrawer : Control
+    public class WorldDrawer
     {
         public world mainForms;
         public float cameraX, cameraY;
@@ -21,9 +22,9 @@ namespace factordictatorship.drawing
             cameraX = cameraY = 0;
             chunkPictures = new List<WorldPartImage>();
         }
-        public void Update(object sender, PaintEventArgs e)
+        public void Update(PaintEventArgs e)
         {
-            float strength = (mainForms.IsKeyPressed(Keys.ShiftKey) ? 5 : 1);
+            float strength = (mainForms.IsKeyPressed(Keys.ShiftKey) ? 10 : 3);
             float deltaX = (mainForms.IsKeyPressed(Keys.Right) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Left) ? strength : 0);
             float deltaY = (mainForms.IsKeyPressed(Keys.Down) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Up) ? strength : 0);
             cameraX += deltaX;// + (float)Math.Sin(DateTime.Now.Second * 0.1f) ;
@@ -99,6 +100,37 @@ namespace factordictatorship.drawing
                     );
             }
             //grp.Dispose();
+        }
+        public void DrawHover(PaintEventArgs e,Point tilePos)
+        {
+            Color funnyColor = Color.FromArgb(127, 123, 45, 67);
+            tilePos = TranslateWorld2Screen(tilePos);
+            // don't draw out of bounce (oob)
+            if (tilePos.X < -ResourceHandler.imageSize || tilePos.Y < -ResourceHandler.imageSize)
+                return;
+            if (tilePos.X > mainForms.Width || tilePos.Y > mainForms.Height)
+                return;
+            SolidBrush alphaBrush = new SolidBrush(funnyColor);
+            Rectangle drawRect = new Rectangle(tilePos, new Size(ResourceHandler.imageSize, ResourceHandler.imageSize));
+            e.Graphics.FillRectangle(alphaBrush, drawRect);
+            alphaBrush.Dispose();
+        }
+
+        // world pos as in tile-position!
+        internal Point TranslateScreen2World(Point p)
+        {
+            float localX,localY;
+            localX = (p.X + cameraX) / ResourceHandler.imageSize;
+            localY = (p.Y + cameraY) / ResourceHandler.imageSize;
+            return new Point((int)localX, (int)localY);
+        }
+        // world pos as in tile-position!
+        internal Point TranslateWorld2Screen(Point p)
+        {
+            float localX, localY;
+            localX = p.X * ResourceHandler.imageSize - cameraX;
+            localY = p.Y * ResourceHandler.imageSize - cameraY;
+            return new Point((int)localX, (int)localY);
         }
     }
 }

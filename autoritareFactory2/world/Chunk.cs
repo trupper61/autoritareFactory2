@@ -15,18 +15,17 @@ namespace autoritaereFactory.world
         public int x, y; // chunk position not world
         public List<Fabrikgebeude> buildings;
         readonly GroundResource[,] blockState;
-        public Chunk()
-        {
-            blockState = new GroundResource[chunkSize, chunkSize];
-        }
         // yes this function is slow, but who cares anyways.
-        private void GenerateCircleRessource(int seed, GroundResource state, float radius,int randStrength)
+        private void GenerateCircleRessource(int seed, GroundResource state, float radius,int randStrength,float existenceChance)
         {
             // explorer the neighbours with this funny loop
             for (int neb = 0; neb < 9; neb++)
             {
                 // create an fitting random function
                 Random rng = new Random((x + neb / 3 - 1) * 256 + (y + neb % 3 - 1) + seed);
+                rng.Next();// more random!
+                if (existenceChance <= rng.NextDouble())
+                    continue;
                 // get the chosen position
                 int selectedX = rng.Next(chunkSize) + (neb / 3 - 1) * chunkSize;
                 int selectedY = rng.Next(chunkSize) + (neb % 3 - 1) * chunkSize;
@@ -54,6 +53,7 @@ namespace autoritaereFactory.world
         {
             x = posX;
             y = posY;
+            buildings = new List<Fabrikgebeude>();
             Random rng = new Random(posX * 256 + posY + seed);
             blockState = new GroundResource[chunkSize, chunkSize];
             // fill with random grass!
@@ -65,7 +65,8 @@ namespace autoritaereFactory.world
                 }
             }
             // you can put more to place more resources!
-            GenerateCircleRessource(seed, GroundResource.Iron, 4.5f,16); // evl Kohle
+            GenerateCircleRessource(seed, GroundResource.Iron, 4.5f, 16, 1f); // evl Kohle
+            GenerateCircleRessource(seed+2, GroundResource.Iron, 7f, 40, 0.25f); // evl hochwertiges
         }
         public GroundResource GetSubChunk(int innerX, int innerY)
         {
