@@ -46,7 +46,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="drawing\WorldDrawer.cs" />
+    <Compile Include="drawing\WorldPartImage.cs" />
     <Compile Include="Fabrikgebeude.cs" />
+    <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -61,7 +64,7 @@
     <Compile Include="resource\resource.cs" />
     <Compile Include="setup\Band.cs" />
     <Compile Include="Rezepte.cs" />
-    <Compile Include="world\BlockState.cs" />
+    <Compile Include="world\GroundResource.cs" />
     <Compile Include="world\Chunk.cs" />
     <Compile Include="world\WorldMap.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -110,6 +113,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\miner.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\grass2.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

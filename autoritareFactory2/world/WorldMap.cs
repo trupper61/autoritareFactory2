@@ -1,26 +1,39 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using autoritaereFactory.setup;
 using factordictatorship;
 using static System.Windows.Forms.AxHost;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace autoritaereFactory.world
 {
     public class WorldMap
     {
+        Thread iteratorThread;
+        bool shouldStopThread = false;
+        int seed = (new Random()).Next();
         public static WorldMap theWorld;
         List<Chunk> chunkList;
-        int chunkXcount, chunkYcount;
+        public int chunkXcount, chunkYcount;
         public WorldMap(int sizeX, int sizeY)
         {
+            iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
             theWorld = this;
             chunkXcount = sizeX;
             chunkYcount = sizeY;
             chunkList = new List<Chunk>();
+            iteratorThread.Start();
+        }
+        // this stops the worker thread
+        public void Dispose()
+        {
+            shouldStopThread = true;
         }
         // from and including start with the size (including)
         public List<Fabrikgebeude> GetEntityInBox(int posX, int posY, int width, int height)
@@ -87,9 +100,26 @@ namespace autoritaereFactory.world
                 return true;
             }
             // if there is no right chunk...
-            Chunk newChunk = new Chunk(chunkX, chunkY);
+            Chunk newChunk = new Chunk(chunkX, chunkY, seed);
             newChunk.buildings.Add(build);
             chunkList.Add(newChunk);
+            return true;
+        }
+        public bool GenerateChunk(int chunkX,int chunkY)
+        {
+            if (chunkX < 0 || chunkY < 0)
+                return false;
+            if (chunkX > chunkXcount || chunkY > chunkYcount)
+                return false;
+            // find the right chunk
+            foreach (Chunk ch in chunkList)
+            {
+                if (ch.x != chunkX || ch.y != chunkY)
+                    continue;
+                return false;
+            }
+            Chunk newChunnk = new Chunk(chunkX, chunkY, seed);
+            chunkList.Add(newChunnk);
             return true;
         }
         // check for out of bounce!
@@ -121,7 +151,7 @@ namespace autoritaereFactory.world
             }
         }
 
-        public BlockState? GetBlockState(int posX, int posY)
+        public GroundResource? GetBlockState(int posX, int posY)
         {
             int chunkX = posX / Chunk.chunkSize;
             int chunkY = posY / Chunk.chunkSize;
@@ -139,12 +169,16 @@ namespace autoritaereFactory.world
         public void IterateAll()
         {
             const int timerDelay = 100; // in ms
-            foreach (Chunk ch in chunkList)
+            while (!shouldStopThread)
             {
-                foreach (Fabrikgebeude bd in ch.buildings)
+                foreach (Chunk ch in chunkList)
                 {
-                    bd.Iteration();
+                    foreach (Fabrikgebeude bd in ch.buildings)
+                    {
+                        bd.Iteration();
+                    }
                 }
+                Thread.Sleep(timerDelay);
             }
         }
         public List<Chunk> GetChuckBox(int posX, int posY, int sizeX, int sizeY)
@@ -170,6 +204,17 @@ namespace autoritaereFactory.world
             }
 
             return chunks; // fix from "null"
+        }
+        // 
+        public Chunk GetSpecificChunk(int chunkX,int chunkY)
+        {
+            // build a list of building inside the area
+            foreach (Chunk ch in chunkList)
+            {
+                if (ch.x == chunkX && ch.y == chunkY)
+                    return ch;
+            }
+            return null; // fix from "null"
         }
     }
 }

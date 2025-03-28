@@ -12,20 +12,63 @@ namespace autoritaereFactory.world
     public class Chunk
     {
         public const int chunkSize = 32;
-        public int x, y;
+        public int x, y; // chunk position not world
         public List<Fabrikgebeude> buildings;
-        readonly BlockState[,] blockState;
-        public Chunk()
+        readonly GroundResource[,] blockState;
+        // yes this function is slow, but who cares anyways.
+        private void GenerateCircleRessource(int seed, GroundResource state, float radius,int randStrength,float existenceChance)
         {
-            blockState = new BlockState[chunkSize, chunkSize];
+            // explorer the neighbours with this funny loop
+            for (int neb = 0; neb < 9; neb++)
+            {
+                // create an fitting random function
+                Random rng = new Random((x + neb / 3 - 1) * 256 + (y + neb % 3 - 1) + seed);
+                rng.Next();// more random!
+                if (existenceChance <= rng.NextDouble())
+                    continue;
+                // get the chosen position
+                int selectedX = rng.Next(chunkSize) + (neb / 3 - 1) * chunkSize;
+                int selectedY = rng.Next(chunkSize) + (neb % 3 - 1) * chunkSize;
+                int bigSize = (int)Math.Ceiling(radius);
+                // maybe fill the tiles with the resource
+                for (int i = -bigSize; i <= bigSize; i++)
+                {
+                    for (int j = -bigSize; j <= bigSize; j++)
+                    {
+                        // check if outside this chunk
+                        if (selectedX + i < 0 || selectedY + j < 0)
+                            continue;
+                        if (selectedX + i >= chunkSize || selectedY + j >= chunkSize)
+                            continue;
+                        // test if outside the "circle"
+                        if (i * i + j * j + rng.Next(0, randStrength) > radius * radius)
+                            continue;
+                        // put
+                        blockState[selectedX + i, selectedY + j] = state;
+                    }
+                }
+            }
         }
-        public Chunk(int posX, int posY)
+        public Chunk(int posX, int posY,int seed)
         {
-            blockState = new BlockState[chunkSize, chunkSize];
             x = posX;
             y = posY;
+            buildings = new List<Fabrikgebeude>();
+            Random rng = new Random(posX * 256 + posY + seed);
+            blockState = new GroundResource[chunkSize, chunkSize];
+            // fill with random grass!
+            for (int ptX = 0; ptX < chunkSize; ptX++)
+            {
+                for (int ptY = 0; ptY < chunkSize; ptY++)
+                {
+                    blockState[ptX, ptY] = (GroundResource)rng.Next(0, 2); // Grass 1 && Grass 2
+                }
+            }
+            // you can put more to place more resources!
+            GenerateCircleRessource(seed, GroundResource.Iron, 4.5f, 16, 1f); // evl Kohle
+            GenerateCircleRessource(seed+2, GroundResource.Iron, 7f, 40, 0.25f); // evl hochwertiges
         }
-        public BlockState GetSubChunk(int innerX, int innerY)
+        public GroundResource GetSubChunk(int innerX, int innerY)
         {
             return blockState[innerX, innerY];
         }
