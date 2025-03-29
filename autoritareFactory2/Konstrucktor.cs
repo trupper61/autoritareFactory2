@@ -1,4 +1,5 @@
 ﻿using autoritaereFactory;
+using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,19 +43,43 @@ namespace factordictatorship
         }
         public override void Iteration()
         {
-            //if (verbleibendeProduktionsdauer <= 0)
-            //{
-            //    if (anzahlBenotigteRecurse1 >= nötigeMengenBenotigteRecurse1) 
-            //    {
-            //        verbleibendeProduktionsdauer -= 100;
-            //    }
-            //}
-            //else
-            //{
-            //    anzahlBenotigteRecurse1 -= nötigeMengenBenotigteRecurse1;
-            //    anzahlErgebnissRecurse1 += mengenErgebnissRecursen1;
-            //    verbleibendeProduktionsdauer = produktionsdauer;
-            //}
+            if (verbleibendeProduktionsdauer <= 0)
+            {
+                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1) 
+                {
+                    verbleibendeProduktionsdauer -= 100;
+                }
+            }
+            else
+            {
+                for (int i = nötigeMengenBenotigteRecurse1; i > 0; i--)
+                {
+                    benotigteRecurse1.RemoveAt(0);
+                }
+                for (int i = mengenErgebnissRecursen1; i > 0; i--)
+                {
+                    benotigteRecurse1.Add(new Iron(1));//nur forläufig bis es mehr recursen gibt
+                }
+                verbleibendeProduktionsdauer = produktionsdauer;
+            }
+            /*if (ergebnissRecurse1.Count > 0)//muss noch auf die aktuelle World aktualisiert werden
+            {
+                List<Fabrikgebeude> entitys = world.GetEntityInPos(PositionX + (längeInXRichtung-1) + 1, PositionY);
+                if (entitys.Count == 1)
+                {
+                    Band band = (Band)entitys[0];
+                    if (band != null)
+                    {
+                        band.ErkenneRescourcen();
+                        while (band.ItemAnzahlMoment < 10 & ergebnissRecurse1.Count > 0)
+                        {
+                            band.RescourceKommtAufBand(ergebnissRecurse1[0]);
+                            ergebnissRecurse1.RemoveAt(0);
+                            band.ErkenneRescourcen();
+                        }
+                    }
+                }
+            }*/
         }
 
     }
