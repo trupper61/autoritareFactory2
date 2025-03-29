@@ -166,8 +166,10 @@ namespace autoritaereFactory.world
             return null;
         }
         // iterate over every building in the "loaded" world
+        long lastTimeTick;
         public void IterateAll()
         {
+            lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             const int timerDelay = 100; // in ms
             while (!shouldStopThread)
             {
@@ -178,7 +180,8 @@ namespace autoritaereFactory.world
                         bd.Iteration();
                     }
                 }
-                Thread.Sleep(timerDelay);
+                lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                Thread.Sleep(timerDelay - (int)(lastTimeTick % timerDelay));
             }
         }
         public List<Chunk> GetChuckBox(int posX, int posY, int sizeX, int sizeY)

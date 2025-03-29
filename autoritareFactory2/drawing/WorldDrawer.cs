@@ -14,7 +14,7 @@ namespace factordictatorship.drawing
     public class WorldDrawer
     {
         public world mainForms;
-        public float cameraX, cameraY;
+        public double cameraX, cameraY; // in tile pos!
         public List<WorldPartImage> chunkPictures;
         public WorldDrawer(world parent)
         {
@@ -22,15 +22,17 @@ namespace factordictatorship.drawing
             cameraX = cameraY = 0;
             chunkPictures = new List<WorldPartImage>();
         }
-        public void Update(PaintEventArgs e)
+        public void Update(PaintEventArgs e, float deltaTime)
         {
-            float strength = (mainForms.IsKeyPressed(Keys.ShiftKey) ? 10 : 3);
-            float deltaX = (mainForms.IsKeyPressed(Keys.Right) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Left) ? strength : 0);
-            float deltaY = (mainForms.IsKeyPressed(Keys.Down) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Up) ? strength : 0);
-            cameraX += deltaX;// + (float)Math.Sin(DateTime.Now.Second * 0.1f) ;
-            cameraY += deltaY;
+            double strength = (mainForms.IsKeyPressed(Keys.ShiftKey) ? 50 : 12);
+            double deltaX = (mainForms.IsKeyPressed(Keys.Right) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Left) ? strength : 0);
+            double deltaY = (mainForms.IsKeyPressed(Keys.Down) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Up) ? strength : 0);
+            cameraX += deltaX * deltaTime;
+            cameraY += deltaY * deltaTime;
             if (cameraX < 0) cameraX = 0;
             if (cameraY < 0) cameraY = 0;
+            if (cameraX > WorldMap.theWorld.chunkXcount * Chunk.chunkSize) cameraX = WorldMap.theWorld.chunkXcount * Chunk.chunkSize;
+            if (cameraY > WorldMap.theWorld.chunkXcount * Chunk.chunkSize) cameraY = WorldMap.theWorld.chunkXcount * Chunk.chunkSize;
             DrawWorld(e);
         }
         public void DrawWorld(PaintEventArgs e)
@@ -38,7 +40,7 @@ namespace factordictatorship.drawing
             Graphics grp = e.Graphics;
             //Graphics grp = mainForms.CreateGraphics();
             List<Chunk> drawChunks = mainForms.mapWorld.GetChuckBox(
-                (int)(cameraX / (float)ResourceHandler.imageSize), (int)(cameraY / (float)ResourceHandler.imageSize),
+                (int)(cameraX), (int)(cameraY),
                 (int)Math.Ceiling(mainForms.Width / (float)ResourceHandler.imageSize),
                 (int)Math.Ceiling(mainForms.Height / (float)ResourceHandler.imageSize));
             //List<Chunk> drawChunks = mapWorld.GetChuckBox((int)cameraX, (int)cameraY,Width, Height );
@@ -95,8 +97,8 @@ namespace factordictatorship.drawing
                 grp.DrawImage(
                     wpi.map,
                     new Point(
-                        (int)(wpi.chRef.x * Chunk.chunkSize * ResourceHandler.imageSize - cameraX),
-                        (int)(wpi.chRef.y * Chunk.chunkSize * ResourceHandler.imageSize - cameraY))
+                        (int)((wpi.chRef.x * Chunk.chunkSize - cameraX) * ResourceHandler.imageSize),
+                        (int)((wpi.chRef.y * Chunk.chunkSize - cameraY) * ResourceHandler.imageSize))
                     );
             }
             //grp.Dispose();
@@ -104,8 +106,13 @@ namespace factordictatorship.drawing
         public void DrawHover(PaintEventArgs e,Point tilePos)
         {
             Color funnyColor = Color.FromArgb(127, 123, 45, 67);
+            // don't draw out of bounce (oob) of the world!
+            if (tilePos.X < 0) return;
+            if (tilePos.Y < 0) return;
+            if (tilePos.X >= WorldMap.theWorld.chunkXcount * Chunk.chunkSize) return ;
+            if (tilePos.Y >= WorldMap.theWorld.chunkXcount * Chunk.chunkSize) return;
             tilePos = TranslateWorld2Screen(tilePos);
-            // don't draw out of bounce (oob)
+            // don't draw out of bounce (oob) of the screen!
             if (tilePos.X < -ResourceHandler.imageSize || tilePos.Y < -ResourceHandler.imageSize)
                 return;
             if (tilePos.X > mainForms.Width || tilePos.Y > mainForms.Height)
@@ -119,17 +126,17 @@ namespace factordictatorship.drawing
         // world pos as in tile-position!
         internal Point TranslateScreen2World(Point p)
         {
-            float localX,localY;
-            localX = (p.X + cameraX) / ResourceHandler.imageSize;
-            localY = (p.Y + cameraY) / ResourceHandler.imageSize;
+            double localX,localY;
+            localX = p.X / (float)ResourceHandler.imageSize + cameraX;
+            localY = p.Y / (float)ResourceHandler.imageSize + cameraY;
             return new Point((int)localX, (int)localY);
         }
         // world pos as in tile-position!
         internal Point TranslateWorld2Screen(Point p)
         {
-            float localX, localY;
-            localX = p.X * ResourceHandler.imageSize - cameraX;
-            localY = p.Y * ResourceHandler.imageSize - cameraY;
+            double localX, localY;
+            localX = (p.X - cameraX) * ResourceHandler.imageSize;
+            localY = (p.Y - cameraY) * ResourceHandler.imageSize;
             return new Point((int)localX, (int)localY);
         }
     }
