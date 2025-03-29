@@ -22,6 +22,7 @@ namespace factordictatorship
         public Timer frameSceduler;
         public WorldDrawer wlrdDrawer;
         public Point lastMousePos;
+        long lastTimeTick;
         public world()
         {
             InitializeComponent();
@@ -33,6 +34,7 @@ namespace factordictatorship
                     mapWorld.GenerateChunk(wrdX, wrdY);
                 }
             }
+            lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             wlrdDrawer = new WorldDrawer(this);
             //Controls.Add(wlrdDrawer);
             keyHit = new Dictionary<Keys, bool>();
@@ -63,8 +65,11 @@ namespace factordictatorship
         }
         public void PaintHandler(object sender, PaintEventArgs e)
         {
+            long testTime = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+            float deltaMs = (testTime - lastTimeTick) / 1000f;
+            lastTimeTick = testTime;
             // draw the world!
-            wlrdDrawer.Update(e);
+            wlrdDrawer.Update(e,deltaMs);
             if(Focused)
                 // draw the hover thing!
                 wlrdDrawer.DrawHover(e,wlrdDrawer.TranslateScreen2World(lastMousePos));

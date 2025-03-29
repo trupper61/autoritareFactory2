@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace factordictatorship
 {
-    internal class Rezepte
+    public class Rezepte
     {
         private string zugehörigesGebeude;
         public string ZugehörigesGebeude { get { return zugehörigesGebeude; } }
