@@ -26,6 +26,7 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private int verbleibendeProduktionsdauer;//verbleibende dauer des Produktionsprozesses in millisekunden
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
+        private world welt;//(nur vorleufig) muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
 
         public Konstrucktor(int positionX, int positionY) : base(positionX, positionY)
         {
@@ -62,9 +63,9 @@ namespace factordictatorship
                 }
                 verbleibendeProduktionsdauer = produktionsdauer;
             }
-            /*if (ergebnissRecurse1.Count > 0)//muss noch auf die aktuelle World aktualisiert werden
+            if (ergebnissRecurse1.Count > 0)
             {
-                List<Fabrikgebeude> entitys = world.GetEntityInPos(PositionX + (längeInXRichtung-1) + 1, PositionY);
+                List<Fabrikgebeude> entitys = welt.mapWorld.GetEntityInPos(PositionX + (längeInXRichtung-1) + 1, PositionY);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
                 if (entitys.Count == 1)
                 {
                     Band band = (Band)entitys[0];
@@ -79,7 +80,7 @@ namespace factordictatorship
                         }
                     }
                 }
-            }*/
+            }
         }
 
     }
