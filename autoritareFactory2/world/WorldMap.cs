@@ -62,10 +62,10 @@ namespace autoritaereFactory.world
 
                 foreach (Fabrikgebeude building in ch.buildings)
                 {
-                    if (building.PositionX > endX) continue;
-                    if (building.PositionY > endY) continue;
-                    if (building.PositionX + building.SizeX < startX) continue;
-                    if (building.PositionY + building.SizeY < startY) continue;
+                    if (building.PositionX >= endX) continue;
+                    if (building.PositionY >= endY) continue;
+                    if (building.PositionX + building.SizeX <= startX) continue;
+                    if (building.PositionY + building.SizeY <= startY) continue;
                     entitys.Add(building);
                 }
             }

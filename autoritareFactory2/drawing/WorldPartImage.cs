@@ -30,7 +30,9 @@ namespace factordictatorship.drawing
                 {
                     grp.DrawImage(
                     ResourceHandler.tileSet[chRef.GetSubChunk(ptX, ptY)],
-                    new Point(ptX * ResourceHandler.imageSize, ptY * ResourceHandler.imageSize)
+                    new Rectangle(
+                        ptX * ResourceHandler.imageSize, ptY * ResourceHandler.imageSize,
+                        ResourceHandler.imageSize, ResourceHandler.imageSize)
                     );
                 }
             }

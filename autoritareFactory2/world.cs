@@ -26,7 +26,7 @@ namespace factordictatorship
         public world()
         {
             InitializeComponent();
-            mapWorld = new WorldMap(8,8);
+            mapWorld = new WorldMap(8, 8);
             for (int wrdX = 0; wrdX < mapWorld.chunkXcount; wrdX++)
             {
                 for (int wrdY = 0; wrdY < mapWorld.chunkXcount; wrdY++)
@@ -34,14 +34,27 @@ namespace factordictatorship
                     mapWorld.GenerateChunk(wrdX, wrdY);
                 }
             }
+            SetupTest();
+            SettingUpWorldDrawer();
+        }
+        public void SetupTest()
+        {
+            Konstrucktor testKonst = new Konstrucktor(4, 5);
+            mapWorld.AddEntityAt(testKonst);
+        }
+        // only use once
+        private void SettingUpWorldDrawer() { 
+            // get good delta times
             lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             wlrdDrawer = new WorldDrawer(this);
             //Controls.Add(wlrdDrawer);
-            keyHit = new Dictionary<Keys, bool>();
             //KeyDown += OnKeyDown; // this seemed to not work with double buffered Graphics!
             //KeyUp += OnKeyUp;
+            // refresh loop
             frameSceduler = new Timer() { Interval = 16, Enabled = true};
             frameSceduler.Tick += RefreshLoop;
+            // event handler
+            keyHit = new Dictionary<Keys, bool>();
             MouseClick += OnClick;
             MouseMove += OnMouseMove;
             Paint += PaintHandler;
@@ -70,9 +83,19 @@ namespace factordictatorship
             lastTimeTick = testTime;
             // draw the world!
             wlrdDrawer.Update(e,deltaMs);
-            if(Focused)
-                // draw the hover thing!
-                wlrdDrawer.DrawHover(e,wlrdDrawer.TranslateScreen2World(lastMousePos));
+            if (Focused)
+            {
+                Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
+                //// draw the hover thing!
+                //wlrdDrawer.DrawHover(e,worldPoint);
+                // this is really badly optimised... (Who cares)
+                Konstrucktor kot = new Konstrucktor(worldPoint.X,worldPoint.Y);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX,kot.PositionY,kot.SizeX,kot.SizeY);
+                if (lffb.Count == 0)
+                    wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
+                else
+                    wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 255, 64, 16));
+            }
         }
         // this is a fix for not working "OnKey"-Events
         [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
@@ -99,6 +122,7 @@ namespace factordictatorship
         // free computer-resources (aka Threads9
         private void OnFormClosed(object sender, FormClosedEventArgs e)
         {
+            wlrdDrawer.Dispose();
             mapWorld.Dispose();
         }
     }
