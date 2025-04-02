@@ -48,7 +48,6 @@ namespace factordictatorship.setup
         {
             resource.Add(r);
         }
-
         //Relevantes gebäude übergibt sich selbst. Diese Methode muss in der Klasse Konstruktor ausgeführt werden
         public void NehmeResourcenVonBand(Konstrucktor gebauede, Band band) 
         {
@@ -74,6 +73,12 @@ namespace factordictatorship.setup
 
             //entnehme Rescource und Füge sie in die Liste des Konstruktorgebäude-Objektes 'benötigteResscourcen' hinzu.
             //Entferne die jeweiligen Rescourcen aus der Liste des Förderbandes
+        }
+        public Resource NimmRescourceVomBand(int stelleInResourcedieGenommenWerdenSoll)//von Markus ich brauche den zukrifsrecht um auch (List<Resource> resource) zu ändern
+        {
+            Resource r = resource[stelleInResourcedieGenommenWerdenSoll];
+            resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
+            return r;
         }
 
     }
