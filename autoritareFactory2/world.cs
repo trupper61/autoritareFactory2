@@ -26,7 +26,7 @@ namespace factordictatorship
         public Panel uiPanel;
         public Button buildBtn;
         public Button destroyBtn;
-        public string aktuellerModus;
+        public string aktuellerModus = null;
         public world()
         {
             InitializeComponent();
@@ -95,12 +95,16 @@ namespace factordictatorship
                 //// draw the hover thing!
                 //wlrdDrawer.DrawHover(e,worldPoint);
                 // this is really badly optimised... (Who cares)
-                Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y);
-                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
-                if (lffb.Count == 0)
-                    wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
-                else
-                    wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 255, 64, 16));
+
+                if (aktuellerModus == "Build")
+                {
+                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
+                    if (lffb.Count == 0)
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
+                    else
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 255, 64, 16));
+                }
             }
         }
         // this is a fix for not working "OnKey"-Events
@@ -131,31 +135,47 @@ namespace factordictatorship
             wlrdDrawer.Dispose();
             mapWorld.Dispose();
         }
-private void InitUI()
+        private void InitUI()
         {
-            uiPanel = new Panel
-            {
-                Size = new Size(this.Width, 50),
-                BackColor = Color.Gray,
-                Dock = DockStyle.Top
-            };
-            Controls.Add(uiPanel);
+            //uiPanel = new Panel
+            //{
+            //    Size = new Size(this.Width, 50),
+            //    BackColor = Color.Gray,
+            //    Dock = DockStyle.Top
+            //};
+            //Controls.Add(uiPanel);
+            //buildBtn = new Button
+            //{
+            //    Text = "Build",
+            //    Location = new Point(10, 10)
+            //};
+            //buildBtn.Click += (s, e) => aktuellerModus = "Build";
+            //uiPanel.Controls.Add(buildBtn);
 
-            buildBtn = new Button
-            {
-                Text = "Build",
-                Location = new Point(10, 10)
-            };
+            //destroyBtn = new Button
+            //{
+            //    Text = "Destroy",
+            //    Location = new Point(100, 10)
+            //};
+            //destroyBtn.Click += (s, e) => aktuellerModus = "Destroy";
+            //uiPanel.Controls.Add(destroyBtn);
+
+            ToolStrip toolStrip = new ToolStrip();
+            toolStrip.Dock = DockStyle.Top;
+
+            // Create Build button
+            ToolStripButton buildBtn = new ToolStripButton("Build");
             buildBtn.Click += (s, e) => aktuellerModus = "Build";
-            uiPanel.Controls.Add(buildBtn);
+            toolStrip.Items.Add(buildBtn);
 
-            destroyBtn = new Button
-            {
-                Text = "Destroy",
-                Location = new Point(100, 10)
-            };
+            // Create Destroy button
+            ToolStripButton destroyBtn = new ToolStripButton("Destroy");
             destroyBtn.Click += (s, e) => aktuellerModus = "Destroy";
-            uiPanel.Controls.Add(destroyBtn);
+            toolStrip.Items.Add(destroyBtn);
+
+            // Add ToolStrip to the form
+            Controls.Add(toolStrip);
+
         }
     }
 }
