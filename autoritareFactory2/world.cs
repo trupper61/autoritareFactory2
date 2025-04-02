@@ -23,9 +23,14 @@ namespace factordictatorship
         public WorldDrawer wlrdDrawer;
         public Point lastMousePos;
         long lastTimeTick;
+        public Panel uiPanel;
+        public Button buildBtn;
+        public Button destroyBtn;
+        public string aktuellerModus;
         public world()
         {
             InitializeComponent();
+            InitUI();
             mapWorld = new WorldMap(8, 8);
             for (int wrdX = 0; wrdX < mapWorld.chunkXcount; wrdX++)
             {
@@ -43,7 +48,8 @@ namespace factordictatorship
             mapWorld.AddEntityAt(testKonst);
         }
         // only use once
-        private void SettingUpWorldDrawer() { 
+        private void SettingUpWorldDrawer()
+        {
             // get good delta times
             lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             wlrdDrawer = new WorldDrawer(this);
@@ -51,7 +57,7 @@ namespace factordictatorship
             //KeyDown += OnKeyDown; // this seemed to not work with double buffered Graphics!
             //KeyUp += OnKeyUp;
             // refresh loop
-            frameSceduler = new Timer() { Interval = 16, Enabled = true};
+            frameSceduler = new Timer() { Interval = 16, Enabled = true };
             frameSceduler.Tick += RefreshLoop;
             // event handler
             keyHit = new Dictionary<Keys, bool>();
@@ -82,15 +88,15 @@ namespace factordictatorship
             float deltaMs = (testTime - lastTimeTick) / 1000f;
             lastTimeTick = testTime;
             // draw the world!
-            wlrdDrawer.Update(e,deltaMs);
+            wlrdDrawer.Update(e, deltaMs);
             if (Focused)
             {
                 Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
                 //// draw the hover thing!
                 //wlrdDrawer.DrawHover(e,worldPoint);
                 // this is really badly optimised... (Who cares)
-                Konstrucktor kot = new Konstrucktor(worldPoint.X,worldPoint.Y);
-                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX,kot.PositionY,kot.SizeX,kot.SizeY);
+                Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
                 if (lffb.Count == 0)
                     wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
                 else
@@ -124,6 +130,32 @@ namespace factordictatorship
         {
             wlrdDrawer.Dispose();
             mapWorld.Dispose();
+        }
+private void InitUI()
+        {
+            uiPanel = new Panel
+            {
+                Size = new Size(this.Width, 50),
+                BackColor = Color.Gray,
+                Dock = DockStyle.Top
+            };
+            Controls.Add(uiPanel);
+
+            buildBtn = new Button
+            {
+                Text = "Build",
+                Location = new Point(10, 10)
+            };
+            buildBtn.Click += (s, e) => aktuellerModus = "Build";
+            uiPanel.Controls.Add(buildBtn);
+
+            destroyBtn = new Button
+            {
+                Text = "Destroy",
+                Location = new Point(100, 10)
+            };
+            destroyBtn.Click += (s, e) => aktuellerModus = "Destroy";
+            uiPanel.Controls.Add(destroyBtn);
         }
     }
 }
