@@ -36,7 +36,7 @@ namespace factordictatorship
                 Zähler++;
                 if (Zähler <= 10)
                 {
-                    recurse.Add(new Iron(1));
+                    recurse.Add(new Resource(TypResurce));
                     Zähler = 0;
                 }
             }

@@ -60,7 +60,6 @@
     <Compile Include="Miner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="resource\iron.cs" />
     <Compile Include="resource\resource.cs" />
     <Compile Include="setup\Band.cs" />
     <Compile Include="Rezepte.cs" />

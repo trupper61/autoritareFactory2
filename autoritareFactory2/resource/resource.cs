@@ -8,23 +8,19 @@ using System.Windows.Forms;
 
 namespace autoritaereFactory
 {
-    public abstract class Resource
+    public class Resource
     {
-        public  ResourceType Type{ get; private set; }
-        public int Amount { get; private set; }
-
-        // spätere ideen:
-        //public Point Position { get; set; } Position im Feld
-        //public PictureBox Texture { get; set; } Picturebox als Texturfeld
-
-        public Resource(ResourceType type, int amount)
+        public ResourceType Type { get; private set; }
+        public Resource(ResourceType type)
         {
             Type = type;
-            Amount = amount;
         }
     }
     public enum ResourceType
     {
-        Iron
+        IronIngot,
+        IronOre,
+        IronPlate,
+        IronStick
     }
 }

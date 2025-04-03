@@ -69,7 +69,7 @@ namespace factordictatorship
                 }
                 for (int i = mengenErgebnissRecursen1; i > 0; i--)
                 {
-                    ergebnissRecurse1.Add(new Iron(1));//nur forläufig bis es mehr recursen gibt
+                    ergebnissRecurse1.Add(new Resource(TypErgebnissRecurse1));//nur forläufig bis es mehr recursen gibt
                 }
                 verbleibendeProduktionsdauer = produktionsdauer;
             }
