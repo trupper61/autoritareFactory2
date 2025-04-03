@@ -1,4 +1,5 @@
 ﻿using autoritaereFactory;
+using autoritaereFactory.world;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,11 @@ namespace factordictatorship.setup.BaenderTypes
             : base(bandGe, itemAnMax, resources, richtung, anzEisen, positionX, positionY)
         {
 
+        }
+
+        public override void InNaechsteBand(Band band, Band BandNxt, WorldMap world)
+        {
+            
         }
     }
 }

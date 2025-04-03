@@ -56,7 +56,7 @@ namespace factordictatorship.setup
             resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
             return r;
         }
-        public void InNaechsteBand(Band band, Band BandNxt,WorldMap world) 
+        public virtual void InNaechsteBand(Band band, Band BandNxt,WorldMap world) 
         {
             //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
             //Transfer rescourcen.
