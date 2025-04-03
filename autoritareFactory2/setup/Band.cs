@@ -48,32 +48,6 @@ namespace factordictatorship.setup
         {
             resource.Add(r);
         }
-        //Relevantes gebäude übergibt sich selbst. Diese Methode muss in der Klasse Konstruktor ausgeführt werden
-        public void NehmeResourcenVonBand(Konstrucktor gebauede, Band band) 
-        {
-            //Wenn Gebäudeeingang rechts vom Förderband, und das Gebäude noch nicht voll (Max 100 Resscourcen), dann
-
-            if (null == null) //Platzhalter | Wenn die Anzahl der Rescourcen in der Liste nicht über oder gleich 100, weiter 
-            {
-                //Wenn die Rescourcen auf dem Band relevant für das Gebäude sind, weiter.
-                if (null == null) //Platzhalter
-                {
-                    foreach (Resource r in band.resource)
-                    {
-                        if (r.Type == gebauede.TypBenotigteRecurse1)
-                        {
-                            band.anzahlEisen--;
-                            
-                        }
-                        band.ItemAnzahlMoment--;
-                    }
-                }
-            }
-
-
-            //entnehme Rescource und Füge sie in die Liste des Konstruktorgebäude-Objektes 'benötigteResscourcen' hinzu.
-            //Entferne die jeweiligen Rescourcen aus der Liste des Förderbandes
-        }
         public Resource NimmRescourceVomBand(int stelleInResourcedieGenommenWerdenSoll)//von Markus ich brauche den zukrifsrecht um auch (List<Resource> resource) zu ändern
         {
             Resource r = resource[stelleInResourcedieGenommenWerdenSoll];
