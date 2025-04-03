@@ -35,7 +35,7 @@ namespace factordictatorship.setup
             {
                 foreach (Resource r in resource) 
                 {
-                    if(r.Type == ResourceType.Iron) 
+                    if(r.Type == ResourceType.IronOre) 
                     {
                         anzahlEisen++;
                     }
