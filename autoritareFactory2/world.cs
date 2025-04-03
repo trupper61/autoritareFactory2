@@ -23,7 +23,6 @@ namespace factordictatorship
         public WorldDrawer wlrdDrawer;
         public Point lastMousePos;
         long lastTimeTick;
-        public Panel uiPanel;
         public Button buildBtn;
         public Button destroyBtn;
         public string aktuellerModus = null;
@@ -136,46 +135,26 @@ namespace factordictatorship
             mapWorld.Dispose();
         }
         private void InitUI()
-        {
-            //uiPanel = new Panel
-            //{
-            //    Size = new Size(this.Width, 50),
-            //    BackColor = Color.Gray,
-            //    Dock = DockStyle.Top
-            //};
-            //Controls.Add(uiPanel);
-            //buildBtn = new Button
-            //{
-            //    Text = "Build",
-            //    Location = new Point(10, 10)
-            //};
-            //buildBtn.Click += (s, e) => aktuellerModus = "Build";
-            //uiPanel.Controls.Add(buildBtn);
-
-            //destroyBtn = new Button
-            //{
-            //    Text = "Destroy",
-            //    Location = new Point(100, 10)
-            //};
-            //destroyBtn.Click += (s, e) => aktuellerModus = "Destroy";
-            //uiPanel.Controls.Add(destroyBtn);
-
+        { 
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
 
-            // Create Build button
             ToolStripButton buildBtn = new ToolStripButton("Build");
-            buildBtn.Click += (s, e) => aktuellerModus = "Build";
+            buildBtn.Click += (s, e) => 
+            {
+                if (aktuellerModus == "Build")
+                    aktuellerModus = null;
+                else
+                    aktuellerModus = "Build";
+
+            };
             toolStrip.Items.Add(buildBtn);
 
-            // Create Destroy button
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
             destroyBtn.Click += (s, e) => aktuellerModus = "Destroy";
             toolStrip.Items.Add(destroyBtn);
 
-            // Add ToolStrip to the form
             Controls.Add(toolStrip);
-
         }
     }
 }
