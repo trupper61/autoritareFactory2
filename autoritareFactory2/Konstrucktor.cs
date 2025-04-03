@@ -38,12 +38,15 @@ namespace factordictatorship
             this.drehung = drehung;
             längeInXRichtung = 2;
             längeInYRichtung = 1;
+            PassLängeZUDreungAn(drehung);
         }
-        private void PassLängeZUDreungAn()
+        private void PassLängeZUDreungAn(int drehungswert)
         {
-            if (drehung%2 == 0)
+            if (drehungswert % 2 == 0)
             {
-
+                int speicherwert = längeInXRichtung;
+                längeInXRichtung = längeInYRichtung;
+                längeInYRichtung = speicherwert;
             }
         }
         public void SpeichereRezept(Rezepte gewähltesRezept)
@@ -78,7 +81,7 @@ namespace factordictatorship
                 }
                 for (int i = mengenErgebnissRecursen1; i > 0; i--)
                 {
-                    ergebnissRecurse1.Add(new Resource(TypErgebnissRecurse1));//nur forläufig bis es mehr recursen gibt
+                    ergebnissRecurse1.Add(new Resource(TypErgebnissRecurse1));
                 }
                 verbleibendeProduktionsdauer = produktionsdauer;
             }
@@ -87,7 +90,7 @@ namespace factordictatorship
         {
             if (gebendeRecursenListe.Count > 0)
             {
-                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
+                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
                     Band band = (Band)entitys[0];
@@ -108,7 +111,7 @@ namespace factordictatorship
         {
             if (nehmendeRecursenListe.Count < maxRecursen)
             {
-                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
+                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
                     Band band = (Band)entitys[0];
@@ -134,6 +137,14 @@ namespace factordictatorship
                     }
                 }
             }
+        }
+        private int DrehePAufXAchse(int VX, int VY)
+        {
+            return PositionX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VY + ((drehung / 2) % 2) * (längeInXRichtung - 1);          
+        }
+        private int DrehePAufYAchse(int VX, int VY)
+        {
+            return PositionY - Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VY + (drehung / 3) * (längeInYRichtung - 1);
         }
 
     }
