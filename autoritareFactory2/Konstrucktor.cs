@@ -1,4 +1,5 @@
 ﻿using autoritaereFactory;
+using autoritaereFactory.world;
 using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
@@ -30,8 +31,7 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private int verbleibendeProduktionsdauer;//verbleibende dauer des Produktionsprozesses in millisekunden
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
-        private world welt;//(nur vorleufig) muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
-
+        private int d;
         public Konstrucktor(int positionX, int positionY) : base(positionX, positionY)
         {
             längeInXRichtung = 2;
@@ -78,7 +78,7 @@ namespace factordictatorship
         {
             if (gebendeRecursenListe.Count > 0)
             {
-                List<Fabrikgebeude> entitys = welt.mapWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
+                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
                 if (entitys.Count == 1)
                 {
                     Band band = (Band)entitys[0];
@@ -99,7 +99,7 @@ namespace factordictatorship
         {
             if (nehmendeRecursenListe.Count < maxRecursen)
             {
-                List<Fabrikgebeude> entitys = welt.mapWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
+                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
                 if (entitys.Count == 1)
                 {
                     Band band = (Band)entitys[0];

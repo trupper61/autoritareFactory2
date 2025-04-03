@@ -1,4 +1,5 @@
 ﻿using autoritaereFactory;
+using autoritaereFactory.world;
 using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
@@ -17,7 +18,6 @@ namespace factordictatorship
         public List<Resource> Recurse { get { return recurse; } }
         private int maxAnzalRecurse = 100;
         public int MaxAnzalRecurse { get { return maxAnzalRecurse; } }
-        private world welt;//(nur vorleufig) muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
         public Miner(int positionX, int positionY, ResourceType typResurce) : base(positionX, positionY)
         {
             this.typResurce = typResurce;
@@ -45,7 +45,7 @@ namespace factordictatorship
         {
             if (gebendeRecursenListe.Count > 0)
             {
-                List<Fabrikgebeude> entitys = welt.mapWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
+                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
                 if (entitys.Count == 1)
                 {
                     Band band = (Band)entitys[0];
