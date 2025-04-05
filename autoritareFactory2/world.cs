@@ -26,6 +26,7 @@ namespace factordictatorship
         public Button buildBtn;
         public Button destroyBtn;
         public string aktuellerModus = null;
+        public Panel buildPanel;
         public world()
         {
             InitializeComponent();
@@ -95,7 +96,7 @@ namespace factordictatorship
                 //wlrdDrawer.DrawHover(e,worldPoint);
                 // this is really badly optimised... (Who cares)
 
-                if (aktuellerModus == "Build")
+                if (aktuellerModus == "Constructor")
                 {
                     Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y);
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
@@ -135,18 +136,34 @@ namespace factordictatorship
             mapWorld.Dispose();
         }
         private void InitUI()
-        { 
+        {
+            int panelWidth = (int)(this.Width * 0.7);
+            int panelHeight = (int)(this.Height * 0.7);
+            buildPanel = new Panel
+            {
+                Size = new Size(panelWidth, panelHeight),
+                Location = new Point((this.Width - panelWidth) / 2, (this.Height - panelHeight)/ 2),
+                BackColor = Color.LightGray,
+                Visible = false,
+            };
+            Controls.Add(buildPanel);
+            SetupBuildPanel();
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
 
             ToolStripButton buildBtn = new ToolStripButton("Build");
             buildBtn.Click += (s, e) => 
             {
-                if (aktuellerModus == "Build")
-                    aktuellerModus = null;
+                if (aktuellerModus == null)
+                {
+                    buildPanel.Visible = true;
+                    buildPanel.BringToFront();
+                }
                 else
-                    aktuellerModus = "Build";
-
+                {
+                    aktuellerModus = null;
+                    buildPanel.Visible = false;
+                }   
             };
             toolStrip.Items.Add(buildBtn);
 
@@ -155,6 +172,71 @@ namespace factordictatorship
             toolStrip.Items.Add(destroyBtn);
 
             Controls.Add(toolStrip);
+        }
+        private void SetupBuildPanel()
+        {
+            buildPanel.Controls.Clear();
+            int panelWidth = buildPanel.Width;
+            int panelHeight = buildPanel.Height;
+
+            Panel inventoryPanel = new Panel
+            {
+                Size = new Size(panelWidth / 2, panelHeight),
+                Location = new Point(0, 0),
+                BackColor = Color.DarkGray
+            };
+            Label inventoryLabel = new Label
+            {
+                Text = "Inventar (WIP)",
+                AutoSize = false,
+                Size = new Size(inventoryPanel.Width, 30),
+                TextAlign = ContentAlignment.MiddleCenter,
+                Location = new Point(0, 20)
+            };
+            inventoryPanel.Controls.Add(inventoryLabel);
+            buildPanel.Controls.Add(inventoryPanel);
+
+            Panel buildOptionsPanel = new Panel
+            {
+                Size = new Size(panelWidth / 2, panelHeight),
+                Location = new Point(panelWidth / 2, 0),
+                BackColor = Color.LightBlue
+            };
+            Label titleLabel = new Label
+            {
+                Text = "Choose Building",
+                Font = new Font("Segoe UI", 11, FontStyle.Bold),
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
+            buildOptionsPanel.Controls.Add(titleLabel);
+
+            var buildings = new List<String>
+            {
+                "Miner",
+                "Constructor",
+                "Belt"
+            };
+            int y = 50;
+            foreach (var name in buildings)
+            {
+                Button btn = new Button
+                {
+                    Text = name,
+                    Size = new Size(120, 35),
+                    Location = new Point(10, y),
+                    BackColor = Color.LightSteelBlue
+                };
+                btn.Click += (s, e) =>
+                {
+                    aktuellerModus = name;
+                    buildPanel.Visible = false;
+                    this.Focus();
+                };
+                buildOptionsPanel.Controls.Add(btn);
+                y += 45;
+            }
+            buildPanel.Controls.Add(buildOptionsPanel);
         }
     }
 }
