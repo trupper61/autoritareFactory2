@@ -66,8 +66,6 @@ namespace factordictatorship
             Paint += PaintHandler;
             FormClosed += OnFormClosed;
         }
-
-
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
             lastMousePos = e.Location;
@@ -76,6 +74,22 @@ namespace factordictatorship
         private void OnClick(object sender, MouseEventArgs e)
         {
             lastMousePos = e.Location;
+            if (aktuellerModus == "Constructor")
+            {
+                Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
+                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y);
+                List<Fabrikgebeude> conflictingEntities = mapWorld.GetEntityInBox(kon.PositionX, kon.PositionY, kon.SizeX, kon.SizeY);
+                if (conflictingEntities.Count == 0)
+                {
+                    // Konstruktor platzieren
+                    mapWorld.AddEntityAt(kon);
+                    aktuellerModus = null; // Konstruktor-Modus deaktivieren, um Bau abzuschließen
+                }
+                else
+                {
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
+            }
         }
 
         public void RefreshLoop(object sender, EventArgs e)
@@ -89,13 +103,14 @@ namespace factordictatorship
             lastTimeTick = testTime;
             // draw the world!
             wlrdDrawer.Update(e, deltaMs);
+
+            // preview
             if (Focused)
             {
                 Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
                 //// draw the hover thing!
                 //wlrdDrawer.DrawHover(e,worldPoint);
                 // this is really badly optimised... (Who cares)
-
                 if (aktuellerModus == "Constructor")
                 {
                     Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y);
@@ -104,6 +119,7 @@ namespace factordictatorship
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
                     else
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 255, 64, 16));
+
                 }
             }
         }
