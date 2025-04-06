@@ -86,11 +86,13 @@ namespace factordictatorship.setup
                     //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
                     foreach(Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY)) 
                     {
+                        if(BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
+                        if(BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
                         BandNxt = gb;
                     }
                     if(BandNxt.Richtung == band.Richtung) 
                     {
-                        foreach(Resource resources in resource) 
+                        foreach(Resource resources in band.resource) 
                         {
                             BandNxt.RescourceKommtAufBand(resources);
                             band.resource.Remove(resources);
