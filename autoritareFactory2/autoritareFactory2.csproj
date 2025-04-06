@@ -50,6 +50,8 @@
     <Compile Include="drawing\WorldPartImage.cs" />
     <Compile Include="Fabrikgebeude.cs" />
     <Compile Include="Resources\ResourceHandler.cs" />
+    <Compile Include="setup\BaenderTypes\CurveBand.cs" />
+    <Compile Include="setup\BaenderTypes\CurvedBand2.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
