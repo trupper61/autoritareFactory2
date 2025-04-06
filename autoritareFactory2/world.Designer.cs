@@ -31,13 +31,13 @@ namespace factordictatorship
         /// </summary>
         private void InitializeComponent()
         {
-            this.noFocusButton = new NoFocusButton();
+            this.noFocusButton = new factordictatorship.formsElement.NoFocusButton();
             this.SuspendLayout();
             // 
-            // noSelButton
+            // noFocusButton
             // 
             this.noFocusButton.CausesValidation = false;
-            this.noFocusButton.Location = new System.Drawing.Point(271, 90);
+            this.noFocusButton.Location = new System.Drawing.Point(63, 319);
             this.noFocusButton.Name = "noFocusButton";
             this.noFocusButton.Size = new System.Drawing.Size(100, 35);
             this.noFocusButton.TabIndex = 0;
@@ -60,7 +60,7 @@ namespace factordictatorship
 
         #endregion
 
-        private Button noFocusButton;
+        private NoFocusButton noFocusButton;
     }
 }
 
