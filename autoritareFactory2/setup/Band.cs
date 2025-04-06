@@ -106,7 +106,7 @@ namespace factordictatorship.setup
         }
         private void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
-            if (BandNxt.Richtung == band.Richtung) //TODO - Transport der Rescourcen darf nicht sofort passieren. Es muss auf Basis der Bandgeschwindigkeit eine Verzögerung geben.
+            if (BandNxt.Richtung == band.Richtung)
             {
                 foreach (Resource resources in band.resource)
                 {
