@@ -1,12 +1,15 @@
 ﻿using autoritaereFactory;
 using autoritaereFactory.setup;
 using autoritaereFactory.world;
+using factordictatorship.Properties;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace factordictatorship.setup
 {
@@ -16,8 +19,9 @@ namespace factordictatorship.setup
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment; //Anzahl an Items, die sich gerade auf dem Band befinden.
-        public int BandGeschwindigkeit = 5; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde)
+        public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
         public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
+        private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
         public Band (int bandGe, int itemAnMax, List<Resource> resources, int richtung, int anzEisen, int positionX, int positionY)
             :base(positionX, positionY) 
@@ -56,7 +60,7 @@ namespace factordictatorship.setup
             resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
             return r;
         }
-        public virtual void InNaechsteBand(Band band, Band BandNxt,WorldMap world) 
+        public virtual void InNaechsteBand(Band band, Band BandNxt, WorldMap world, Konstrucktor konstrucktor) 
         {
             //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
             //Transfer rescourcen.
@@ -89,19 +93,35 @@ namespace factordictatorship.setup
                         if(BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
                         if(BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
                         BandNxt = gb;
+                        determineTransfer(band, BandNxt);
                     }
-                    if(BandNxt.Richtung == band.Richtung) 
+                    foreach(Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXRichtung, konstrucktor.längeInYRichtung)) 
                     {
-                        foreach(Resource resources in band.resource) 
-                        {
-                            BandNxt.RescourceKommtAufBand(resources);
-                            band.resource.Remove(resources);
-                        }
+                        
                     }
+                    
                 }
                 
             }
         }
+        private void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
+        {
+            if (BandNxt.Richtung == band.Richtung) //TODO - Transport der Rescourcen darf nicht sofort passieren. Es muss auf Basis der Bandgeschwindigkeit eine Verzögerung geben.
+            {
+                foreach (Resource resources in band.resource)
+                {
+                    cooldownTimer.Interval = BandGeschwindigkeit;
+                    cooldownTimer.Start();
 
+                    if(cooldownTimer.Interval == 0) 
+                    {
+                        BandNxt.RescourceKommtAufBand(resources);
+                        band.resource.Remove(resources);
+                        cooldownTimer.Dispose();
+                    }
+
+                }
+            }
+        }
     }
 }
