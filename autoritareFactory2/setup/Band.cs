@@ -18,18 +18,16 @@ namespace factordictatorship.setup
         public List<Resource> resource { get; }
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
-        public int ItemAnzahlMoment; //Anzahl an Items, die sich gerade auf dem Band befinden.
+        public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
         public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
-        public Band (int bandGe, int itemAnMax, List<Resource> resources, int richtung, int anzEisen, int positionX, int positionY)
+        public Band (int richtung, int itemAnzahlMoment,int positionX, int positionY)
             :base(positionX, positionY) 
         {
-            anzEisen = anzahlEisen;
-            resources = resource;
+            itemAnzahlMoment = ItemAnzahlMoment;
             richtung = Richtung;
-            ItemAnzahlMax = itemAnMax;
         }
         public override void Iteration()
         {

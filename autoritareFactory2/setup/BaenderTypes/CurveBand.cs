@@ -16,10 +16,5 @@ namespace factordictatorship.setup.BaenderTypes
         {
 
         }
-
-        public override void InNaechsteBand(Band band, Band BandNxt, WorldMap world)
-        {
-            
-        }
     }
 }
