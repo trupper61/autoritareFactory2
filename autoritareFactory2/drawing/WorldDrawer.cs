@@ -35,8 +35,8 @@ namespace factordictatorship.drawing
         public void Update(PaintEventArgs e, float deltaTime)
         {
             double strength = (mainForms.IsKeyPressed(Keys.ShiftKey) ? 50 : 12);
-            double deltaX = ((mainForms.IsKeyPressed(Keys.Right) || mainForms.IsKeyPressed(Keys.A)) ? strength : 0);
-            deltaX -= ((mainForms.IsKeyPressed(Keys.Left) || mainForms.IsKeyPressed(Keys.D)) ? strength : 0);
+            double deltaX = ((mainForms.IsKeyPressed(Keys.Right) || mainForms.IsKeyPressed(Keys.D)) ? strength : 0);
+            deltaX -= ((mainForms.IsKeyPressed(Keys.Left) || mainForms.IsKeyPressed(Keys.A)) ? strength : 0);
             double deltaY = ((mainForms.IsKeyPressed(Keys.Down) || mainForms.IsKeyPressed(Keys.S)) ? strength : 0);
             deltaY -= ((mainForms.IsKeyPressed(Keys.Up) || mainForms.IsKeyPressed(Keys.W)) ? strength : 0);
             cameraX += deltaX * deltaTime;
