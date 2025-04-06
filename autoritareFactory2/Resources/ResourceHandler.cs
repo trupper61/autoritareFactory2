@@ -15,7 +15,10 @@ namespace factordictatorship.Resources
         public static Dictionary<GroundResource, Image> tileSet = new Dictionary<GroundResource, Image>(){
             { GroundResource.Grass , LoadImage("grass.png") },
             { GroundResource.Grass2 , LoadImage("grass2.png") },
-            { GroundResource.Iron, LoadImage("iron.png") } };
+            { GroundResource.Desert , LoadImage("IndustrialWasteland.png") },
+            { GroundResource.Desert2, LoadImage("IndustrialWasteland2.png") },
+            { GroundResource.ColeOre, LoadImage("ColeOre.png") },
+            { GroundResource.IronOre, LoadImage("iron.png") } };
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("belt.png") },
             {typeof(Konstrucktor).GetHashCode(),LoadImage("factory.png") },
