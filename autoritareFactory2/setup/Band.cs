@@ -24,26 +24,25 @@ namespace factordictatorship.setup
         public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
-        public Band (int richtung, int itemAnzahlMoment,int positionX, int positionY)
-            :base(positionX, positionY) 
+        public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY)
+            : base(positionX, positionY)
         {
             itemAnzahlMoment = ItemAnzahlMoment;
             richtung = Richtung;
-            ItemAnzahlMax = itemAnMax;
-            längeInYRichtung = 1;
             längeInXRichtung = 1;
+            längeInYRichtung = 1;
         }
         public override void Iteration()
         {
             //throw new NotImplementedException();
         }
-        public void ErkenneRescourcen() 
+        public void ErkenneRescourcen()
         {
-            if(resource != null) 
+            if (resource != null)
             {
-                foreach (Resource r in resource) 
+                foreach (Resource r in resource)
                 {
-                    if(r.Type == ResourceType.IronOre) 
+                    if (r.Type == ResourceType.IronOre)
                     {
                         anzahlEisen++;
                     }
@@ -52,7 +51,7 @@ namespace factordictatorship.setup
             }
         }
 
-        public void RescourceKommtAufBand(Resource r) 
+        public void RescourceKommtAufBand(Resource r)
         {
             resource.Add(r);
         }
@@ -62,16 +61,16 @@ namespace factordictatorship.setup
             resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
             return r;
         }
-        public virtual void InNaechsteBand(Band band, Band BandNxt, CurveBand bandCur,WorldMap world, Konstrucktor konstrucktor) 
+        public virtual void InNaechsteBand(Band band, Band BandNxt, CurveBand bandCur, WorldMap world, Konstrucktor konstrucktor)
         {
             //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
             //Transfer rescourcen.
             int wertRotX = 0;
             int wertRotY = 0;
 
-            for(int i = 4; i > 0; i--) 
+            for (int i = 4; i > 0; i--)
             {
-                switch(i) 
+                switch (i)
                 {
                     case 4:
                         wertRotX = -1;
@@ -87,15 +86,15 @@ namespace factordictatorship.setup
                         wertRotY = 1;
                         break;
                 }
-                if(world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY).Count == 1) 
+                if (world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY).Count == 1)
                 {
                     //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
-                    foreach(Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY)) 
+                    foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                     {
-                        if(BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
-                        if(BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+                        if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
+                        if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
                         BandNxt = gb;
-                        determineTransfer(band, BandNxt);
+                        determineTransfer(band, BandNxt, bandCur);
                     }
 
                     /*
@@ -105,7 +104,7 @@ namespace factordictatorship.setup
                     }
                     */
                 }
-                
+
             }
         }
         public virtual void determineTransfer(Band band, Band BandNxt, CurveBand curveBand) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
@@ -117,7 +116,7 @@ namespace factordictatorship.setup
                     cooldownTimer.Interval = BandGeschwindigkeit;
                     cooldownTimer.Start();
 
-                    if(cooldownTimer.Interval == 0) 
+                    if (cooldownTimer.Interval == 0)
                     {
                         BandNxt.RescourceKommtAufBand(resources);
                         band.resource.Remove(resources);

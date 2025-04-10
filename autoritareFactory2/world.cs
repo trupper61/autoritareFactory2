@@ -52,7 +52,7 @@ namespace factordictatorship
         }
         public void SetupTest()
         {
-            Konstrucktor testKonst = new Konstrucktor(4, 5);
+            Konstrucktor testKonst = new Konstrucktor(4, 5, 1);
             mapWorld.AddEntityAt(testKonst);
         }
         // only use once
@@ -86,7 +86,7 @@ namespace factordictatorship
             if (aktuellerModus == "Constructor")
             {
 
-                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y);
+                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
                 List<Fabrikgebeude> conflictingEntities = mapWorld.GetEntityInBox(kon.PositionX, kon.PositionY, kon.SizeX, kon.SizeY);
                 if (conflictingEntities.Count == 0)
                 {
@@ -103,7 +103,7 @@ namespace factordictatorship
             {
                 GroundResource? resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
                 // TODO Miner Resource zu GroundResource ändern
-                Miner miner = new Miner(worldPoint.X, worldPoint.Y, resource.ToString());
+                Miner miner = new Miner(worldPoint.X, worldPoint.Y, autoritaereFactory.ResourceType.IronOre);
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                 if (lffb.Count == 0 && resource == GroundResource.Iron)
                 {
@@ -117,7 +117,7 @@ namespace factordictatorship
             }
             else if (aktuellerModus == "Belt")
             {
-                Band belt = new Band(3, 50, null, 0, 20, worldPoint.X, worldPoint.Y);
+                Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                 if (lffb.Count == 0)
                 {
@@ -167,7 +167,7 @@ namespace factordictatorship
                 // this is really badly optimised... (Who cares)
                 if (aktuellerModus == "Constructor")
                 {
-                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y);
+                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
                     if (lffb.Count == 0)
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
@@ -180,7 +180,7 @@ namespace factordictatorship
                     GroundResource? resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
 
                     // TODO: Miner resource to GroundType!
-                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, resource.ToString());
+                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, autoritaereFactory.ResourceType.IronOre);
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                     if (lffb.Count == 0 && resource == GroundResource.Iron)
                     {
@@ -193,7 +193,7 @@ namespace factordictatorship
                 }
                 else if (aktuellerModus == "Belt")
                 {
-                    Band belt = new Band(3, 50, null, 0, 20, worldPoint.X, worldPoint.Y);
+                    Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                     if (lffb.Count == 0)
                     {

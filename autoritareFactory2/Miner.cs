@@ -31,36 +31,36 @@ namespace factordictatorship
         }
         private void mine()
         {
-            if (recurse.Count < maxAnzalRecurse)
-            {
-                Zähler++;
-                if (Zähler <= 10)
-                {
-                    recurse.Add(new Resource(TypResurce));
-                    Zähler = 0;
-                }
-            }
+            //if (recurse.Count < maxAnzalRecurse)
+            //{
+            //    Zähler++;
+            //    if (Zähler <= 10)
+            //    {
+            //        recurse.Add(new Resource(TypResurce));
+            //        Zähler = 0;
+            //    }
+            //}
         }
         private void legAufBand(List<Resource> gebendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {
-            if (gebendeRecursenListe.Count > 0)
-            {
-                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
-                if (entitys.Count == 1)
-                {
-                    Band band = (Band)entitys[0];
-                    if (band != null)
-                    {
-                        band.ErkenneRescourcen();
-                        while (band.ItemAnzahlMoment < band.ItemAnzahlMax & gebendeRecursenListe.Count > 0)
-                        {
-                            band.RescourceKommtAufBand(gebendeRecursenListe[0]);
-                            gebendeRecursenListe.RemoveAt(0);
-                            band.ErkenneRescourcen();
-                        }
-                    }
-                }
-            }
+            //if (gebendeRecursenListe.Count > 0)
+            //{
+            //    List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);//muss noch entschieden werden ob welt im Konstruckter mitgegeben, in Iteration mitgegeben oder als Publik Obekt erstellt und so genutzt werden soll
+            //    if (entitys.Count == 1)
+            //    {
+            //        Band band = (Band)entitys[0];
+            //        if (band != null)
+            //        {
+            //            band.ErkenneRescourcen();
+            //            while (band.ItemAnzahlMoment < band.ItemAnzahlMax & gebendeRecursenListe.Count > 0)
+            //            {
+            //                band.RescourceKommtAufBand(gebendeRecursenListe[0]);
+            //                gebendeRecursenListe.RemoveAt(0);
+            //                band.ErkenneRescourcen();
+            //            }
+            //        }
+            //    }
+            //}
         }
     }
 }
