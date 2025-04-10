@@ -2,6 +2,7 @@
 using autoritaereFactory.setup;
 using autoritaereFactory.world;
 using factordictatorship.Properties;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -58,7 +59,7 @@ namespace factordictatorship.setup
             resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
             return r;
         }
-        public virtual void InNaechsteBand(Band band, Band BandNxt, WorldMap world, Konstrucktor konstrucktor) 
+        public virtual void InNaechsteBand(Band band, Band BandNxt, CurveBand bandCur,WorldMap world, Konstrucktor konstrucktor) 
         {
             //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
             //Transfer rescourcen.
@@ -93,16 +94,18 @@ namespace factordictatorship.setup
                         BandNxt = gb;
                         determineTransfer(band, BandNxt);
                     }
+
+                    /*
                     foreach(Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXRichtung, konstrucktor.längeInYRichtung)) 
                     {
                         
                     }
-                    
+                    */
                 }
                 
             }
         }
-        private void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
+        public virtual void determineTransfer(Band band, Band BandNxt, CurveBand curveBand) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
             if (BandNxt.Richtung == band.Richtung)
             {
