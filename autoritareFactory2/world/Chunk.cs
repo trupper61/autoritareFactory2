@@ -34,8 +34,8 @@ namespace autoritaereFactory.world
 
         private static float GenerateNoiseValue(int seed, float x,float y)
         {
-            int posX = (int)x;
-            int posY = (int)y;
+            int posX = (int)Math.Floor(x);
+            int posY = (int)Math.Floor(y);
             float fracX = x - posX;
             float fracY = y - posY;
             /* // triangle(aka Simplex) value noise
@@ -64,9 +64,9 @@ namespace autoritaereFactory.world
         }
         private static float TestBiomeType(int seed, float x,float y,float expTem,float expHum)
         {
-            float tem = GenerateNoiseValue(seed, x * 0.01f, y * 0.01f);
-            float hum = GenerateNoiseValue(seed, x * 0.1f - 10, y * 0.1f - 3);
-            return tem * expTem + hum * expHum;
+            float tem = GenerateNoiseValue(seed, x * 0.003f, y * 0.003f) - expTem;
+            float hum = GenerateNoiseValue(seed, x * 0.01f - 10, y * 0.01f - 3) - expHum;
+            return (float)Math.Sqrt(tem * tem + hum * hum);
         }
         private void GenerateBlobGround(
             int seed, GroundResource state,int randStrength, 
@@ -78,7 +78,7 @@ namespace autoritaereFactory.world
                 for (int j = 0; j < chunkSize; j++)
                 {
                     // test if outside the "circle"
-                    if (TestBiomeType(seed, i + x * chunkSize, j + y * chunkSize, expTem, expHum) < cutoff)
+                    if (TestBiomeType(seed, i + x * chunkSize, j + y * chunkSize, expTem, expHum) > cutoff)
                         continue;
                     // put
                     blockState[i,j] = state;
@@ -99,7 +99,7 @@ namespace autoritaereFactory.world
                 // get the chosen position
                 int selectedX = rng.Next(chunkSize) + (neb / 3 - 1) * chunkSize;
                 int selectedY = rng.Next(chunkSize) + (neb % 3 - 1) * chunkSize;
-                if (cutoff > -5f && TestBiomeType(seed,selectedX + x * chunkSize, selectedY + y * chunkSize, expTem, expHum) < cutoff)
+                if (cutoff > -5f && TestBiomeType(seed,selectedX + x * chunkSize, selectedY + y * chunkSize, expTem, expHum) > cutoff)
                     continue;
                 int bigSize = (int)Math.Ceiling(radius);
                 // maybe fill the tiles with the resource
