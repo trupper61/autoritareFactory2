@@ -29,7 +29,7 @@ namespace factordictatorship
         long lastTimeTick;
         public Button buildBtn;
         public Button destroyBtn;
-        public string aktuellerModus = null;
+        public string aktuellerModus = "";
         public Panel buildPanel;
         public world()
         {
@@ -123,6 +123,20 @@ namespace factordictatorship
                 else
                 {
                     MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+            else if (aktuellerModus == "Destroy")
+            {
+                Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
+                List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
+                if(fab.Count == 0)
+                {
+                    MessageBox.Show("Nix zum Löschen");
+                }
+                else
+                {
+                    foreach(Fabrikgebeude f in fab)
+                    {
+                        mapWorld.RemoveEntity(f);
+                    }
                 }
             }
         }
@@ -183,6 +197,14 @@ namespace factordictatorship
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
                     }
+                if (aktuellerModus == "Destroy")
+                {
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
+                    if (lffb.Count == 0)
+                        wlrdDrawer.DrawHover(e, worldPoint, Color.FromArgb(127, 255, 64, 16));
+                    else
+                        foreach (var f in lffb)
+                            wlrdDrawer.DrawPlacableBuilding(e, new Point(f.PositionX,f.PositionY), f, Color.FromArgb(127, 255, 64, 16));
                 }
             }
         }
@@ -247,7 +269,7 @@ namespace factordictatorship
             toolStrip.Items.Add(buildBtn);
 
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
-            destroyBtn.Click += (s, e) => aktuellerModus = "Destroy";
+            destroyBtn.Click += (s, e) =>  aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy"; 
             toolStrip.Items.Add(destroyBtn);
 
             Controls.Add(toolStrip);
