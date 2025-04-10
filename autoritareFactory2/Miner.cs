@@ -15,6 +15,8 @@ namespace factordictatorship
         public Miner(int positionX, int positionY, string recurse) : base(positionX, positionY)
         {
             Recurse = recurse;
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
         }
         public override void Iteration()
         {

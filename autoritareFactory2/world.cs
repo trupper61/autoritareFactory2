@@ -1,13 +1,17 @@
-﻿using autoritaereFactory.world;
+﻿using autoritaereFactory.setup;
+using autoritaereFactory.world;
 using factordictatorship.drawing;
 using factordictatorship.Resources;
+using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -74,9 +78,10 @@ namespace factordictatorship
         private void OnClick(object sender, MouseEventArgs e)
         {
             lastMousePos = e.Location;
+            Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
             if (aktuellerModus == "Constructor")
             {
-                Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
+
                 Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y);
                 List<Fabrikgebeude> conflictingEntities = mapWorld.GetEntityInBox(kon.PositionX, kon.PositionY, kon.SizeX, kon.SizeY);
                 if (conflictingEntities.Count == 0)
@@ -84,6 +89,36 @@ namespace factordictatorship
                     // Konstruktor platzieren
                     mapWorld.AddEntityAt(kon);
                     aktuellerModus = null; // Konstruktor-Modus deaktivieren, um Bau abzuschließen
+                }
+                else
+                {
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
+            }
+            else if (aktuellerModus == "Miner")
+            {
+                GroundResource? resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
+                // TODO Miner Resource zu GroundResource ändern
+                Miner miner = new Miner(worldPoint.X, worldPoint.Y, resource.ToString());
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
+                if (lffb.Count == 0 && resource == GroundResource.Iron)
+                {
+                    mapWorld.AddEntityAt(miner);
+                    aktuellerModus = null;
+                }
+                else
+                {
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
+            }
+            else if (aktuellerModus == "Belt")
+            {
+                Band belt = new Band(3, 50, null, 0, 20, worldPoint.X, worldPoint.Y);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
+                if (lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(belt);
+                    aktuellerModus = null;
                 }
                 else
                 {
@@ -103,7 +138,6 @@ namespace factordictatorship
             lastTimeTick = testTime;
             // draw the world!
             wlrdDrawer.Update(e, deltaMs);
-
             // preview
             if (Focused)
             {
@@ -120,6 +154,35 @@ namespace factordictatorship
                     else
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 255, 64, 16));
 
+                }
+                else if (aktuellerModus == "Miner")
+                {
+                    GroundResource? resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
+
+                    // TODO: Miner resource to GroundType!
+                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, resource.ToString());
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
+                    if (lffb.Count == 0 && resource == GroundResource.Iron)
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
+                    }
+                    else
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 255, 64, 16));
+                    }
+                }
+                else if (aktuellerModus == "Belt")
+                {
+                    Band belt = new Band(3, 50, null, 0, 20, worldPoint.X, worldPoint.Y);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
+                    if (lffb.Count == 0)
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 127, 255, 95));
+                    }
+                    else
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
+                    }
                 }
             }
         }
@@ -188,7 +251,19 @@ namespace factordictatorship
             toolStrip.Items.Add(destroyBtn);
 
             Controls.Add(toolStrip);
+            this.Resize += new EventHandler(OnFormResize);
         }
+
+        // BuildPanel Resize Event
+        private void OnFormResize(object sender, EventArgs e)
+        {
+            int width = (int)(this.Width * 0.7);
+            int height = (int)(this.Height * 0.7);
+            buildPanel.Size = new Size(width, height);
+            buildPanel.Location = new Point((this.Width - width) / 2, (this.Height - height) / 2);
+            SetupBuildPanel();
+        }
+        // Setup for the Items inside Build Panel
         private void SetupBuildPanel()
         {
             buildPanel.Controls.Clear();
@@ -218,6 +293,21 @@ namespace factordictatorship
                 Location = new Point(panelWidth / 2, 0),
                 BackColor = Color.LightBlue
             };
+            Button closeButton = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(buildOptionsPanel.Width - 40, 10),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeButton.Click += (s, e) =>
+            {
+                buildPanel.Visible = false;
+                aktuellerModus = null;
+                this.Focus();
+            };
+            buildOptionsPanel.Controls.Add(closeButton);
             Label titleLabel = new Label
             {
                 Text = "Choose Building",

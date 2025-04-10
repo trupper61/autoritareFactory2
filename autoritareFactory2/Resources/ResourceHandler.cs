@@ -19,7 +19,7 @@ namespace factordictatorship.Resources
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("belt.png") },
             {typeof(Konstrucktor).GetHashCode(),LoadImage("factory.png") },
-            {typeof(Fabrikgebeude).GetHashCode(),LoadImage("miner.png") } };
+            {typeof(Miner).GetHashCode(),LoadImage("miner.png") } };
         public const int imageSize = 32;
         private static Image LoadImage(string path)
         {
