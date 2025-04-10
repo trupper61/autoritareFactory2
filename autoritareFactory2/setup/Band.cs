@@ -29,10 +29,13 @@ namespace factordictatorship.setup
         {
             itemAnzahlMoment = ItemAnzahlMoment;
             richtung = Richtung;
+            ItemAnzahlMax = itemAnMax;
+            längeInYRichtung = 1;
+            längeInXRichtung = 1;
         }
         public override void Iteration()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
         }
         public void ErkenneRescourcen() 
         {

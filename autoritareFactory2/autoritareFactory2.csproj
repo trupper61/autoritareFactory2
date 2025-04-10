@@ -49,6 +49,9 @@
     <Compile Include="drawing\WorldDrawer.cs" />
     <Compile Include="drawing\WorldPartImage.cs" />
     <Compile Include="Fabrikgebeude.cs" />
+    <Compile Include="formsElement\NoFocusButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="rotation\rotation.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />
@@ -119,6 +122,11 @@
   <ItemGroup>
     <None Include="Resources\grass2.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\ColeOre.png" />
+    <Content Include="Resources\IndustrialWasteland2.png" />
+    <Content Include="Resources\IndustrialWasteland.png" />
+  </ItemGroup>
+ // <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
