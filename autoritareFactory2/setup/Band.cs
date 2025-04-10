@@ -2,6 +2,7 @@
 using autoritaereFactory.setup;
 using autoritaereFactory.world;
 using factordictatorship.Properties;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,18 +19,16 @@ namespace factordictatorship.setup
         public List<Resource> resource { get; }
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
-        public int ItemAnzahlMoment; //Anzahl an Items, die sich gerade auf dem Band befinden.
+        public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
         public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
-        public Band (int bandGe, int itemAnMax, List<Resource> resources, int richtung, int anzEisen, int positionX, int positionY)
+        public Band (int richtung, int itemAnzahlMoment,int positionX, int positionY)
             :base(positionX, positionY) 
         {
-            anzEisen = anzahlEisen;
-            resources = resource;
+            itemAnzahlMoment = ItemAnzahlMoment;
             richtung = Richtung;
-            ItemAnzahlMax = itemAnMax;
         }
         public override void Iteration()
         {
@@ -60,7 +59,7 @@ namespace factordictatorship.setup
             resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
             return r;
         }
-        public virtual void InNaechsteBand(Band band, Band BandNxt, WorldMap world, Konstrucktor konstrucktor) 
+        public virtual void InNaechsteBand(Band band, Band BandNxt, CurveBand bandCur,WorldMap world, Konstrucktor konstrucktor) 
         {
             //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
             //Transfer rescourcen.
@@ -95,16 +94,18 @@ namespace factordictatorship.setup
                         BandNxt = gb;
                         determineTransfer(band, BandNxt);
                     }
+
+                    /*
                     foreach(Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXRichtung, konstrucktor.längeInYRichtung)) 
                     {
                         
                     }
-                    
+                    */
                 }
                 
             }
         }
-        private void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
+        public virtual void determineTransfer(Band band, Band BandNxt, CurveBand curveBand) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
             if (BandNxt.Richtung == band.Richtung)
             {
