@@ -31,6 +31,7 @@ namespace factordictatorship
         public Button destroyBtn;
         public string aktuellerModus = "";
         public Panel buildPanel;
+        public Panel menuPanel;
         public world()
         {
             InitializeComponent();
@@ -254,6 +255,9 @@ namespace factordictatorship
             SetupBuildPanel();
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
+            ToolStripButton menuBtn = new ToolStripButton("Menu");
+            menuBtn.Click += (s, e) => ToogleMenuPanel();
+            toolStrip.Items.Add(menuBtn);
 
             ToolStripButton buildBtn = new ToolStripButton("Build");
             buildBtn.Click += (s, e) => 
@@ -277,6 +281,50 @@ namespace factordictatorship
 
             Controls.Add(toolStrip);
             this.Resize += new EventHandler(OnFormResize);
+
+            // Menu Panel
+            menuPanel = new Panel
+            {
+                Size = new Size(200, 170),
+                Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            Button backBtn = new Button
+            {
+                Text = "Back To Game",
+                Size = new Size(180, 30),
+                Location = new Point(10, 10)
+            };
+            backBtn.Click += (s, e) =>
+            {
+                menuPanel.Visible = false;
+                this.Focus();
+            };
+            menuPanel.Controls.Add(backBtn);
+            Button saveBtn = new Button
+            {
+                Text = "Speichern",
+                Size = new Size(180, 30),
+                Location = new Point(10, 50)
+            };
+            menuPanel.Controls.Add(saveBtn);
+            Button loadBtn = new Button
+            {
+                Text = "Load",
+                Size = new Size(180, 30),
+                Location = new Point(10, 90)
+            };
+            menuPanel.Controls.Add(loadBtn);
+            Button closeBtn = new Button
+            {
+                Text = "Close Game",
+                Size = new Size(180, 30),
+                Location = new Point(10, 130)
+            };
+            closeBtn.Click += (s, e) => this.Close();
+            menuPanel.Controls.Add(closeBtn);
+            Controls.Add(menuPanel);
         }
 
         // BuildPanel Resize Event
@@ -286,6 +334,9 @@ namespace factordictatorship
             int height = (int)(this.Height * 0.7);
             buildPanel.Size = new Size(width, height);
             buildPanel.Location = new Point((this.Width - width) / 2, (this.Height - height) / 2);
+
+            menuPanel.Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75);
+
             SetupBuildPanel();
         }
         // Setup for the Items inside Build Panel
@@ -368,6 +419,18 @@ namespace factordictatorship
                 y += 45;
             }
             buildPanel.Controls.Add(buildOptionsPanel);
+        }
+        private void ToogleMenuPanel()
+        {
+            if (menuPanel.Visible)
+            {
+                menuPanel.Visible = false;
+                this.Focus();
+            }
+            else
+            {
+                menuPanel.Visible = true;
+            }
         }
     }
 }
