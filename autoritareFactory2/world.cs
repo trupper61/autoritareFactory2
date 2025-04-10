@@ -123,20 +123,22 @@ namespace factordictatorship
                 else
                 {
                     MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
+            }
             else if (aktuellerModus == "Destroy")
             {
-                Point worldPoint = wlrdDrawer.TranslateScreen2World(lastMousePos);
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
-                if(fab.Count == 0)
+                if (fab.Count == 0)
                 {
                     MessageBox.Show("Nix zum Löschen");
                 }
                 else
                 {
-                    foreach(Fabrikgebeude f in fab)
+                    foreach (Fabrikgebeude f in fab)
                     {
                         mapWorld.RemoveEntity(f);
                     }
+                    aktuellerModus = null;
                 }
             }
         }
@@ -197,6 +199,7 @@ namespace factordictatorship
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
                     }
+                }
                 if (aktuellerModus == "Destroy")
                 {
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
