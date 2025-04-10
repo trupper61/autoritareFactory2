@@ -7,10 +7,15 @@ using System.Threading.Tasks;
 
 namespace factordictatorship
 {
+    public enum zugehörigesGebeude
+    {
+        Konstrucktor
+    }
+
     public class Rezepte
     {
-        private string zugehörigesGebeude;
-        public string ZugehörigesGebeude { get { return zugehörigesGebeude; } }
+        private zugehörigesGebeude gebeudeTyp;
+        public zugehörigesGebeude GebeudeTyp { get { return gebeudeTyp; } }
         private List<ResourceType> benotigteRecursen = new List<ResourceType>();
         public List<ResourceType> BenotigteRecursen { get { return benotigteRecursen; } }
         private List<int> mengenBenotigteRecurse = new List<int>();
@@ -23,9 +28,9 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private string rezeptName;
         public string RezeptName { get { return rezeptName; } }
-        public Rezepte(string zugehörigesGebeude, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
+        public Rezepte(zugehörigesGebeude gebeudeTyp, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
         {
-            this.zugehörigesGebeude = zugehörigesGebeude;
+            this.gebeudeTyp = gebeudeTyp;
             this.produktionsdauer = produktionsdauer;
             this.rezeptName = rezeptName;
             benotigteRecursen.Add(benotigteRecurse1);
