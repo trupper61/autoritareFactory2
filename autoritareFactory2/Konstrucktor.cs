@@ -13,7 +13,7 @@ namespace factordictatorship
     {
         private ResourceType typBenotigteRecurse1;
         public ResourceType TypBenotigteRecurse1 { get { return typBenotigteRecurse1; } }
-        private List<Resource> benotigteRecurse1;//Liste mit der ersten für die Produktion nötige Recurse 
+        private List<Resource> benotigteRecurse1 = new List<Resource>();//Liste mit der ersten für die Produktion nötige Recurse 
         public List<Resource> BenotigteRecurse1 { get { return benotigteRecurse1; } }
         private int nötigeMengenBenotigteRecurse1;//menge der ersten für die Produktion nötige Recurse um zu Produzieren
         public int NötigeMengenBenotigteRecurse1 { get { return nötigeMengenBenotigteRecurse1; } }
@@ -21,7 +21,7 @@ namespace factordictatorship
         public int MaxAnzalBenotigteRecurse1 { get { return maxAnzalBenotigteRecurse1; } }
         private ResourceType typErgebnissRecurse1;
         public ResourceType TypErgebnissRecurse1 { get { return typErgebnissRecurse1; } }
-        private List<Resource> ergebnissRecurse1;//name der ersten ergebniss Recurse 
+        private List<Resource> ergebnissRecurse1 = new List<Resource>();//name der ersten ergebniss Recurse 
         public List<Resource> ErgebnissRecurse1 { get { return ergebnissRecurse1; } }
         private int mengenErgebnissRecursen1;//menge der ersten ergebniss Recurse die bei einer Durchfürung des Produktionsprozesses entsteht
         public int MengenErgebnissRecursen1 { get { return mengenErgebnissRecursen1; } }
@@ -60,13 +60,16 @@ namespace factordictatorship
         }
         public override void Iteration()
         {
-            produziere();
-            legAufBand(ergebnissRecurse1, (längeInXRichtung - 1) + 1, 0);
-            nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);
+            if (typBenotigteRecurse1 != null && typErgebnissRecurse1 != null)
+            {
+                produziere();
+                legAufBand(ergebnissRecurse1, (längeInXRichtung - 1) + 1, 0);
+                nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);
+            }
         }
         private void produziere()
         {
-            if (verbleibendeProduktionsdauer <= 0)
+            if (verbleibendeProduktionsdauer > 0)
             {
                 if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
                 {
