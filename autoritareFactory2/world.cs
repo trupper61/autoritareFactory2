@@ -1,4 +1,5 @@
-﻿using autoritaereFactory.setup;
+﻿using autoritaereFactory;
+using autoritaereFactory.setup;
 using autoritaereFactory.world;
 using factordictatorship.drawing;
 using factordictatorship.Resources;
@@ -16,6 +17,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.AxHost;
+using ResourceType = autoritaereFactory.ResourceType;
 
 namespace factordictatorship
 {
@@ -78,6 +80,14 @@ namespace factordictatorship
         {
             lastMousePos = e.Location;
         }
+        public static autoritaereFactory.ResourceType GetResourceFromGround(GroundResource grs)
+        {
+            switch (grs)
+            {
+                case GroundResource.Iron:return autoritaereFactory.ResourceType.IronOre;
+                default:return (autoritaereFactory.ResourceType)(-1);
+            }
+        }
 
         private void OnClick(object sender, MouseEventArgs e)
         {
@@ -101,9 +111,9 @@ namespace factordictatorship
             }
             else if (aktuellerModus == "Miner")
             {
-                GroundResource? resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
+                GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
                 // TODO Miner Resource zu GroundResource ändern
-                Miner miner = new Miner(worldPoint.X, worldPoint.Y, autoritaereFactory.ResourceType.IronOre);
+                Miner miner = new Miner(worldPoint.X, worldPoint.Y, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                 if (lffb.Count == 0 && resource == GroundResource.Iron)
                 {
@@ -177,10 +187,10 @@ namespace factordictatorship
                 }
                 else if (aktuellerModus == "Miner")
                 {
-                    GroundResource? resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
+                    GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
 
                     // TODO: Miner resource to GroundType!
-                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, autoritaereFactory.ResourceType.IronOre);
+                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                     if (lffb.Count == 0 && resource == GroundResource.Iron)
                     {

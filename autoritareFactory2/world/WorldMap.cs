@@ -151,7 +151,7 @@ namespace autoritaereFactory.world
             }
         }
 
-        public GroundResource? GetBlockState(int posX, int posY)
+        public GroundResource GetBlockState(int posX, int posY)
         {
             int chunkX = posX / Chunk.chunkSize;
             int chunkY = posY / Chunk.chunkSize;
@@ -163,7 +163,7 @@ namespace autoritaereFactory.world
                     continue;
                 return ch.GetSubChunk(subChunkX, subChunkY);
             }
-            return null;
+            return (GroundResource)(-1);
         }
         // iterate over every building in the "loaded" world
         long lastTimeTick;
