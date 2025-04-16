@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace factordictatorship.world
 {
@@ -22,10 +23,10 @@ namespace factordictatorship.world
 
         //TODO: Lagerhaus soll von Band nehmen.
 
-        public void NimmVonBand(Lagergebaeude lager) 
+        public void NimmVonBand(Lagergebaeude lager, factordictatorship.setup.Band band) 
         {
-            //Wenn Die Richtung des Eingangs des Lagers gleich die Richtung des Bandes ist, dann rescourcen, die sich auf dem Band befinden nehmen.
-            int Richtung;
+            //Wenn Die Richtung des Eingangs des Lagers gleich die Richtung des Bandes ist, dann rescourcen, die sich auf dem Band befinden, nehmen.
+            int Richtung = 0;
             int wertRotX = 0;
             int wertRotY = 0;
 
@@ -51,7 +52,13 @@ namespace factordictatorship.world
 
             if (world.GetEntityInPos(lager.PositionX + wertRotX, lager.PositionY + wertRotY).Count > 0) 
             {
-                
+                foreach (factordictatorship.setup.Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                {
+                    if (gb.Richtung != Richtung) continue; // Wenn Band Richtung nicht gleich ist mit Eingang vom benachbarte Lagerhaus, dann nächste loop.
+                    if (gb.Richtung == Richtung) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+                    //BandNxt = gb;
+                    //determineTransfer(band, BandNxt, bandCur);
+                }
             }
         }
 
