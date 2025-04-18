@@ -1,4 +1,5 @@
 ﻿using autoritaereFactory;
+using autoritaereFactory.world;
 using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
@@ -7,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
-namespace factordictatorship.world
+namespace factordictatorship
 {
     public class Lagergebaeude : Fabrikgebeude
     {
@@ -27,7 +28,7 @@ namespace factordictatorship.world
 
         //TODO: Lagerhaus soll von Band nehmen.
 
-        public void NimmVonBand(Lagergebaeude lager, factordictatorship.setup.Band band) 
+        public void NimmVonBand(Lagergebaeude lager, factordictatorship.setup.Band band, WorldMap world) 
         {
             //Wenn Die Richtung des Eingangs des Lagers gleich die Richtung des Bandes ist, dann rescourcen, die sich auf dem Band befinden, nehmen.
             int Richtung = 0;
@@ -72,7 +73,7 @@ namespace factordictatorship.world
 
         //TODO Lagerhaus soll auf Band platzieren.
 
-        public void LegAufBand(Lagergebaeude lager, factordictatorship.setup.Band band)
+        public void LegAufBand(Lagergebaeude lager, factordictatorship.setup.Band band, WorldMap world)
         {
             int Richtung = 0;
             int wertRotX = 0;
