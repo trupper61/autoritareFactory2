@@ -37,6 +37,9 @@ namespace factordictatorship
         public Rezepte Eisenbarren = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000);
         public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
         public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
+        public bool isDragging = false;
+        public Point beltStart;
+        public Point beltEnd;
         public world()
         {
             InitializeComponent();
@@ -75,6 +78,26 @@ namespace factordictatorship
             MouseMove += OnMouseMove;
             Paint += PaintHandler;
             FormClosed += OnFormClosed;
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
+        }
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            if (aktuellerModus == "Belt" && e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                beltStart = wlrdDrawer.TranslateScreen2World(e.Location);   
+            }
+        }
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            if (aktuellerModus == "Belt" && isDragging)
+            {
+                isDragging = false;
+                beltEnd = wlrdDrawer.TranslateScreen2World(e.Location);
+                PlaceBeltLine(beltStart, beltEnd);
+                aktuellerModus = null;
+            }
         }
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
@@ -125,20 +148,20 @@ namespace factordictatorship
                     MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
                 }
             }
-            else if (aktuellerModus == "Belt")
-            {
-                Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
-                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
-                if (lffb.Count == 0)
-                {
-                    mapWorld.AddEntityAt(belt);
-                    aktuellerModus = null;
-                }
-                else
-                {
-                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
-                }
-            }
+            //else if (aktuellerModus == "Belt")
+            //{
+            //    Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
+            //    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
+            //    if (lffb.Count == 0)
+            //    {
+            //        mapWorld.AddEntityAt(belt);
+            //        aktuellerModus = null;
+            //    }
+            //    else
+            //    {
+            //        MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+            //    }
+            //}
             else if (aktuellerModus == "Destroy")
             {
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
@@ -203,15 +226,35 @@ namespace factordictatorship
                 }
                 else if (aktuellerModus == "Belt")
                 {
-                    Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
-                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
-                    if (lffb.Count == 0)
+                    if (isDragging)
                     {
-                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 127, 255, 95));
+                        List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
+                        foreach (var pt in beltLine)
+                        {
+                            Band belt = new Band(3, 20, pt.X, pt.Y);
+                            List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
+                            if (lffb.Count == 0)
+                            {
+                                wlrdDrawer.DrawPlacableBuilding(e, pt, belt, Color.FromArgb(127, 127, 255, 95));
+                            }
+                            else
+                            {
+                                wlrdDrawer.DrawPlacableBuilding(e, pt, belt, Color.FromArgb(127, 255, 64, 16));
+                            }
+                        }
                     }
                     else
                     {
-                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
+                        Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
+                        List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
+                        if (lffb.Count == 0)
+                        {
+                            wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 127, 255, 95));
+                        }
+                        else
+                        {
+                            wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
+                        }
                     }
                 }
                 if (aktuellerModus == "Destroy")
@@ -252,6 +295,51 @@ namespace factordictatorship
         {
             wlrdDrawer.Dispose();
             mapWorld.Dispose();
+        }
+        private List<Point> GetLinePoints(Point start, Point end)
+        {
+            List<Point> points = new List<Point>();
+            if (start.X != end.X && start.Y != end.Y) // Only straight lines
+                return points;
+            // Richtung der Linie in X- und Y-Richtung bestimmen (-1, 0, 1)
+            int dx = Math.Sign(end.X - start.X);
+            int dy = Math.Sign(end.Y - start.Y);
+
+            while (start.X != end.X || start.Y != end.Y)
+            {
+                points.Add(new Point(start.X, start.Y));
+                start.X += dx;
+                start.Y += dy;
+            }
+            points.Add(end);
+            return points;
+        }
+        private void PlaceBeltLine(Point start, Point end)
+        {
+            if (start.X != end.X && start.Y != end.Y)
+            {
+                // Only straight Lines
+                MessageBox.Show("Nur gerade Linien für die Transportbänder");
+                return;
+            }
+            int dx = Math.Sign(end.X - start.X);
+            int dy = Math.Sign(end.Y - start.Y);
+            while (start.X != end.X || start.Y != end.Y)
+            {
+                TryPlaceBeltAt(start.X, start.Y);
+                start.X += dx;
+                start.Y += dy;
+            }
+            TryPlaceBeltAt(end.X, end.Y);
+        }
+        private void TryPlaceBeltAt(int x, int y)
+        {
+            Band belt = new Band(3, 20, x, y);
+            List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
+            if (lffb.Count == 0)
+            {
+                mapWorld.AddEntityAt(belt);
+            }
         }
         private void InitUI()
         {
