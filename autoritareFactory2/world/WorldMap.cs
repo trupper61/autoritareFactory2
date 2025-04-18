@@ -38,7 +38,7 @@ namespace autoritaereFactory.world
         // from and including start with the size (including)
         public List<Fabrikgebeude> GetEntityInBox(int posX, int posY, int width, int height)
         {
-            return GetEntityInArea(posX, posY, posX + width, posY + height);
+            return GetEntityInArea(posX, posY, posX + width - 1, posY + height - 1);
         }
         public List<Fabrikgebeude> GetEntityInPos(int posX, int posY)
         {
@@ -64,8 +64,8 @@ namespace autoritaereFactory.world
                 {
                     if (building.PositionX > endX) continue;
                     if (building.PositionY > endY) continue;
-                    if (building.PositionX + building.SizeX < startX) continue;
-                    if (building.PositionY + building.SizeY < startY) continue;
+                    if (building.PositionX + building.SizeX <= startX) continue;
+                    if (building.PositionY + building.SizeY <= startY) continue;
                     entitys.Add(building);
                 }
             }
@@ -151,7 +151,7 @@ namespace autoritaereFactory.world
             }
         }
 
-        public GroundResource? GetBlockState(int posX, int posY)
+        public GroundResource GetBlockState(int posX, int posY)
         {
             int chunkX = posX / Chunk.chunkSize;
             int chunkY = posY / Chunk.chunkSize;
@@ -163,7 +163,7 @@ namespace autoritaereFactory.world
                     continue;
                 return ch.GetSubChunk(subChunkX, subChunkY);
             }
-            return null;
+            return (GroundResource)(-1);
         }
         // iterate over every building in the "loaded" world
         long lastTimeTick;

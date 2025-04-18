@@ -71,10 +71,10 @@ namespace factordictatorship
         {
             if (verbleibendeProduktionsdauer > 0)
             {
-                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
-                {
-                    verbleibendeProduktionsdauer -= 100;
-                }
+                //if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
+                //{
+                //    verbleibendeProduktionsdauer -= 100;
+                //}
             }
             else
             {
@@ -91,55 +91,55 @@ namespace factordictatorship
         }
         private void legAufBand(List<Resource> gebendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {
-            if (gebendeRecursenListe.Count > 0)
-            {
-                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
-                if (entitys.Count == 1)
-                {
-                    Band band = (Band)entitys[0];
-                    if (band != null)
-                    {
-                        band.ErkenneRescourcen();
-                        while (band.ItemAnzahlMoment < band.ItemAnzahlMax & gebendeRecursenListe.Count > 0)
-                        {
-                            band.RescourceKommtAufBand(gebendeRecursenListe[0]);
-                            gebendeRecursenListe.RemoveAt(0);
-                            band.ErkenneRescourcen();
-                        }
-                    }
-                }
-            }
+            //if (gebendeRecursenListe.Count > 0)
+            //{
+            //    List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
+            //    if (entitys.Count == 1)
+            //    {
+            //        Band band = (Band)entitys[0];
+            //        if (band != null)
+            //        {
+            //            band.ErkenneRescourcen();
+            //            while (band.ItemAnzahlMoment < band.ItemAnzahlMax & gebendeRecursenListe.Count > 0)
+            //            {
+            //                band.RescourceKommtAufBand(gebendeRecursenListe[0]);
+            //                gebendeRecursenListe.RemoveAt(0);
+            //                band.ErkenneRescourcen();
+            //            }
+            //        }
+            //    }
+            //}
         }
         private void nimmVomBand(List<Resource> nehmendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse, ResourceType gewolteRecurse, int maxRecursen)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {
-            if (nehmendeRecursenListe.Count < maxRecursen)
-            {
-                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
-                if (entitys.Count == 1)
-                {
-                    Band band = (Band)entitys[0];
-                    if (band != null)
-                    {
-                        band.ErkenneRescourcen();
-                        while (nehmendeRecursenListe.Count < maxRecursen & band.resource.Count > 0)
-                        {
-                            for (int i = 0; i < band.resource.Count; i++)
-                            {
-                                if (band.resource[i].Type == gewolteRecurse)
-                                {
-                                    nehmendeRecursenListe.Add(band.NimmRescourceVomBand(i));
-                                    break;
-                                }
-                                if (i == band.resource.Count-1)
-                                {
-                                    return;
-                                }
-                            }
-                            band.ErkenneRescourcen();
-                        }
-                    }
-                }
-            }
+            //if (nehmendeRecursenListe.Count < maxRecursen)
+            //{
+            //    List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
+            //    if (entitys.Count == 1)
+            //    {
+            //        Band band = (Band)entitys[0];
+            //        if (band != null)
+            //        {
+            //            band.ErkenneRescourcen();
+            //            while (nehmendeRecursenListe.Count < maxRecursen & band.resource.Count > 0)
+            //            {
+            //                for (int i = 0; i < band.resource.Count; i++)
+            //                {
+            //                    if (band.resource[i].Type == gewolteRecurse)
+            //                    {
+            //                        nehmendeRecursenListe.Add(band.NimmRescourceVomBand(i));
+            //                        break;
+            //                    }
+            //                    if (i == band.resource.Count-1)
+            //                    {
+            //                        return;
+            //                    }
+            //                }
+            //                band.ErkenneRescourcen();
+            //            }
+            //        }
+            //    }
+            //}
         }
         private int DrehePAufXAchse(int VX, int VY)
         {

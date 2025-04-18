@@ -1,6 +1,6 @@
 ﻿using autoritaereFactory;
 using autoritaereFactory.world;
-using factordictatorship.rotation;
+//using factordictatorship.rotation;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace factordictatorship.setup.BaenderTypes
         public int RichtungAusgang;
         public int RichtungEingang; // Darf nicht selbe und nicht verkehrt herum wie Ausgang sein! Sollte ebenfalls die Richtung sein!.
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
-        public CurveBand(int richtung, int itemAnzahlMoment, int positionX, int positionY, int richtungEingang, int richtungAusgang) 
+        public CurveBand(int richtung, int itemAnzahlMoment, int positionX, int positionY, int richtungEingang, int richtungAusgang)
             : base(richtung, itemAnzahlMoment, positionX, positionY)
         {
             richtungEingang = RichtungEingang;
@@ -23,7 +23,7 @@ namespace factordictatorship.setup.BaenderTypes
             richtung = RichtungEingang;
         }
 
-        public override void InNaechsteBand(Band band, Band BandNxt, CurveBand curveBand,WorldMap world, Konstrucktor konstrucktor)
+        public override void InNaechsteBand(Band band, Band BandNxt, CurveBand curveBand, WorldMap world, Konstrucktor konstrucktor)
         {
             base.InNaechsteBand(band, BandNxt, curveBand, world, konstrucktor);
 

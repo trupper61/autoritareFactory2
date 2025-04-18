@@ -18,8 +18,9 @@ namespace factordictatorship.Resources
             { GroundResource.Iron, LoadImage("iron.png") } };
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("belt.png") },
-            {typeof(Fabrikgebeude).GetHashCode(),LoadImage("miner.png") } };
-        public const int imageSize = 16;
+            {typeof(Konstrucktor).GetHashCode(),LoadImage("factory.png") },
+            {typeof(Miner).GetHashCode(),LoadImage("miner.png") } };
+        public const int imageSize = 32;
         private static Image LoadImage(string path)
         {
             path = "Resources\\" + path;
