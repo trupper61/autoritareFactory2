@@ -54,7 +54,6 @@
     </Compile>
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />
-    <Compile Include="setup\BaenderTypes\CurvedBand2.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -70,6 +69,7 @@
     <Compile Include="Rezepte.cs" />
     <Compile Include="world\GroundResource.cs" />
     <Compile Include="world\Chunk.cs" />
+    <Compile Include="Lagergebaeude.cs" />
     <Compile Include="world\WorldMap.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
