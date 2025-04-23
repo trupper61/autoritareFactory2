@@ -136,7 +136,7 @@ namespace factordictatorship
             {
                 GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
                 // TODO Miner Resource zu GroundResource ändern
-                Miner miner = new Miner(worldPoint.X, worldPoint.Y, GetResourceFromGround(resource));
+                Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                 if (lffb.Count == 0 && resource == GroundResource.Iron)
                 {
@@ -213,7 +213,7 @@ namespace factordictatorship
                     GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
 
                     // TODO: Miner resource to GroundType!
-                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, GetResourceFromGround(resource));
+                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                     if (lffb.Count == 0 && resource == GroundResource.Iron)
                     {
