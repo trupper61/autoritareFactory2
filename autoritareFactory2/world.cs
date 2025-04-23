@@ -37,9 +37,11 @@ namespace factordictatorship
         public Rezepte Eisenbarren = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000);
         public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
         public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
+        public PlayerData player = new PlayerData(0);
         public world()
         {
             InitializeComponent();
+            DisplayData();
             InitUI();
             mapWorld = new WorldMap(8, 8);
             for (int wrdX = 0; wrdX < mapWorld.chunkXcount; wrdX++)
@@ -444,6 +446,11 @@ namespace factordictatorship
             {
                 menuPanel.Visible = true;
             }
+        }
+
+        public void DisplayData() 
+        {
+            moneyAmount.Text = player.displayData();
         }
     }
 }

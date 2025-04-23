@@ -31,8 +31,32 @@ namespace factordictatorship
         /// </summary>
         private void InitializeComponent()
         {
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.moneyAmount = new System.Windows.Forms.Label();
             this.noFocusButton = new factordictatorship.formsElement.NoFocusButton();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.BackgroundImage = global::factordictatorship.Properties.Resources.money;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(538, 67);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(50, 42);
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
+            // 
+            // moneyAmount
+            // 
+            this.moneyAmount.AutoSize = true;
+            this.moneyAmount.BackColor = System.Drawing.Color.Transparent;
+            this.moneyAmount.Location = new System.Drawing.Point(510, 82);
+            this.moneyAmount.Name = "moneyAmount";
+            this.moneyAmount.Size = new System.Drawing.Size(35, 13);
+            this.moneyAmount.TabIndex = 2;
+            this.moneyAmount.Text = "label1";
             // 
             // noFocusButton
             // 
@@ -49,18 +73,24 @@ namespace factordictatorship
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 366);
+            this.Controls.Add(this.moneyAmount);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.noFocusButton);
             this.DoubleBuffered = true;
             this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "world";
             this.Text = "FactoriaAutoritaet";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
         private NoFocusButton noFocusButton;
+        private PictureBox pictureBox1;
+        private Label moneyAmount;
     }
 }
 

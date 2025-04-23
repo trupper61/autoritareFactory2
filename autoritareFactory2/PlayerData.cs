@@ -9,12 +9,15 @@ namespace factordictatorship
     public class PlayerData
     {
         public int money;
-        public int level;
 
-        public PlayerData(int money, int level)
+        public PlayerData(int money)
         {
             this.money = money;
-            this.level = level;
+        }
+
+        public string displayData()
+        {
+            return money.ToString();
         }
     }
 }
