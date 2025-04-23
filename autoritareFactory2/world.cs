@@ -34,12 +34,16 @@ namespace factordictatorship
         public string aktuellerModus = "";
         public Panel buildPanel;
         public Panel menuPanel;
-        public Rezepte Eisenbarren = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000);
-        public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
-        public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
+        public Rezepte[] rezepte =
+        {
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenplatte", autoritaereFactory.ResourceType.IronPlate, 2, 1500)
+        };
         public bool isDragging = false;
         public Point beltStart;
         public Point beltEnd;
+        public Panel konInterface;
         public world()
         {
             InitializeComponent();
@@ -148,20 +152,6 @@ namespace factordictatorship
                     MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
                 }
             }
-            //else if (aktuellerModus == "Belt")
-            //{
-            //    Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
-            //    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
-            //    if (lffb.Count == 0)
-            //    {
-            //        mapWorld.AddEntityAt(belt);
-            //        aktuellerModus = null;
-            //    }
-            //    else
-            //    {
-            //        MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
-            //    }
-            //}
             else if (aktuellerModus == "Destroy")
             {
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
@@ -178,8 +168,20 @@ namespace factordictatorship
                     aktuellerModus = null;
                 }
             }
+            else
+            {
+                List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
+                if (fab.Count == 0)
+                    return;
+                foreach(Fabrikgebeude f in fab)
+                {
+                    if (f is Konstrucktor)
+                    {
+                        ShowKonInterface(f as Konstrucktor);
+                    }
+                }
+            }
         }
-
         public void RefreshLoop(object sender, EventArgs e)
         {
             this.Invalidate(DisplayRectangle);
@@ -426,6 +428,16 @@ namespace factordictatorship
             closeBtn.Click += (s, e) => this.Close();
             menuPanel.Controls.Add(closeBtn);
             Controls.Add(menuPanel);
+
+            konInterface = new Panel
+            {
+                Size = new Size(250, 300),
+                Location = new Point(50, 50),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+            Controls.Add(konInterface);
         }
 
         // BuildPanel Resize Event
@@ -437,6 +449,8 @@ namespace factordictatorship
             buildPanel.Location = new Point((this.Width - width) / 2, (this.Height - height) / 2);
 
             menuPanel.Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75);
+
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
 
             SetupBuildPanel();
         }
@@ -532,6 +546,47 @@ namespace factordictatorship
             {
                 menuPanel.Visible = true;
             }
+        }
+        public void ShowKonInterface(Konstrucktor kon)
+        {
+            konInterface.Visible = true;
+            konInterface.Controls.Clear();
+            Label name = new Label();
+            name.Text = kon.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+            konInterface.Controls.Add(name);
+            int y = 50;
+            int maxRight = name.Right;
+            foreach (Rezepte rezept in rezepte)
+            {
+                Button rezeptBtn = new Button();
+                rezeptBtn.Text = rezept.RezeptName + $" ({rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenErgebnissRecursen[0]} {rezept.ErgebnissRecursen[0]})";
+                rezeptBtn.Size = new Size(200, 30);
+                rezeptBtn.Location = new Point(10, y);
+                rezeptBtn.AutoSize = true;
+                rezeptBtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                rezeptBtn.Click += (s, e) =>
+                {
+                    kon.SpeichereRezept(rezept);
+                    konInterface.Visible = false;
+                };
+                konInterface.Controls.Add(rezeptBtn);
+                maxRight = Math.Max(maxRight, rezeptBtn.Right);
+                y += 40;
+            }
+            konInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => konInterface.Visible = false;
+            konInterface.Controls.Add(closeBtn);
         }
     }
 }
