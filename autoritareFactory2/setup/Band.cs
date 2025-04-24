@@ -17,6 +17,7 @@ namespace factordictatorship.setup
     public class Band : Fabrikgebeude
     {
         public List<Resource> resource = new List<Resource>();
+        public List<Resource> currentRescourceList = new List<Resource>();
         public WorldMap wrld;
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
@@ -37,6 +38,7 @@ namespace factordictatorship.setup
         public override void Iteration()
         {
             InNaechsteBand(this, wrld);
+            UpdateRescourceList();
         }
         public void ErkenneRescourcen()
         {
@@ -55,7 +57,11 @@ namespace factordictatorship.setup
 
         public void RescourceKommtAufBand(Resource r)
         {
-            resource.Add(r);
+            currentRescourceList.Add(r);
+        }
+        public void UpdateRescourceList()
+        {
+            currentRescourceList = resource;
         }
         public Resource NimmRescourceVomBand(int stelleInResourcedieGenommenWerdenSoll)//von Markus ich brauche den zukrifsrecht um auch (List<Resource> resource) zu ändern
         {
@@ -105,7 +111,7 @@ namespace factordictatorship.setup
                             {
                                 BandNxt = gb;
                                 if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
-                                if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+                                if (BandNxt != gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
 
                                 determineTransfer(band, BandNxt);
                             }
@@ -121,24 +127,18 @@ namespace factordictatorship.setup
                 }
             }
         }
+        // NEEEEEDSSSS FIXIIIIIIINGNGNGNGNGNGNGNGGNNGGNGNGNGNGN!!!!111111!!!11!!
         public virtual void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
             if (BandNxt.Richtung == band.Richtung)
             {
-                MessageBox.Show("true");
                 foreach (Resource resources in band.resource)
                 {
-                    cooldownTimer.Interval = BandGeschwindigkeit;
-                    cooldownTimer.Start();
-
-                    if (cooldownTimer.Interval == 0)
-                    {
-                        BandNxt.RescourceKommtAufBand(resources);
-                        band.resource.Remove(resources);
-                        cooldownTimer.Dispose();
-                    }
-
+                    BandNxt.RescourceKommtAufBand(resources);
+                    //band.currentRescourceList.Remove(resources);
                 }
+                //band.resource = band.currentRescourceList;
+                //BandNxt.resource = BandNxt.currentRescourceList;
             }
         }
 
