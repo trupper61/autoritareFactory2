@@ -432,7 +432,7 @@ namespace factordictatorship
             };
             saveBtn.Click += (s, e) => {
                 byte[] worldData = mapWorld.GetAsBytes();
-                FileStream fptr = File.OpenWrite(mapWorld.worldName);
+                FileStream fptr = File.OpenWrite(mapWorld.worldName + ".world");
                 fptr.Write(worldData,0, worldData.Length);
                 fptr.Close();
             };

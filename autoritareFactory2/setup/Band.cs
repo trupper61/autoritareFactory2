@@ -23,6 +23,11 @@ namespace factordictatorship.setup
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
+        internal Band():base()
+        {
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+        }
         public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY)
             : base(positionX, positionY,richtung)
         {
@@ -130,6 +135,11 @@ namespace factordictatorship.setup
         {
             List<byte> bytes = base.GetAsBytes();
             return bytes;
+        }
+        public static Band FromByteArray(byte[] bytes, ref int offset)
+        {
+            Band newBand = new Band();
+            return newBand;
         }
     }
 }

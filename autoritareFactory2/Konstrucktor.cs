@@ -31,6 +31,11 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private int verbleibendeProduktionsdauer;//verbleibende dauer des Produktionsprozesses in millisekunden
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
+        internal Konstrucktor() : base()
+        {
+            längeInXRichtung = 2;
+            längeInYRichtung = 1;
+        }
         public Konstrucktor(int positionX, int positionY, int drehung) : base(positionX, positionY,drehung)
         {
             längeInXRichtung = 2;
@@ -154,6 +159,11 @@ namespace factordictatorship
         {
             List<byte> bytes = base.GetAsBytes();
             return bytes;
+        }
+        public static Konstrucktor FromByteArray(byte[] bytes, ref int offset)
+        {
+            Konstrucktor newKonstrucktor = new Konstrucktor();
+            return newKonstrucktor;
         }
     }
 }

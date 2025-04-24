@@ -18,12 +18,16 @@ namespace factordictatorship
         public List<Resource> Recurse { get { return recurse; } }
         private int maxAnzalRecurse = 100;
         public int MaxAnzalRecurse { get { return maxAnzalRecurse; } }
-        public Miner(int positionX, int positionY, int drehung, ResourceType typResurce) : base(positionX, positionY)
+        internal Miner() : base()
+        {
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+        }
+        public Miner(int positionX, int positionY, int drehung, ResourceType typResurce) : base(positionX, positionY,drehung)
         {
             this.typResurce = typResurce;
             längeInXRichtung = 1;
             längeInYRichtung = 1;
-            this.drehung = drehung;
         }
         public override void Iteration()
         {
@@ -78,6 +82,19 @@ namespace factordictatorship
             // everything is of the same type!
             bytes.AddRange(BitConverter.GetBytes(recurse.Count));
             return bytes;
+        }
+        public static Miner FromByteArray(byte[] bytes, ref int offset)
+        {
+            Miner newMiner = new Miner();
+            newMiner.typResurce = (ResourceType)bytes[offset++];
+            int count = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            newMiner.recurse = new List<Resource>();
+            for(int i = 0;i < count; i++)
+            {
+                newMiner.recurse.Add(new Resource(newMiner.typResurce));
+            }
+            return newMiner;
         }
     }
 }

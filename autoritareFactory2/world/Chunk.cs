@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using autoritaereFactory.setup;
 using factordictatorship;
+using factordictatorship.setup;
 
 namespace autoritaereFactory.world
 {
@@ -150,9 +152,49 @@ namespace autoritaereFactory.world
                 }
             }
         }
+        private Chunk()
+        {
+            x = y = -100;
+        }
         public GroundResource GetSubChunk(int innerX, int innerY)
         {
             return blockState[innerX, innerY];
+        }
+        public static Chunk FromByteArray(byte[] bytes,ref int offset)
+        {
+            // thinking byte[offset - 1] is SavingPackets.ChunkPacket
+            Chunk newChunk = new Chunk();
+            newChunk.x = BitConverter.ToInt32(bytes, offset);
+            newChunk.y = BitConverter.ToInt32(bytes, offset + 4);
+            offset += 8;
+            if ((int)GroundResource.UpperBound < 255)
+            {
+                for (int ovY = 0; ovY < chunkSize; ovY++)
+                    for (int ovX = 0; ovX < chunkSize; ovX++)
+                        newChunk.blockState[ovX, ovY] = (GroundResource)bytes[offset++];
+            }
+            else
+            {
+                // fallback - never used!
+                for (int ovY = 0; ovY < chunkSize; ovY++)
+                    for (int ovX = 0; ovX < chunkSize; ovX++)
+                    {
+                        newChunk.blockState[ovX, ovY] = (GroundResource)BitConverter.ToInt32(bytes,offset);
+                        offset += 4;
+                    }
+            }
+            int buildingCount = BitConverter.ToInt32(bytes,offset);
+            offset += 4;
+            newChunk.buildings = new List<Fabrikgebeude>();
+            for (int ent = 0; ent < buildingCount; ent++)
+            {
+                if (bytes[offset++] == (byte)SavingPackets.EntityPacket)
+                {
+                    newChunk.buildings.Add(Fabrikgebeude.FromByteArray(bytes,ref offset));
+                }
+                else { throw new Exception("this shouldn't bee here!"); }
+            }
+            return newChunk;
         }
         public List<byte> GetAsBytes()
         {
@@ -168,6 +210,7 @@ namespace autoritaereFactory.world
             }
             else
             {
+                // fallback - never used!
                 for (int ovY = 0; ovY < chunkSize; ovY++)
                     for (int ovX = 0; ovX < chunkSize; ovX++)
                         bytes.AddRange(BitConverter.GetBytes((int)blockState[ovX, ovY]));
