@@ -115,6 +115,7 @@ namespace factordictatorship
             switch (grs)
             {
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.ColeOre:throw new Exception("Hey Markus insert stuff here!"); return autoritaereFactory.ResourceType.IronOre;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
