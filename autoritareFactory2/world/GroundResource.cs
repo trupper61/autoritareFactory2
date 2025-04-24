@@ -21,5 +21,14 @@ namespace autoritaereFactory.setup
         // Ore Start
         IronOre,
         ColeOre,
+
+        // always on the end!
+        UpperBound
+    }
+
+    public enum SavingPackets
+    {
+        ChunkPacket,
+        EntityPacket,
     }
 }

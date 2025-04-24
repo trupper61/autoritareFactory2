@@ -71,5 +71,13 @@ namespace factordictatorship
         {
             return PositionY - Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VY;
         }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.Add((byte)typResurce);
+            // everything is of the same type!
+            bytes.AddRange(BitConverter.GetBytes(recurse.Count));
+            return bytes;
+        }
     }
 }

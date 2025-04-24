@@ -1,6 +1,8 @@
-﻿using System;
+﻿using autoritaereFactory.setup;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +40,16 @@ namespace factordictatorship
             this.positionX = positionX;
             this.positionY = positionY;
             this.drehung = drehung;
+        }
+        public virtual List<byte> GetAsBytes()
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(this.GetType().GetHashCode()));
+            bytes.AddRange(BitConverter.GetBytes(gebeudeID));
+            bytes.AddRange(BitConverter.GetBytes(positionX));
+            bytes.AddRange(BitConverter.GetBytes(positionY));
+            bytes.AddRange(BitConverter.GetBytes(drehung));
+            return bytes;
         }
         public abstract void Iteration();
     }

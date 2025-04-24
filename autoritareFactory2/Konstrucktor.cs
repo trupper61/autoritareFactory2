@@ -150,5 +150,10 @@ namespace factordictatorship
         {
             return "Konstruktor";
         }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            return bytes;
+        }
     }
 }

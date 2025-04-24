@@ -154,5 +154,32 @@ namespace autoritaereFactory.world
         {
             return blockState[innerX, innerY];
         }
+        public List<byte> GetAsBytes()
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.Add((byte)SavingPackets.ChunkPacket);
+            bytes.AddRange(BitConverter.GetBytes(x));
+            bytes.AddRange(BitConverter.GetBytes(y));
+            if((int)GroundResource.UpperBound < 255)
+            {
+                for (int ovY = 0; ovY < chunkSize; ovY++)
+                    for (int ovX = 0; ovX < chunkSize; ovX++)
+                        bytes.Add((byte)blockState[ovX, ovY]);
+            }
+            else
+            {
+                for (int ovY = 0; ovY < chunkSize; ovY++)
+                    for (int ovX = 0; ovX < chunkSize; ovX++)
+                        bytes.AddRange(BitConverter.GetBytes((int)blockState[ovX, ovY]));
+            }
+            bytes.AddRange(BitConverter.GetBytes(buildings.Count));
+            for (int ent = 0; ent < buildings.Count; ent++)
+            {
+                // add the entity packet indicator, so fbu can do something funny
+                bytes.Add((byte)SavingPackets.EntityPacket);
+                bytes.AddRange(buildings[ent].GetAsBytes());
+            }
+            return bytes;
+        }
     }
 }

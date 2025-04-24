@@ -126,5 +126,10 @@ namespace factordictatorship.setup
                 }
             }
         }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            return bytes;
+        }
     }
 }

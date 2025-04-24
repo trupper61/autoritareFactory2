@@ -20,9 +20,11 @@ namespace autoritaereFactory.world
         int seed = (new Random()).Next();
         public static WorldMap theWorld;
         List<Chunk> chunkList;
+        public string worldName;
         public int chunkXcount, chunkYcount;
         public WorldMap(int sizeX, int sizeY)
         {
+            worldName = DateTime.Now.ToString();
             iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
             theWorld = this;
             chunkXcount = sizeX;
@@ -218,6 +220,29 @@ namespace autoritaereFactory.world
                     return ch;
             }
             return null; // fix from "null"
+        }
+        public byte[] GetAsBytes()
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes(4469));
+            bytes.AddRange(BitConverter.GetBytes(0)); // change here if you like (version stuff)
+            bytes.AddRange(BitConverter.GetBytes(worldName.Length));
+            // why isn't char == byte (just like in C)
+            for(int name = 0; name < worldName.Length; name++)
+                bytes.AddRange(BitConverter.GetBytes(worldName[name]));
+            //
+            bytes.AddRange(BitConverter.GetBytes(seed));
+            bytes.AddRange(BitConverter.GetBytes(Chunk.chunkSize)); // check before something bad happens
+            // this is making someone happy, just to notice, that it won't do anything! (Ha Ha)
+            bytes.AddRange(BitConverter.GetBytes(chunkXcount));
+            bytes.AddRange(BitConverter.GetBytes(chunkYcount));
+            bytes.AddRange(BitConverter.GetBytes(chunkList.Count));
+            for (int ch = 0; ch < chunkList.Count;ch++)
+            {
+                bytes.AddRange(chunkList[ch].GetAsBytes());
+            }
+            // room for future stuff!
+            return bytes.ToArray();
         }
     }
 }
