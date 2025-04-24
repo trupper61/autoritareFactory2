@@ -118,7 +118,7 @@ namespace factordictatorship.drawing
             {
                 foreach(Fabrikgebeude fbu in wpi.chRef.buildings)
                 {
-                    Image drawImg = ResourceHandler.buildingSet[fbu.GetType().GetHashCode()];
+                    Image drawImg = ResourceHandler.buildingSet[fbu.GetType().GetHashCode() + fbu.Drehung - 1];
                     //Rectangle pos = new Rectangle(TranslateWorld2Screen(new Point(fbu.PositionX, fbu.PositionY)), drawImg.Size);
                     Rectangle pos = new Rectangle(
                         TranslateWorld2Screen(new Point(fbu.PositionX, fbu.PositionY)),
@@ -164,7 +164,7 @@ namespace factordictatorship.drawing
             if (tilePos.X > mainForms.Width || tilePos.Y > mainForms.Height)
                 return;
             // get image
-            Image factoryBuilding = ResourceHandler.buildingSet[fbu.GetType().GetHashCode()];
+            Image factoryBuilding = ResourceHandler.buildingSet[fbu.GetType().GetHashCode() + fbu.Drehung- 1];
 
             // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/advanced/how-to-use-a-color-matrix-to-set-alpha-values-in-images?view=netframeworkdesktop-4.8
             // Initialize the color matrix.

@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -34,6 +35,7 @@ namespace factordictatorship
         public string aktuellerModus = "";
         public Panel buildPanel;
         public Panel menuPanel;
+        public int rotateState = 1;
         public Rezepte[] rezepte =
         {
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
@@ -114,6 +116,7 @@ namespace factordictatorship
             switch (grs)
             {
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.ColeOre:throw new Exception("Hey Markus insert stuff here!"); return autoritaereFactory.ResourceType.IronOre;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -125,7 +128,7 @@ namespace factordictatorship
             if (aktuellerModus == "Constructor")
             {
 
-                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
+                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y, rotateState);
                 List<Fabrikgebeude> conflictingEntities = mapWorld.GetEntityInBox(kon.PositionX, kon.PositionY, kon.SizeX, kon.SizeY);
                 if (conflictingEntities.Count == 0)
                 {
@@ -142,7 +145,7 @@ namespace factordictatorship
             {
                 GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
                 // TODO Miner Resource zu GroundResource ändern
-                Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
+                Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                 if (lffb.Count == 0 && resource == GroundResource.IronOre)
                 {
@@ -159,7 +162,7 @@ namespace factordictatorship
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
                 if (fab.Count == 0)
                 {
-                    MessageBox.Show("Nix zum Löschen");
+                    //MessageBox.Show("Nix zum Löschen");
                 }
                 else
                 {
@@ -167,7 +170,20 @@ namespace factordictatorship
                     {
                         mapWorld.RemoveEntity(f);
                     }
-                    aktuellerModus = null;
+                    //aktuellerModus = null;
+                }
+            }
+            else
+            {
+                List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
+                if (fab.Count == 0)
+                    return;
+                foreach (Fabrikgebeude f in fab)
+                {
+                    if (f is Konstrucktor)
+                    {
+                        ShowKonInterface(f as Konstrucktor);
+                    }
                 }
             }
             else
@@ -204,7 +220,7 @@ namespace factordictatorship
                 // this is really badly optimised... (Who cares)
                 if (aktuellerModus == "Constructor")
                 {
-                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
+                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y, rotateState);
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
                     if (lffb.Count == 0)
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
@@ -217,7 +233,7 @@ namespace factordictatorship
                     GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
 
                     // TODO: Miner resource to GroundType!
-                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
+                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                     if (lffb.Count == 0 && resource == GroundResource.IronOre)
                     {
@@ -233,9 +249,16 @@ namespace factordictatorship
                     if (isDragging)
                     {
                         List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
+                        if(beltLine.Count > 1)
+                        {// auto rotate the lines
+                            if (beltLine[0].X < beltLine[1].X) rotateState = 1;
+                            if (beltLine[0].Y < beltLine[1].Y) rotateState = 2;
+                            if (beltLine[0].X > beltLine[1].X) rotateState = 3;
+                            if (beltLine[0].Y > beltLine[1].Y) rotateState = 4;
+                        }
                         foreach (var pt in beltLine)
                         {
-                            Band belt = new Band(3, 20, pt.X, pt.Y);
+                            Band belt = new Band(rotateState, 20, pt.X, pt.Y);
                             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                             if (lffb.Count == 0)
                             {
@@ -249,7 +272,7 @@ namespace factordictatorship
                     }
                     else
                     {
-                        Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
+                        Band belt = new Band(rotateState, 20, worldPoint.X, worldPoint.Y);
                         List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                         if (lffb.Count == 0)
                         {
@@ -338,7 +361,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(3, 20, x, y);
+            Band belt = new Band(rotateState, 20, x, y);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {
@@ -383,6 +406,13 @@ namespace factordictatorship
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
             destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy";
             toolStrip.Items.Add(destroyBtn);
+            ToolStripButton rotateBtn = new ToolStripButton("Rotate");
+            rotateBtn.Click += (s, e) =>
+            {
+                rotateState %= 4;
+                rotateState ++;
+            };
+            toolStrip.Items.Add(rotateBtn);
 
             Controls.Add(toolStrip);
             this.Resize += new EventHandler(OnFormResize);
@@ -413,12 +443,21 @@ namespace factordictatorship
                 Size = new Size(180, 30),
                 Location = new Point(10, 50)
             };
+            saveBtn.Click += (s, e) => {
+                byte[] worldData = mapWorld.GetAsBytes();
+                FileStream fptr = File.OpenWrite(mapWorld.worldName + ".world");
+                fptr.Write(worldData,0, worldData.Length);
+                fptr.Close();
+            };
             menuPanel.Controls.Add(saveBtn);
             Button loadBtn = new Button
             {
                 Text = "Load",
                 Size = new Size(180, 30),
                 Location = new Point(10, 90)
+            };
+            loadBtn.Click += (s, e) => {
+                throw new Exception("I need to add this stuff!");
             };
             menuPanel.Controls.Add(loadBtn);
             Button closeBtn = new Button

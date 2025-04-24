@@ -56,7 +56,7 @@ namespace factordictatorship.setup.BaenderTypes
                     //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
                     foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                     {
-                        if (BandNxt.Richtung != curveBand.RichtungAusgang) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
+                        if (BandNxt.drehung != curveBand.RichtungAusgang) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
                         if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
                         BandNxt = gb;
                         //determineTransfer(band, BandNxt);
@@ -77,7 +77,7 @@ namespace factordictatorship.setup.BaenderTypes
         {
             base.determineTransfer(band, BandNxt, curveBand);
 
-            if (BandNxt.Richtung == curveBand.RichtungAusgang)
+            if (BandNxt.drehung == curveBand.RichtungAusgang)
             {
                 foreach (Resource resources in band.resource)
                 {
