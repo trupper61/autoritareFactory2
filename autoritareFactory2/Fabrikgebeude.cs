@@ -21,12 +21,23 @@ namespace factordictatorship
         public int LängeInXRichtung { get { return längeInXRichtung; } }
         internal int längeInYRichtung;
         public int LängeInYRichtung { get { return längeInYRichtung; } }
+        internal int drehung; // ??? wert der Dreung 1: Eingang links, Ausgang rechts und dann im Urzeigersinn bis 4: Engang unten, Ausgang oben
+        public int Drehung { get { return drehung; } }
+
         public Fabrikgebeude(int positionX, int positionY)
         {
             gebeude_ID++;
             gebeudeID = gebeude_ID;
             this.positionX = positionX;
             this.positionY = positionY;
+        }
+        public Fabrikgebeude(int positionX, int positionY,int drehung)
+        {
+            gebeude_ID++;
+            gebeudeID = gebeude_ID;
+            this.positionX = positionX;
+            this.positionY = positionY;
+            this.drehung = drehung;
         }
         public abstract void Iteration();
     }

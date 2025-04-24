@@ -31,11 +31,8 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private int verbleibendeProduktionsdauer;//verbleibende dauer des Produktionsprozesses in millisekunden
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
-        private int drehung;//wert der Dreung 1: Eingang links, Ausgang rechts und dann im Urzeigersinn bis 4: Engang unten, Ausgang oben
-        public int Drehung { get { return drehung; } }
-        public Konstrucktor(int positionX, int positionY, int drehung) : base(positionX, positionY)
+        public Konstrucktor(int positionX, int positionY, int drehung) : base(positionX, positionY,drehung)
         {
-            this.drehung = drehung;
             längeInXRichtung = 2;
             längeInYRichtung = 1;
             PassLängeZUDreungAn(drehung);

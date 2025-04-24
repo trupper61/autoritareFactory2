@@ -1,6 +1,7 @@
 ﻿using autoritaereFactory.setup;
 using factordictatorship.setup;
 using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -22,7 +23,8 @@ namespace factordictatorship.Resources
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("belt.png") },
             {typeof(Konstrucktor).GetHashCode(),LoadImage("factory.png") },
-            {typeof(Miner).GetHashCode(),LoadImage("miner.png") } };
+            {typeof(Miner).GetHashCode(),LoadImage("miner.png") } 
+        };
         public const int imageSize = 32;
         private static Image LoadImage(string path)
         {
@@ -37,6 +39,21 @@ namespace factordictatorship.Resources
                 path = "..\\" + path;
             }
             return null;
+        }
+        internal static void SetupBuilding()
+        {
+            List<int> keys = buildingSet.Keys.ToList();
+            foreach (int key in keys)
+            {
+                Image img = buildingSet[key];
+                //
+                for (int i = 1; i <= 3; i++)
+                {
+                    img = (Image)img.Clone();
+                    img.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                    buildingSet.Add(key + i, img);
+                }
+            }
         }
     }
 }

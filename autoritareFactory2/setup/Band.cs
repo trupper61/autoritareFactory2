@@ -21,14 +21,14 @@ namespace factordictatorship.setup
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
-        public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
         public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY)
-            : base(positionX, positionY)
+            : base(positionX, positionY,richtung)
         {
             itemAnzahlMoment = ItemAnzahlMoment;
-            richtung = Richtung;
+            //drehung = richtung;
+            //richtung = Richtung;
             längeInXRichtung = 1;
             längeInYRichtung = 1;
         }
@@ -91,7 +91,7 @@ namespace factordictatorship.setup
                     //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
                     foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                     {
-                        if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
+                        if (BandNxt.drehung != band.drehung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
                         if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
                         BandNxt = gb;
                         determineTransfer(band, BandNxt, bandCur);
@@ -109,7 +109,7 @@ namespace factordictatorship.setup
         }
         public virtual void determineTransfer(Band band, Band BandNxt, CurveBand curveBand) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
-            if (BandNxt.Richtung == band.Richtung)
+            if (BandNxt.drehung == band.drehung)
             {
                 foreach (Resource resources in band.resource)
                 {
