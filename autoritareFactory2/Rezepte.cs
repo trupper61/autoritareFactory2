@@ -9,7 +9,8 @@ namespace factordictatorship
 {
     public enum zugehörigesGebeude
     {
-        Konstrucktor
+        Konstrucktor,
+        Fabrikator
     }
 
     public class Rezepte
@@ -28,6 +29,7 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private string rezeptName;
         public string RezeptName { get { return rezeptName; } }
+
         public Rezepte(zugehörigesGebeude gebeudeTyp, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
         {
             this.gebeudeTyp = gebeudeTyp;
@@ -35,6 +37,19 @@ namespace factordictatorship
             this.rezeptName = rezeptName;
             benotigteRecursen.Add(benotigteRecurse1);
             mengenBenotigteRecurse.Add(anzahlbenotigteRecursen1);
+            ergebnissRecursen.Add(ergebnissRecurse1);
+            mengenErgebnissRecursen.Add(anzahlergebnissRecursen);
+        }
+
+        public Rezepte(zugehörigesGebeude gebeudeTyp, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, ResourceType benotigteRecurse2, int anzahlbenotigteRecursen2, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
+        {
+            this.gebeudeTyp = gebeudeTyp;
+            this.produktionsdauer = produktionsdauer;
+            this.rezeptName = rezeptName;
+            benotigteRecursen.Add(benotigteRecurse1);
+            mengenBenotigteRecurse.Add(anzahlbenotigteRecursen1);
+            benotigteRecursen.Add(benotigteRecurse2);
+            mengenBenotigteRecurse.Add(anzahlbenotigteRecursen2);
             ergebnissRecursen.Add(ergebnissRecurse1);
             mengenErgebnissRecursen.Add(anzahlergebnissRecursen);
         }

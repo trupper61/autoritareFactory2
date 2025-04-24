@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="drawing\WorldDrawer.cs" />
     <Compile Include="drawing\WorldPartImage.cs" />
+    <Compile Include="Fabrikator.cs" />
     <Compile Include="Fabrikgebeude.cs" />
     <Compile Include="formsElement\NoFocusButton.cs">
       <SubType>Component</SubType>

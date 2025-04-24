@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace factordictatorship
 {
-    public class Konstrucktor : Fabrikgebeude
+    public class Fabrikator : Fabrikgebeude
     {
         private ResourceType typBenotigteRecurse1;
         public ResourceType TypBenotigteRecurse1 { get { return typBenotigteRecurse1; } }
@@ -19,6 +19,16 @@ namespace factordictatorship
         public int NötigeMengenBenotigteRecurse1 { get { return nötigeMengenBenotigteRecurse1; } }
         private int maxAnzalBenotigteRecurse1 = 100;
         public int MaxAnzalBenotigteRecurse1 { get { return maxAnzalBenotigteRecurse1; } }
+
+        private ResourceType typBenotigteRecurse2;
+        public ResourceType TypBenotigteRecurse2 { get { return typBenotigteRecurse2; } }
+        private List<Resource> benotigteRecurse2 = new List<Resource>();//Liste mit der zweiten für die Produktion nötige Recurse 
+        public List<Resource> BenotigteRecurse2 { get { return benotigteRecurse2; } }
+        private int nötigeMengenBenotigteRecurse2;//menge der zweiten für die Produktion nötige Recurse um zu Produzieren
+        public int NötigeMengenBenotigteRecurse2 { get { return nötigeMengenBenotigteRecurse2; } }
+        private int maxAnzalBenotigteRecurse2 = 100;
+        public int MaxAnzalBenotigteRecurse2 { get { return maxAnzalBenotigteRecurse2; } }
+
         private ResourceType typErgebnissRecurse1;
         public ResourceType TypErgebnissRecurse1 { get { return typErgebnissRecurse1; } }
         private List<Resource> ergebnissRecurse1 = new List<Resource>();//name der ersten ergebniss Recurse 
@@ -27,17 +37,18 @@ namespace factordictatorship
         public int MengenErgebnissRecursen1 { get { return mengenErgebnissRecursen1; } }
         private int maxAnzalErgebnissRecurse1 = 100;
         public int MaxAnzalErgebnissRecurse1 { get { return maxAnzalErgebnissRecurse1; } }
+
         private int produktionsdauer;//dauer eines Produktionsprozesses in millisekunden
         public int Produktionsdauer { get { return produktionsdauer; } }
         private int verbleibendeProduktionsdauer;//verbleibende dauer des Produktionsprozesses in millisekunden
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
         private int drehung;//wert der Dreung 1: Eingang links, Ausgang rechts und dann im Urzeigersinn bis 4: Engang unten, Ausgang oben
         public int Drehung { get { return drehung; } }
-        public Konstrucktor(int positionX, int positionY, int drehung) : base(positionX, positionY)
+        public Fabrikator(int positionX, int positionY, int drehung) : base(positionX, positionY)
         {
             this.drehung = drehung;
-            längeInXRichtung = 2;
-            längeInYRichtung = 1;
+            längeInXRichtung = 3;
+            längeInYRichtung = 2;
             PassLängeZUDreungAn(drehung);
         }
         private void PassLängeZUDreungAn(int drehungswert)
@@ -53,8 +64,13 @@ namespace factordictatorship
         {
             typBenotigteRecurse1 = gewähltesRezept.BenotigteRecursen[0];
             nötigeMengenBenotigteRecurse1 = gewähltesRezept.MengenBenotigteRecurse[0];
+
+            typBenotigteRecurse2 = gewähltesRezept.BenotigteRecursen[1];
+            nötigeMengenBenotigteRecurse2 = gewähltesRezept.MengenBenotigteRecurse[1];
+
             typErgebnissRecurse1 = gewähltesRezept.ErgebnissRecursen[0];
             mengenErgebnissRecursen1 = gewähltesRezept.MengenErgebnissRecursen[0];
+
             produktionsdauer = gewähltesRezept.Produktionsdauer;
             verbleibendeProduktionsdauer = produktionsdauer;
         }
@@ -64,14 +80,17 @@ namespace factordictatorship
             {
                 produziere();
                 legAufBand(ergebnissRecurse1, (längeInXRichtung - 1) + 1, 0);
-                nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);
+                nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);//heufige wiederholung damit jeder Eingang alle eingangsrecurcen nimmt
+                nimmVomBand(benotigteRecurse2, -1, 0, typBenotigteRecurse2, maxAnzalBenotigteRecurse2);
+                nimmVomBand(benotigteRecurse1, -1, 1, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);
+                nimmVomBand(benotigteRecurse2, -1, 1, typBenotigteRecurse2, maxAnzalBenotigteRecurse2);
             }
         }
         private void produziere()
         {
             if (verbleibendeProduktionsdauer > 0)
             {
-                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
+                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 && benotigteRecurse2.Count >= nötigeMengenBenotigteRecurse2 && (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
                 {
                     verbleibendeProduktionsdauer -= 100;
                 }
@@ -130,7 +149,7 @@ namespace factordictatorship
                                     nehmendeRecursenListe.Add(band.NimmRescourceVomBand(i));
                                     break;
                                 }
-                                if (i == band.resource.Count-1)
+                                if (i == band.resource.Count - 1)
                                 {
                                     return;
                                 }
@@ -143,7 +162,7 @@ namespace factordictatorship
         }
         private int DrehePAufXAchse(int VX, int VY)
         {
-            return PositionX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VY + ((drehung / 2) % 2) * (längeInXRichtung - 1);          
+            return PositionX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VY + ((drehung / 2) % 2) * (längeInXRichtung - 1);
         }
         private int DrehePAufYAchse(int VX, int VY)
         {
@@ -151,7 +170,7 @@ namespace factordictatorship
         }
         public override string ToString()
         {
-            return "Konstruktor";
+            return "Fabrikator";
         }
     }
 }

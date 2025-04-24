@@ -38,7 +38,20 @@ namespace factordictatorship
         {
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800),
-            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenplatte", autoritaereFactory.ResourceType.IronPlate, 2, 1500)
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenplatte", autoritaereFactory.ResourceType.IronPlate, 2, 1500),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronStick, 1, "Schrauben", autoritaereFactory.ResourceType.Screw, 4, 1000),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.CopperOre, 1, "Kupferbarren", autoritaereFactory.ResourceType.CopperIngot, 1, 1500),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.CopperIngot, 1, "Kupferdrat", autoritaereFactory.ResourceType.CopperWire, 2, 1300),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.CopperWire, 2, "Kabel", autoritaereFactory.ResourceType.Cable, 1, 1700),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.SteelIngot, 3, "Stahlträger", autoritaereFactory.ResourceType.SteelBeam, 1, 2300),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.SteelIngot, 2, "Stahlrohr", autoritaereFactory.ResourceType.SteelRod, 1, 1900),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.limestone, 5, "Betong", autoritaereFactory.ResourceType.Concrete, 3, 8000),
+
+            new Rezepte(zugehörigesGebeude.Fabrikator, autoritaereFactory.ResourceType.IronOre, 5, autoritaereFactory.ResourceType.ColeOre, 5, "Stahlbarren", autoritaereFactory.ResourceType.SteelIngot, 5, 2000),
+            new Rezepte(zugehörigesGebeude.Fabrikator, autoritaereFactory.ResourceType.SteelBeam, 5, autoritaereFactory.ResourceType.Concrete, 8, "Stahlbetongträger", autoritaereFactory.ResourceType.SteelConcreteBeam, 1, 5000),
+            new Rezepte(zugehörigesGebeude.Fabrikator, autoritaereFactory.ResourceType.Screw, 12, autoritaereFactory.ResourceType.IronStick, 3, "Rotor", autoritaereFactory.ResourceType.Rotor, 1, 15000),
+            new Rezepte(zugehörigesGebeude.Fabrikator, autoritaereFactory.ResourceType.CopperWire, 15, autoritaereFactory.ResourceType.SteelRod, 5, "Stator", autoritaereFactory.ResourceType.Stator, 1, 17000),
+            new Rezepte(zugehörigesGebeude.Fabrikator, autoritaereFactory.ResourceType.Rotor, 5, autoritaereFactory.ResourceType.Stator, 5, "Motor", autoritaereFactory.ResourceType.Motor, 1, 30000)
         };
         public bool isDragging = false;
         public Point beltStart;

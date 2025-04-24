@@ -16,7 +16,7 @@ namespace factordictatorship.setup
 {
     public class Band : Fabrikgebeude
     {
-        public List<Resource> resource { get; }
+        public List<Resource> resource { get; } = new List<Resource>();
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
