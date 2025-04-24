@@ -149,6 +149,9 @@ namespace factordictatorship
         {
             return PositionY - Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VY + (drehung / 3) * (längeInYRichtung - 1);
         }
-
+        public override string ToString()
+        {
+            return "Konstruktor";
+        }
     }
 }
