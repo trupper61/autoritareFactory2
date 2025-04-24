@@ -38,6 +38,16 @@ namespace factordictatorship
         public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
         public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
         public PlayerData player = new PlayerData(0);
+        public Rezepte[] rezepte =
+        {
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800),
+            new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenplatte", autoritaereFactory.ResourceType.IronPlate, 2, 1500)
+        };
+        public bool isDragging = false;
+        public Point beltStart;
+        public Point beltEnd;
+        public Panel konInterface;
         public world()
         {
             InitializeComponent();
@@ -77,6 +87,26 @@ namespace factordictatorship
             MouseMove += OnMouseMove;
             Paint += PaintHandler;
             FormClosed += OnFormClosed;
+            MouseDown += OnMouseDown;
+            MouseUp += OnMouseUp;
+        }
+        private void OnMouseDown(object sender, MouseEventArgs e)
+        {
+            if (aktuellerModus == "Belt" && e.Button == MouseButtons.Left)
+            {
+                isDragging = true;
+                beltStart = wlrdDrawer.TranslateScreen2World(e.Location);   
+            }
+        }
+        private void OnMouseUp(object sender, MouseEventArgs e)
+        {
+            if (aktuellerModus == "Belt" && isDragging)
+            {
+                isDragging = false;
+                beltEnd = wlrdDrawer.TranslateScreen2World(e.Location);
+                PlaceBeltLine(beltStart, beltEnd);
+                aktuellerModus = null;
+            }
         }
         private void OnMouseMove(object sender, MouseEventArgs e)
         {
@@ -86,7 +116,7 @@ namespace factordictatorship
         {
             switch (grs)
             {
-                case GroundResource.Iron:return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.IronOre:return autoritaereFactory.ResourceType.IronOre;
                 default:return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -117,23 +147,9 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && resource == GroundResource.Iron)
+                if (lffb.Count == 0 && resource == GroundResource.IronOre)
                 {
                     mapWorld.AddEntityAt(miner);
-                    aktuellerModus = null;
-                }
-                else
-                {
-                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
-                }
-            }
-            else if (aktuellerModus == "Belt")
-            {
-                Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
-                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
-                if (lffb.Count == 0)
-                {
-                    mapWorld.AddEntityAt(belt);
                     aktuellerModus = null;
                 }
                 else
@@ -157,8 +173,20 @@ namespace factordictatorship
                     aktuellerModus = null;
                 }
             }
+            else
+            {
+                List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
+                if (fab.Count == 0)
+                    return;
+                foreach(Fabrikgebeude f in fab)
+                {
+                    if (f is Konstrucktor)
+                    {
+                        ShowKonInterface(f as Konstrucktor);
+                    }
+                }
+            }
         }
-
         public void RefreshLoop(object sender, EventArgs e)
         {
             this.Invalidate(DisplayRectangle);
@@ -194,7 +222,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && resource == GroundResource.Iron)
+                    if (lffb.Count == 0 && resource == GroundResource.IronOre)
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
@@ -205,15 +233,35 @@ namespace factordictatorship
                 }
                 else if (aktuellerModus == "Belt")
                 {
-                    Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
-                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
-                    if (lffb.Count == 0)
+                    if (isDragging)
                     {
-                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 127, 255, 95));
+                        List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
+                        foreach (var pt in beltLine)
+                        {
+                            Band belt = new Band(3, 20, pt.X, pt.Y);
+                            List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
+                            if (lffb.Count == 0)
+                            {
+                                wlrdDrawer.DrawPlacableBuilding(e, pt, belt, Color.FromArgb(127, 127, 255, 95));
+                            }
+                            else
+                            {
+                                wlrdDrawer.DrawPlacableBuilding(e, pt, belt, Color.FromArgb(127, 255, 64, 16));
+                            }
+                        }
                     }
                     else
                     {
-                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
+                        Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
+                        List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
+                        if (lffb.Count == 0)
+                        {
+                            wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 127, 255, 95));
+                        }
+                        else
+                        {
+                            wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
+                        }
                     }
                 }
                 if (aktuellerModus == "Destroy")
@@ -254,6 +302,51 @@ namespace factordictatorship
         {
             wlrdDrawer.Dispose();
             mapWorld.Dispose();
+        }
+        private List<Point> GetLinePoints(Point start, Point end)
+        {
+            List<Point> points = new List<Point>();
+            if (start.X != end.X && start.Y != end.Y) // Only straight lines
+                return points;
+            // Richtung der Linie in X- und Y-Richtung bestimmen (-1, 0, 1)
+            int dx = Math.Sign(end.X - start.X);
+            int dy = Math.Sign(end.Y - start.Y);
+
+            while (start.X != end.X || start.Y != end.Y)
+            {
+                points.Add(new Point(start.X, start.Y));
+                start.X += dx;
+                start.Y += dy;
+            }
+            points.Add(end);
+            return points;
+        }
+        private void PlaceBeltLine(Point start, Point end)
+        {
+            if (start.X != end.X && start.Y != end.Y)
+            {
+                // Only straight Lines
+                MessageBox.Show("Nur gerade Linien für die Transportbänder");
+                return;
+            }
+            int dx = Math.Sign(end.X - start.X);
+            int dy = Math.Sign(end.Y - start.Y);
+            while (start.X != end.X || start.Y != end.Y)
+            {
+                TryPlaceBeltAt(start.X, start.Y);
+                start.X += dx;
+                start.Y += dy;
+            }
+            TryPlaceBeltAt(end.X, end.Y);
+        }
+        private void TryPlaceBeltAt(int x, int y)
+        {
+            Band belt = new Band(3, 20, x, y);
+            List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
+            if (lffb.Count == 0)
+            {
+                mapWorld.AddEntityAt(belt);
+            }
         }
         private void InitUI()
         {
@@ -340,6 +433,16 @@ namespace factordictatorship
             closeBtn.Click += (s, e) => this.Close();
             menuPanel.Controls.Add(closeBtn);
             Controls.Add(menuPanel);
+
+            konInterface = new Panel
+            {
+                Size = new Size(250, 300),
+                Location = new Point(50, 50),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+            Controls.Add(konInterface);
         }
 
         // BuildPanel Resize Event
@@ -351,6 +454,8 @@ namespace factordictatorship
             buildPanel.Location = new Point((this.Width - width) / 2, (this.Height - height) / 2);
 
             menuPanel.Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75);
+
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
 
             SetupBuildPanel();
         }
@@ -451,6 +556,46 @@ namespace factordictatorship
         public void DisplayData() 
         {
             moneyAmount.Text = player.displayData();
+        public void ShowKonInterface(Konstrucktor kon)
+        {
+            konInterface.Visible = true;
+            konInterface.Controls.Clear();
+            Label name = new Label();
+            name.Text = kon.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+            konInterface.Controls.Add(name);
+            int y = 50;
+            int maxRight = name.Right;
+            foreach (Rezepte rezept in rezepte)
+            {
+                Button rezeptBtn = new Button();
+                rezeptBtn.Text = rezept.RezeptName + $" ({rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenErgebnissRecursen[0]} {rezept.ErgebnissRecursen[0]})";
+                rezeptBtn.Size = new Size(200, 30);
+                rezeptBtn.Location = new Point(10, y);
+                rezeptBtn.AutoSize = true;
+                rezeptBtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                rezeptBtn.Click += (s, e) =>
+                {
+                    kon.SpeichereRezept(rezept);
+                    konInterface.Visible = false;
+                };
+                konInterface.Controls.Add(rezeptBtn);
+                maxRight = Math.Max(maxRight, rezeptBtn.Right);
+                y += 40;
+            }
+            konInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => konInterface.Visible = false;
+            konInterface.Controls.Add(closeBtn);
         }
     }
 }
