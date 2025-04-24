@@ -111,7 +111,7 @@ namespace factordictatorship
         {
             switch (grs)
             {
-                case GroundResource.Iron:return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.IronOre:return autoritaereFactory.ResourceType.IronOre;
                 default:return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -142,7 +142,7 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && resource == GroundResource.Iron)
+                if (lffb.Count == 0 && resource == GroundResource.IronOre)
                 {
                     mapWorld.AddEntityAt(miner);
                     aktuellerModus = null;
@@ -217,7 +217,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && resource == GroundResource.Iron)
+                    if (lffb.Count == 0 && resource == GroundResource.IronOre)
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
