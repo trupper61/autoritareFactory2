@@ -52,9 +52,9 @@
     <Compile Include="formsElement\NoFocusButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PlayerData.cs" />
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />
-    <Compile Include="setup\BaenderTypes\CurvedBand2.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,6 +125,7 @@
     <Content Include="Resources\ColeOre.png" />
     <Content Include="Resources\IndustrialWasteland2.png" />
     <Content Include="Resources\IndustrialWasteland.png" />
+    <None Include="Resources\money.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

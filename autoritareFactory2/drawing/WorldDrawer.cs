@@ -35,8 +35,10 @@ namespace factordictatorship.drawing
         public void Update(PaintEventArgs e, float deltaTime)
         {
             double strength = (mainForms.IsKeyPressed(Keys.ShiftKey) ? 50 : 12);
-            double deltaX = (mainForms.IsKeyPressed(Keys.Right) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Left) ? strength : 0);
-            double deltaY = (mainForms.IsKeyPressed(Keys.Down) ? strength : 0) - (mainForms.IsKeyPressed(Keys.Up) ? strength : 0);
+            double deltaX = ((mainForms.IsKeyPressed(Keys.Right) || mainForms.IsKeyPressed(Keys.D)) ? strength : 0);
+            deltaX -= ((mainForms.IsKeyPressed(Keys.Left) || mainForms.IsKeyPressed(Keys.A)) ? strength : 0);
+            double deltaY = ((mainForms.IsKeyPressed(Keys.Down) || mainForms.IsKeyPressed(Keys.S)) ? strength : 0);
+            deltaY -= ((mainForms.IsKeyPressed(Keys.Up) || mainForms.IsKeyPressed(Keys.W)) ? strength : 0);
             cameraX += deltaX * deltaTime;
             cameraY += deltaY * deltaTime;
             if (cameraX < 0) cameraX = 0;
@@ -116,7 +118,7 @@ namespace factordictatorship.drawing
             {
                 foreach(Fabrikgebeude fbu in wpi.chRef.buildings)
                 {
-                    Image drawImg = ResourceHandler.buildingSet[fbu.GetType().GetHashCode()];
+                    Image drawImg = ResourceHandler.buildingSet[fbu.GetType().GetHashCode() + fbu.Drehung - 1];
                     //Rectangle pos = new Rectangle(TranslateWorld2Screen(new Point(fbu.PositionX, fbu.PositionY)), drawImg.Size);
                     Rectangle pos = new Rectangle(
                         TranslateWorld2Screen(new Point(fbu.PositionX, fbu.PositionY)),
@@ -162,7 +164,7 @@ namespace factordictatorship.drawing
             if (tilePos.X > mainForms.Width || tilePos.Y > mainForms.Height)
                 return;
             // get image
-            Image factoryBuilding = ResourceHandler.buildingSet[fbu.GetType().GetHashCode()];
+            Image factoryBuilding = ResourceHandler.buildingSet[fbu.GetType().GetHashCode() + fbu.Drehung- 1];
 
             // https://learn.microsoft.com/en-us/dotnet/desktop/winforms/advanced/how-to-use-a-color-matrix-to-set-alpha-values-in-images?view=netframeworkdesktop-4.8
             // Initialize the color matrix.
