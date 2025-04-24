@@ -186,6 +186,19 @@ namespace factordictatorship
                     }
                 }
             }
+            else
+            {
+                List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
+                if (fab.Count == 0)
+                    return;
+                foreach (Fabrikgebeude f in fab)
+                {
+                    if (f is Konstrucktor)
+                    {
+                        ShowKonInterface(f as Konstrucktor);
+                    }
+                }
+            }
         }
         public void RefreshLoop(object sender, EventArgs e)
         {

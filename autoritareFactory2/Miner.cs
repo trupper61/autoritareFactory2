@@ -28,6 +28,7 @@ namespace factordictatorship
             this.typResurce = typResurce;
             längeInXRichtung = 1;
             längeInYRichtung = 1;
+            this.drehung = drehung;
         }
         public override void Iteration()
         {
