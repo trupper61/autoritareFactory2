@@ -45,6 +45,7 @@ namespace factordictatorship
         public Point beltEnd;
         public Panel konInterface;
         public PlayerData player = new PlayerData(0);
+        public Panel inventoryPanel;
         public world()
         {
             InitializeComponent();
@@ -384,6 +385,9 @@ namespace factordictatorship
             destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy";
             toolStrip.Items.Add(destroyBtn);
 
+            ToolStripButton inventoryBtn = new ToolStripButton("Inventory");
+            inventoryBtn.Click += (s, e) => inventoryPanel.Visible = true;
+            toolStrip.Items.Add(inventoryBtn);
             Controls.Add(toolStrip);
             this.Resize += new EventHandler(OnFormResize);
 
@@ -440,6 +444,25 @@ namespace factordictatorship
             };
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
             Controls.Add(konInterface);
+            inventoryPanel = new Panel
+            {
+                Size = new Size((int)(this.ClientSize.Width * 0.3), (int)(this.ClientSize.Height * 0.6)),
+                Location = new Point(5, 5),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            inventoryPanel.Location = new Point((this.ClientSize.Width - inventoryPanel.Width) / 2, (this.ClientSize.Height - inventoryPanel.Height) / 2); 
+            Button closeInventoryBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(inventoryPanel.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeInventoryBtn.Click += (s, e) => inventoryPanel.Visible = false;
+            inventoryPanel.Controls.Add(closeInventoryBtn);
+            Controls.Add(inventoryPanel);
         }
 
         // BuildPanel Resize Event
