@@ -44,9 +44,11 @@ namespace factordictatorship
         public Point beltStart;
         public Point beltEnd;
         public Panel konInterface;
+        public PlayerData player = new PlayerData(0);
         public world()
         {
             InitializeComponent();
+            DisplayData();
             InitUI();
             mapWorld = new WorldMap(8, 8);
             for (int wrdX = 0; wrdX < mapWorld.chunkXcount; wrdX++)
@@ -587,6 +589,10 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => konInterface.Visible = false;
             konInterface.Controls.Add(closeBtn);
+
+        public void DisplayData() 
+        {
+            moneyAmount.Text = player.displayData();
         }
     }
 }
