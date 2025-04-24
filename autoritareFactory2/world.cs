@@ -248,7 +248,7 @@ namespace factordictatorship
                         List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
                         foreach (var pt in beltLine)
                         {
-                            Band belt = new Band(3, 20, pt.X, pt.Y, mapWorld);
+                            Band belt = new Band(1, 20, pt.X, pt.Y, mapWorld);
                             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                             if (lffb.Count == 0)
                             {
@@ -262,7 +262,7 @@ namespace factordictatorship
                     }
                     else
                     {
-                        Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y, mapWorld);
+                        Band belt = new Band(1, 20, worldPoint.X, worldPoint.Y, mapWorld);
                         List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                         if (lffb.Count == 0)
                         {
@@ -643,7 +643,6 @@ namespace factordictatorship
 
                 
             }
-            MessageBox.Show(rescourcen.Length.ToString());
             
             banInterface.Controls.Add(name);
             banInterface.Size = new Size(275, Math.Max(y + 10, 150));

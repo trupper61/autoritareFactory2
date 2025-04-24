@@ -125,6 +125,7 @@ namespace factordictatorship.setup
         {
             if (BandNxt.Richtung == band.Richtung)
             {
+                MessageBox.Show("true");
                 foreach (Resource resources in band.resource)
                 {
                     cooldownTimer.Interval = BandGeschwindigkeit;
