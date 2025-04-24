@@ -21,6 +21,25 @@ namespace autoritaereFactory
         IronIngot,
         IronOre,
         IronPlate,
-        IronStick
+        IronStick,
+        Screw,
+
+        CopperOre,
+        CopperIngot,
+        CopperWire,
+        Cable,
+
+        ColeOre,
+        SteelIngot,
+        SteelRod,
+        SteelBeam,
+        SteelConcreteBeam,
+
+        limestone,
+        Concrete,
+
+        Rotor,
+        Stator,
+        Motor
     }
 }

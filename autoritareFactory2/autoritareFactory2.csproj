@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="drawing\WorldDrawer.cs" />
     <Compile Include="drawing\WorldPartImage.cs" />
+    <Compile Include="Fabrikator.cs" />
     <Compile Include="Fabrikgebeude.cs" />
     <Compile Include="formsElement\NoFocusButton.cs">
       <SubType>Component</SubType>
@@ -55,6 +56,7 @@
     <Compile Include="PlayerData.cs" />
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />
+    <Compile Include="setup\BaenderTypes\CurvedBand2.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>

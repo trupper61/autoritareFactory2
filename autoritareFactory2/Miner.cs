@@ -18,6 +18,8 @@ namespace factordictatorship
         public List<Resource> Recurse { get { return recurse; } }
         private int maxAnzalRecurse = 100;
         public int MaxAnzalRecurse { get { return maxAnzalRecurse; } }
+        private int drehung;//wert der Dreung 1: Ausgang rechts und dann im Urzeigersinn bis 4: Ausgang oben
+        public int Drehung { get { return drehung; } }
         public Miner(int positionX, int positionY, int drehung, ResourceType typResurce) : base(positionX, positionY)
         {
             this.typResurce = typResurce;
@@ -35,7 +37,7 @@ namespace factordictatorship
             //if (recurse.Count < maxAnzalRecurse)
             //{
             //    Zähler++;
-            //    if (Zähler <= 10)
+            //    if (Zähler >= 10)
             //    {
             //        recurse.Add(new Resource(TypResurce));
             //        Zähler = 0;

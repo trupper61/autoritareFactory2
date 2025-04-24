@@ -14,7 +14,6 @@ namespace factordictatorship
         [STAThread]
         static void Main()
         {
-            Resources.ResourceHandler.SetupBuilding();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new world());
