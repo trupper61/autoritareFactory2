@@ -16,7 +16,8 @@ namespace factordictatorship.setup
 {
     public class Band : Fabrikgebeude
     {
-        public List<Resource> resource { get; }
+        public List<Resource> resource = new List<Resource>();
+        public WorldMap wrld;
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
@@ -24,17 +25,18 @@ namespace factordictatorship.setup
         public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
-        public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY)
+        public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY, WorldMap wrld)
             : base(positionX, positionY)
         {
             itemAnzahlMoment = ItemAnzahlMoment;
             richtung = Richtung;
             längeInXRichtung = 1;
             längeInYRichtung = 1;
+            this.wrld = wrld;
         }
         public override void Iteration()
         {
-            //throw new NotImplementedException();
+            InNaechsteBand(this, wrld);
         }
         public void ErkenneRescourcen()
         {
@@ -61,12 +63,15 @@ namespace factordictatorship.setup
             resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
             return r;
         }
-        public virtual void InNaechsteBand(Band band, Band BandNxt, CurveBand bandCur, WorldMap world, Konstrucktor konstrucktor)
+        public virtual void InNaechsteBand(Band band, WorldMap world)
         {
+            Band BandNxt;
             //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
             //Transfer rescourcen.
             int wertRotX = 0;
             int wertRotY = 0;
+
+            
 
             for (int i = 4; i > 0; i--)
             {
@@ -86,28 +91,37 @@ namespace factordictatorship.setup
                         wertRotY = 1;
                         break;
                 }
-                if (world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY).Count == 1)
+
+                List<Fabrikgebeude> values = world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
+
+                foreach(Fabrikgebeude v in values) 
                 {
-                    //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
-                    foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                    if(v is Band) 
                     {
-                        if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
-                        if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
-                        BandNxt = gb;
-                        determineTransfer(band, BandNxt, bandCur);
-                    }
+                        if (values.Count >= 1)
+                        {
+                            //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
+                            foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                            {
+                                BandNxt = gb;
+                                if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
+                                if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
 
-                    /*
-                    foreach(Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXRichtung, konstrucktor.längeInYRichtung)) 
-                    {
-                        
+                                determineTransfer(band, BandNxt);
+                            }
+
+                            /*
+                            foreach(Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXRichtung, konstrucktor.längeInYRichtung)) 
+                            {
+
+                            }
+                            */
+                        }
                     }
-                    */
                 }
-
             }
         }
-        public virtual void determineTransfer(Band band, Band BandNxt, CurveBand curveBand) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
+        public virtual void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
             if (BandNxt.Richtung == band.Richtung)
             {
@@ -125,6 +139,11 @@ namespace factordictatorship.setup
 
                 }
             }
+        }
+
+        public override string ToString()
+        {
+            return "Band";
         }
     }
 }

@@ -34,15 +34,15 @@ namespace factordictatorship
         }
         private void mine()
         {
-            //if (recurse.Count < maxAnzalRecurse)
-            //{
-            //    Zähler++;
-            //    if (Zähler <= 10)
-            //    {
-            //        recurse.Add(new Resource(TypResurce));
-            //        Zähler = 0;
-            //    }
-            //}
+            if (recurse.Count < maxAnzalRecurse)
+            {
+                Zähler++;
+                if (Zähler >= 10)
+                {
+                    recurse.Add(new Resource(TypResurce));
+                    Zähler = 0;
+                }
+            }
         }
         private void legAufBand(List<Resource> gebendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {
