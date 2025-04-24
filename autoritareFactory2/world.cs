@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -429,12 +430,21 @@ namespace factordictatorship
                 Size = new Size(180, 30),
                 Location = new Point(10, 50)
             };
+            saveBtn.Click += (s, e) => {
+                byte[] worldData = mapWorld.GetAsBytes();
+                FileStream fptr = File.OpenWrite(mapWorld.worldName);
+                fptr.Write(worldData,0, worldData.Length);
+                fptr.Close();
+            };
             menuPanel.Controls.Add(saveBtn);
             Button loadBtn = new Button
             {
                 Text = "Load",
                 Size = new Size(180, 30),
                 Location = new Point(10, 90)
+            };
+            loadBtn.Click += (s, e) => {
+                throw new Exception("I need to add this stuff!");
             };
             menuPanel.Controls.Add(loadBtn);
             Button closeBtn = new Button

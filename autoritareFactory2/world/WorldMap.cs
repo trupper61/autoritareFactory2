@@ -226,10 +226,6 @@ namespace autoritaereFactory.world
             List<byte> bytes = new List<byte>();
             bytes.AddRange(BitConverter.GetBytes(4469));
             bytes.AddRange(BitConverter.GetBytes(0)); // change here if you like (version stuff)
-            bytes.AddRange(BitConverter.GetBytes(worldName.Length));
-            // why isn't char == byte (just like in C)
-            for(int name = 0; name < worldName.Length; name++)
-                bytes.AddRange(BitConverter.GetBytes(worldName[name]));
             //
             bytes.AddRange(BitConverter.GetBytes(seed));
             bytes.AddRange(BitConverter.GetBytes(Chunk.chunkSize)); // check before something bad happens
