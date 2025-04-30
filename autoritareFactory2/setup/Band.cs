@@ -24,6 +24,8 @@ namespace factordictatorship.setup
         public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
         public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
+        public int RichtungEingang; //1 -> Eingang Links //2 -> Eingang Oben //3 -> Eingang Rechts // 4 -> Eingang Unten
+        public int RichtungAusgang; //1 -> Ausgang Rechts //2 -> Ausgang Unten //3 -> Ausgang Links //4 -> Ausgang Oben
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
         public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY, WorldMap wrld)
@@ -34,6 +36,8 @@ namespace factordictatorship.setup
             längeInXRichtung = 1;
             längeInYRichtung = 1;
             this.wrld = wrld;
+
+            
         }
         public override void Iteration()
         {
@@ -42,7 +46,7 @@ namespace factordictatorship.setup
         }
         public void ErkenneRescourcen()
         {
-            if (resource != null)
+            if (resource != null && ItemAnzahlMoment < ItemAnzahlMax)
             {
                 foreach (Resource r in resource)
                 {
@@ -130,16 +134,18 @@ namespace factordictatorship.setup
         // NEEEEEDSSSS FIXIIIIIIINGNGNGNGNGNGNGNGGNNGGNGNGNGNGN!!!!111111!!!11!!
         public virtual void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
-            if (BandNxt.Richtung == band.Richtung)
+            if (BandNxt.RichtungEingang == band.RichtungAusgang && BandNxt.ItemAnzahlMoment < band.ItemAnzahlMax)
             {
-                foreach (Resource resources in band.resource)
-                {
-                    BandNxt.RescourceKommtAufBand(resources);
-                    //band.currentRescourceList.Remove(resources);
-                }
-                //band.resource = band.currentRescourceList;
-                //BandNxt.resource = BandNxt.currentRescourceList;
+                
             }
+            foreach (Resource resources in band.resource)
+            {
+                BandNxt.RescourceKommtAufBand(resources);
+                BandNxt.ErkenneRescourcen();
+                //band.currentRescourceList.Remove(resources);
+            }
+            //band.resource = band.currentRescourceList;
+            //BandNxt.resource = BandNxt.currentRescourceList;
         }
 
         public override string ToString()

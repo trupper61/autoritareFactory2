@@ -57,9 +57,12 @@ namespace factordictatorship
                         band.ErkenneRescourcen();
                         while (band.ItemAnzahlMoment < band.ItemAnzahlMax & gebendeRecursenListe.Count > 0)
                         {
-                            band.RescourceKommtAufBand(gebendeRecursenListe[0]);
-                            gebendeRecursenListe.RemoveAt(0);
-                            band.ErkenneRescourcen();
+                            if(band.ItemAnzahlMoment < band.ItemAnzahlMax) 
+                            {
+                                band.RescourceKommtAufBand(gebendeRecursenListe[0]);
+                                gebendeRecursenListe.RemoveAt(0);
+                                band.ErkenneRescourcen();
+                            }
                         }
                     }
                 }
