@@ -34,6 +34,7 @@ namespace factordictatorship
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.moneyAmount = new System.Windows.Forms.Label();
             this.noFocusButton = new factordictatorship.formsElement.NoFocusButton();
+            this.openWorldFile = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -42,10 +43,9 @@ namespace factordictatorship
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImage = global::factordictatorship.Properties.Resources.money;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(717, 82);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Location = new System.Drawing.Point(538, 67);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(67, 52);
+            this.pictureBox1.Size = new System.Drawing.Size(50, 42);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Visible = false;
@@ -54,10 +54,9 @@ namespace factordictatorship
             // 
             this.moneyAmount.AutoSize = true;
             this.moneyAmount.BackColor = System.Drawing.Color.Transparent;
-            this.moneyAmount.Location = new System.Drawing.Point(680, 101);
-            this.moneyAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.moneyAmount.Location = new System.Drawing.Point(510, 82);
             this.moneyAmount.Name = "moneyAmount";
-            this.moneyAmount.Size = new System.Drawing.Size(44, 16);
+            this.moneyAmount.Size = new System.Drawing.Size(35, 13);
             this.moneyAmount.TabIndex = 2;
             this.moneyAmount.Text = "label1";
             this.moneyAmount.Visible = false;
@@ -65,25 +64,29 @@ namespace factordictatorship
             // noFocusButton
             // 
             this.noFocusButton.CausesValidation = false;
-            this.noFocusButton.Location = new System.Drawing.Point(84, 393);
-            this.noFocusButton.Margin = new System.Windows.Forms.Padding(4);
+            this.noFocusButton.Location = new System.Drawing.Point(63, 319);
             this.noFocusButton.Name = "noFocusButton";
-            this.noFocusButton.Size = new System.Drawing.Size(133, 43);
+            this.noFocusButton.Size = new System.Drawing.Size(100, 35);
             this.noFocusButton.TabIndex = 0;
             this.noFocusButton.Text = "Not Focusable Button";
             this.noFocusButton.UseVisualStyleBackColor = true;
             this.noFocusButton.Visible = false;
             // 
+            // openWorldFile
+            // 
+            this.openWorldFile.DefaultExt = "world";
+            this.openWorldFile.FileName = "open World";
+            // 
             // world
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(600, 366);
             this.Controls.Add(this.moneyAmount);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.noFocusButton);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "world";
             this.Text = "FactoriaAutoritaet";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -97,6 +100,7 @@ namespace factordictatorship
         private NoFocusButton noFocusButton;
         private PictureBox pictureBox1;
         private Label moneyAmount;
+        private OpenFileDialog openWorldFile;
     }
 }
 

@@ -23,21 +23,35 @@ namespace autoritaereFactory.world
         List<Chunk> chunkList;
         public string worldName;
         public int chunkXcount, chunkYcount;
-        private WorldMap() { }
+        private WorldMap()
+        {
+            theWorld = this;
+            chunkList = new List<Chunk>();
+            iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
+        }
         public WorldMap(int sizeX, int sizeY)
         {
             worldName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-            iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
             theWorld = this;
             chunkXcount = sizeX;
             chunkYcount = sizeY;
             chunkList = new List<Chunk>();
+            iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
+            _StartThread();
+        }
+        public void _StartThread()
+        {
+            shouldStopThread = false;
             iteratorThread.Start();
         }
         // this stops the worker thread
         public void Dispose()
         {
             shouldStopThread = true;
+        }
+        public void AwaitThread()
+        {
+            iteratorThread.Join();
         }
         // from and including start with the size (including)
         public List<Fabrikgebeude> GetEntityInBox(int posX, int posY, int width, int height)
@@ -227,15 +241,15 @@ namespace autoritaereFactory.world
         public byte[] GetAsBytes()
         {
             List<byte> bytes = new List<byte>();
-            bytes.AddRange(BitConverter.GetBytes(SPECIAL_FILE_NUMBER));
-            bytes.AddRange(BitConverter.GetBytes(SPECIAL_FILE_NUMBER));
+            bytes.AddRange(BitConverter.GetBytes((int)SPECIAL_FILE_NUMBER));
+            bytes.AddRange(BitConverter.GetBytes((int)SPECIAL_FILE_NUMBER));
             //
-            bytes.AddRange(BitConverter.GetBytes(Chunk.chunkSize)); // check before something bad happens
-            bytes.AddRange(BitConverter.GetBytes(seed));
+            bytes.AddRange(BitConverter.GetBytes((int)Chunk.chunkSize)); // check before something bad happens
+            bytes.AddRange(BitConverter.GetBytes((int)seed));
             // this is making someone happy, just to notice, that it won't do anything! (Ha Ha)
-            bytes.AddRange(BitConverter.GetBytes(chunkXcount));
-            bytes.AddRange(BitConverter.GetBytes(chunkYcount));
-            bytes.AddRange(BitConverter.GetBytes(chunkList.Count));
+            bytes.AddRange(BitConverter.GetBytes((int)chunkXcount));
+            bytes.AddRange(BitConverter.GetBytes((int)chunkYcount));
+            bytes.AddRange(BitConverter.GetBytes((int)chunkList.Count));
             for (int ch = 0; ch < chunkList.Count;ch++)
             {
                 bytes.AddRange(chunkList[ch].GetAsBytes());
@@ -258,10 +272,12 @@ namespace autoritaereFactory.world
             newMap.chunkYcount = BitConverter.ToInt32(bytes, offset + 8);
             int chunkCount = BitConverter.ToInt32(bytes, offset + 12);
             offset += 16;
-            newMap.chunkList = new List<Chunk>();
             for (int ch = 0; ch < chunkCount; ch++)
             {
-                newMap.chunkList.Add(Chunk.FromByteArray(bytes, ref offset));
+                if (bytes[offset++] == (byte)SavingPackets.ChunkPacket)
+                    newMap.chunkList.Add(Chunk.FromByteArray(bytes, ref offset));
+                else
+                    throw new Exception("this shouldn't bee here!");
             }
             // room for future stuff!
             return newMap;

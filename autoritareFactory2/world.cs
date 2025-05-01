@@ -444,7 +444,27 @@ namespace factordictatorship
                 Location = new Point(10, 90)
             };
             loadBtn.Click += (s, e) => {
-                throw new Exception("I need to add this stuff!");
+                openWorldFile.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
+                //openWorldFile.CustomPlaces.Add(FileDialogCustomPlace.)
+                DialogResult status = openWorldFile.ShowDialog();
+                if (status != DialogResult.OK)
+                    return;
+                Stream worldFptr = openWorldFile.OpenFile();
+                byte[] allData = new byte[worldFptr.Length];
+                int offset = 0;
+                worldFptr.Read(allData,offset,allData.Length);
+                WorldMap newMap = WorldMap.FromByteArray(allData, ref offset);
+                worldFptr.Close();
+                if (newMap != null)
+                {
+                    mapWorld.Dispose();
+                    mapWorld.AwaitThread();
+                    newMap.worldName = openWorldFile.FileName;
+                    if (newMap.worldName.EndsWith(".world"))
+                        newMap.worldName = newMap.worldName.Substring(0, newMap.worldName.Length - 6);
+                    mapWorld = newMap;
+                    mapWorld._StartThread();
+                }
             };
             menuPanel.Controls.Add(loadBtn);
             Button closeBtn = new Button

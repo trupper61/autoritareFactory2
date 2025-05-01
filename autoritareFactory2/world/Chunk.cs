@@ -154,6 +154,7 @@ namespace autoritaereFactory.world
         }
         private Chunk()
         {
+            blockState = new GroundResource[chunkSize, chunkSize];
             x = y = -100;
         }
         public GroundResource GetSubChunk(int innerX, int innerY)
@@ -200,8 +201,8 @@ namespace autoritaereFactory.world
         {
             List<byte> bytes = new List<byte>();
             bytes.Add((byte)SavingPackets.ChunkPacket);
-            bytes.AddRange(BitConverter.GetBytes(x));
-            bytes.AddRange(BitConverter.GetBytes(y));
+            bytes.AddRange(BitConverter.GetBytes((int)x));
+            bytes.AddRange(BitConverter.GetBytes((int)y));
             if((int)GroundResource.UpperBound < 255)
             {
                 for (int ovY = 0; ovY < chunkSize; ovY++)
@@ -215,7 +216,7 @@ namespace autoritaereFactory.world
                     for (int ovX = 0; ovX < chunkSize; ovX++)
                         bytes.AddRange(BitConverter.GetBytes((int)blockState[ovX, ovY]));
             }
-            bytes.AddRange(BitConverter.GetBytes(buildings.Count));
+            bytes.AddRange(BitConverter.GetBytes((int)buildings.Count));
             for (int ent = 0; ent < buildings.Count; ent++)
             {
                 // add the entity packet indicator, so fbu can do something funny
