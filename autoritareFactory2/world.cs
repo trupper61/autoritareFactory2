@@ -54,6 +54,7 @@ namespace factordictatorship
         public Point beltEnd;
         public Panel konInterface;
         public Panel banInterface;
+        public PlayerData player = new PlayerData(0);
         public world()
         {
             InitializeComponent();
@@ -101,7 +102,7 @@ namespace factordictatorship
             if (aktuellerModus == "Belt" && e.Button == MouseButtons.Left)
             {
                 isDragging = true;
-                beltStart = wlrdDrawer.TranslateScreen2World(e.Location);   
+                beltStart = wlrdDrawer.TranslateScreen2World(e.Location);
             }
         }
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -122,8 +123,8 @@ namespace factordictatorship
         {
             switch (grs)
             {
-                case GroundResource.IronOre:return autoritaereFactory.ResourceType.IronOre;
-                default:return (autoritaereFactory.ResourceType)(-1);
+                case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
+                default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
 
@@ -184,7 +185,7 @@ namespace factordictatorship
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
                 if (fab.Count == 0)
                     return;
-                foreach(Fabrikgebeude f in fab)
+                foreach (Fabrikgebeude f in fab)
                 {
                     if (f is Konstrucktor)
                     {
@@ -281,7 +282,7 @@ namespace factordictatorship
                         wlrdDrawer.DrawHover(e, worldPoint, Color.FromArgb(127, 255, 64, 16));
                     else
                         foreach (var f in lffb)
-                            wlrdDrawer.DrawPlacableBuilding(e, new Point(f.PositionX,f.PositionY), f, Color.FromArgb(127, 255, 64, 16));
+                            wlrdDrawer.DrawPlacableBuilding(e, new Point(f.PositionX, f.PositionY), f, Color.FromArgb(127, 255, 64, 16));
                 }
             }
         }
@@ -365,7 +366,7 @@ namespace factordictatorship
             buildPanel = new Panel
             {
                 Size = new Size(panelWidth, panelHeight),
-                Location = new Point((this.Width - panelWidth) / 2, (this.Height - panelHeight)/ 2),
+                Location = new Point((this.Width - panelWidth) / 2, (this.Height - panelHeight) / 2),
                 BackColor = Color.LightGray,
                 Visible = false,
             };
@@ -378,7 +379,7 @@ namespace factordictatorship
             toolStrip.Items.Add(menuBtn);
 
             ToolStripButton buildBtn = new ToolStripButton("Build");
-            buildBtn.Click += (s, e) => 
+            buildBtn.Click += (s, e) =>
             {
                 if (aktuellerModus == null)
                 {
@@ -389,12 +390,12 @@ namespace factordictatorship
                 {
                     aktuellerModus = null;
                     buildPanel.Visible = false;
-                }   
+                }
             };
             toolStrip.Items.Add(buildBtn);
 
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
-            destroyBtn.Click += (s, e) =>  aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy"; 
+            destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy";
             toolStrip.Items.Add(destroyBtn);
 
             Controls.Add(toolStrip);
@@ -658,6 +659,11 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
+        public void DisplayData()
+        {
+            //moneyAmount.Location = new Point(this.ClientSize.Width - 50, this.ClientSize.Height - 20);
+            moneyAmount.Text = player.displayData();
         }
     }
-}
+} 
+
