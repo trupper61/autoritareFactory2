@@ -34,6 +34,7 @@ namespace factordictatorship.setup
         {
             itemAnzahlMoment = ItemAnzahlMoment;
             Richtung = richtung;
+            RichtungAusgang = richtung;
             längeInXRichtung = 1;
             längeInYRichtung = 1;
             this.wrld = wrld;
