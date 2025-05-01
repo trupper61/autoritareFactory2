@@ -46,6 +46,9 @@ namespace factordictatorship
         public Panel konInterface;
         public PlayerData player = new PlayerData(0);
         public Panel inventoryPanel;
+        public Miner aktuellerMiner = null;
+        public Label resourceCountLabel = null;
+
         public world()
         {
             InitializeComponent();
@@ -182,12 +185,20 @@ namespace factordictatorship
                     {
                         ShowKonInterface(f as Konstrucktor);
                     }
+                    else if (f is Miner)
+                    {
+                        ShowMinerInterface(f as Miner);
+                    }
                 }
             }
         }
         public void RefreshLoop(object sender, EventArgs e)
         {
             this.Invalidate(DisplayRectangle);
+            if (konInterface.Visible  && aktuellerMiner != null && resourceCountLabel != null)
+            {
+                resourceCountLabel.Text = $"Gesammelt: {aktuellerMiner.Recurse.Count} / {aktuellerMiner.MaxAnzalRecurse}";
+            }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
         {
@@ -576,32 +587,62 @@ namespace factordictatorship
         {
             konInterface.Visible = true;
             konInterface.Controls.Clear();
-            Label name = new Label();
-            name.Text = kon.ToString();
-            name.Location = new Point(10, 10);
-            name.AutoSize = true;
+            Label name = new Label()
+            {
+                Text = "Konstruktor",
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
             konInterface.Controls.Add(name);
-            int y = 50;
-            int maxRight = name.Right;
+            int y = 40;
+            if (kon.TypErgebnissRecurse1 != null)
+            {
+                Label productInfo = new Label
+                {
+                    Text = $"Produces: {kon.MengenErgebnissRecursen1} x {kon.TypErgebnissRecurse1}",
+                    Location = new Point(10, y),
+                    AutoSize = true
+                };
+                konInterface.Controls.Add(productInfo);
+                y += 35;
+                Button productBtn = new Button
+                {
+                    Text = $"Produkt nehmen",
+                    Size = new Size(200, 30),
+                    Location = new Point(10, y)
+                };
+                productBtn.Click += (s, e) =>
+                {
+
+                };
+                konInterface.Controls.Add(productBtn);
+            }
+            y += 40;
+            Label rezepteLbl = new Label
+            {
+                Text = "Rezepte:",
+                Location = new Point(10, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(rezepteLbl);
+            y += 25;
             foreach (Rezepte rezept in rezepte)
             {
-                Button rezeptBtn = new Button();
-                rezeptBtn.Text = rezept.RezeptName + $" ({rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenErgebnissRecursen[0]} {rezept.ErgebnissRecursen[0]})";
-                rezeptBtn.Size = new Size(200, 30);
-                rezeptBtn.Location = new Point(10, y);
-                rezeptBtn.AutoSize = true;
-                rezeptBtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                Button rezeptBtn = new Button
+                {
+                    Text = rezept.RezeptName + $" ({rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenErgebnissRecursen[0]} {rezept.ErgebnissRecursen[0]})",
+                    Size = new Size(240, 30),
+                    Location = new Point(10, y)
+                };
                 rezeptBtn.Click += (s, e) =>
                 {
                     kon.SpeichereRezept(rezept);
-                    konInterface.Visible = false;
+                    ShowKonInterface(kon); // Neu laden nach Auswahl
                 };
                 konInterface.Controls.Add(rezeptBtn);
-                maxRight = Math.Max(maxRight, rezeptBtn.Right);
-                y += 40;
+                y += 35;
+
             }
-            konInterface.Size = new Size(275, Math.Max(y + 10, 150));
-            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
             Button closeBtn = new Button
             {
                 Text = "X",
@@ -612,6 +653,66 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => konInterface.Visible = false;
             konInterface.Controls.Add(closeBtn);
+            closeBtn.BringToFront();
+
+            konInterface.Size = new Size(270, Math.Max(y + 10, 200));
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+        }
+        public void ShowMinerInterface(Miner miner)
+        {
+            konInterface.Visible = true;
+            konInterface.Controls.Clear();
+            aktuellerMiner = miner;
+            Label name = new Label
+            {
+                Text = "Miner",
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(name);
+
+            int y = 40;
+            Label resourceTypelb = new Label
+            {
+                Text = $"Ressourcentyp: {miner.TypResurce}",
+                Location = new Point(10, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(resourceTypelb);
+            y += 25;
+            resourceCountLabel = new Label
+            {
+                Text = $"Gesammelt: {miner.Recurse.Count} / {miner.MaxAnzalRecurse}",
+                Location = new Point(10, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(resourceCountLabel);
+            y += 35;
+            Button takeResourceBtn = new Button
+            {
+                Text = "Take resource",
+                Size = new Size(200, 30),
+                Location = new Point(10, y)
+            };
+            takeResourceBtn.Click += (s, e) =>
+            {
+                // inventory
+            };
+            konInterface.Controls.Add(takeResourceBtn);
+            y += 40;
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => konInterface.Visible = false;
+            konInterface.Controls.Add(closeBtn);
+            closeBtn.BringToFront();
+            konInterface.Size = new Size(270, Math.Max(y + 10, 150));
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
         }
         public void DisplayData()
         {
