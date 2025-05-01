@@ -12,6 +12,7 @@ namespace factordictatorship
     public class Konstrucktor : Fabrikgebeude
     {
         private ResourceType typBenotigteRecurse1;
+        private int benutzesRezept;
         public ResourceType TypBenotigteRecurse1 { get { return typBenotigteRecurse1; } }
         private List<Resource> benotigteRecurse1 = new List<Resource>();//Liste mit der ersten für die Produktion nötige Recurse 
         public List<Resource> BenotigteRecurse1 { get { return benotigteRecurse1; } }
@@ -33,15 +34,18 @@ namespace factordictatorship
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
         internal Konstrucktor() : base()
         {
+            benutzesRezept = -1;
             längeInXRichtung = 2;
             längeInYRichtung = 1;
         }
         public Konstrucktor(int positionX, int positionY, int drehung) : base(positionX, positionY,drehung)
         {
+            benutzesRezept = -1;
             längeInXRichtung = 2;
             längeInYRichtung = 1;
-            PassLängeZUDreungAn(drehung);
+            //PassLängeZUDreungAn(drehung);
         }
+        /* I don't like this.
         private void PassLängeZUDreungAn(int drehungswert)
         {
             if (drehungswert % 2 == 0)
@@ -50,9 +54,10 @@ namespace factordictatorship
                 längeInXRichtung = längeInYRichtung;
                 längeInYRichtung = speicherwert;
             }
-        }
+        }*/
         public void SpeichereRezept(Rezepte gewähltesRezept)
         {
+            benutzesRezept = gewähltesRezept.rezeptIndex;
             typBenotigteRecurse1 = gewähltesRezept.BenotigteRecursen[0];
             nötigeMengenBenotigteRecurse1 = gewähltesRezept.MengenBenotigteRecurse[0];
             typErgebnissRecurse1 = gewähltesRezept.ErgebnissRecursen[0];
@@ -158,11 +163,16 @@ namespace factordictatorship
         public override List<byte> GetAsBytes()
         {
             List<byte> bytes = base.GetAsBytes();
+            bytes.AddRange(BitConverter.GetBytes((int)benutzesRezept));
             return bytes;
         }
         public static Konstrucktor FromByteArray(byte[] bytes, ref int offset)
         {
             Konstrucktor newKonstrucktor = new Konstrucktor();
+            int benutzesRezept = BitConverter.ToInt32(bytes, offset);
+            if(benutzesRezept > -1)
+                newKonstrucktor.SpeichereRezept(world.rezepte[benutzesRezept]);
+            offset += 4;
             return newKonstrucktor;
         }
     }

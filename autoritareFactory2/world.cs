@@ -37,7 +37,7 @@ namespace factordictatorship
         public Panel buildPanel;
         public Panel menuPanel;
         public int rotateState = 1;
-        public Rezepte[] rezepte =
+        public static Rezepte[] rezepte =
         {
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800),

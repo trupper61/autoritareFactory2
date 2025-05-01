@@ -18,8 +18,8 @@ namespace factordictatorship
         public int GebeudeID { get { return gebeudeID; } }//ist eine id bei der jedes gebeude eine eigene hat
         public int PositionX { get { return positionX; } }//ist die Position des Feldes oben Links in der Ecke vom gebeude
         public int PositionY { get { return positionY; } }
-        public int SizeX { get { return längeInXRichtung; } }
-        public int SizeY { get { return längeInYRichtung; } }
+        public int SizeX { get { return drehung % 2 == 1 ? längeInXRichtung : längeInYRichtung; } }
+        public int SizeY { get { return drehung % 2 == 0 ? längeInXRichtung : längeInYRichtung; } }
         internal int längeInXRichtung;
         public int LängeInXRichtung { get { return längeInXRichtung; } }
         internal int längeInYRichtung;

@@ -27,6 +27,7 @@ namespace factordictatorship.setup
         {
             längeInXRichtung = 1;
             längeInYRichtung = 1;
+            resource = new List<Resource>();
         }
         public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY)
             : base(positionX, positionY,richtung)
@@ -134,11 +135,28 @@ namespace factordictatorship.setup
         public override List<byte> GetAsBytes()
         {
             List<byte> bytes = base.GetAsBytes();
+            if (resource == null)
+                bytes.AddRange(BitConverter.GetBytes((int)0));
+            else
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)resource.Count));
+                for (int i = 0; i < resource.Count; i++)
+                {
+                    bytes.AddRange(BitConverter.GetBytes((int)resource[i].Type));
+                }
+            }
             return bytes;
         }
         public static Band FromByteArray(byte[] bytes, ref int offset)
         {
             Band newBand = new Band();
+            int resourceCount = BitConverter.ToInt32 (bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newBand.resource.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes,offset)));
+                offset+= 4;
+            }
             return newBand;
         }
     }
