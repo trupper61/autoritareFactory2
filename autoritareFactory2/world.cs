@@ -11,6 +11,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
@@ -397,7 +398,7 @@ namespace factordictatorship
             toolStrip.Items.Add(destroyBtn);
 
             ToolStripButton inventoryBtn = new ToolStripButton("Inventory");
-            inventoryBtn.Click += (s, e) => inventoryPanel.Visible = true;
+            inventoryBtn.Click += (s, e) => ShowInventory();
             toolStrip.Items.Add(inventoryBtn);
             Controls.Add(toolStrip);
             this.Resize += new EventHandler(OnFormResize);
@@ -462,17 +463,7 @@ namespace factordictatorship
                 BackColor = Color.LightGray,
                 Visible = false
             };
-            inventoryPanel.Location = new Point((this.ClientSize.Width - inventoryPanel.Width) / 2, (this.ClientSize.Height - inventoryPanel.Height) / 2); 
-            Button closeInventoryBtn = new Button
-            {
-                Text = "X",
-                Size = new Size(30, 30),
-                Location = new Point(inventoryPanel.Width - 35, 5),
-                BackColor = Color.Red,
-                ForeColor = Color.White
-            };
-            closeInventoryBtn.Click += (s, e) => inventoryPanel.Visible = false;
-            inventoryPanel.Controls.Add(closeInventoryBtn);
+            inventoryPanel.Location = new Point((this.ClientSize.Width - inventoryPanel.Width) / 2, (this.ClientSize.Height - inventoryPanel.Height) / 2);
             Controls.Add(inventoryPanel);
         }
 
@@ -494,37 +485,12 @@ namespace factordictatorship
         private void SetupBuildPanel()
         {
             buildPanel.Controls.Clear();
-            int panelWidth = buildPanel.Width;
-            int panelHeight = buildPanel.Height;
 
-            Panel inventoryPanel = new Panel
-            {
-                Size = new Size(panelWidth / 2, panelHeight),
-                Location = new Point(0, 0),
-                BackColor = Color.DarkGray
-            };
-            Label inventoryLabel = new Label
-            {
-                Text = "Inventar (WIP)",
-                AutoSize = false,
-                Size = new Size(inventoryPanel.Width, 30),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(0, 20)
-            };
-            inventoryPanel.Controls.Add(inventoryLabel);
-            buildPanel.Controls.Add(inventoryPanel);
-
-            Panel buildOptionsPanel = new Panel
-            {
-                Size = new Size(panelWidth / 2, panelHeight),
-                Location = new Point(panelWidth / 2, 0),
-                BackColor = Color.LightBlue
-            };
             Button closeButton = new Button
             {
                 Text = "X",
                 Size = new Size(30, 30),
-                Location = new Point(buildOptionsPanel.Width - 40, 10),
+                Location = new Point(buildPanel.Width - 40, 10),
                 BackColor = Color.Red,
                 ForeColor = Color.White
             };
@@ -534,7 +500,7 @@ namespace factordictatorship
                 aktuellerModus = null;
                 this.Focus();
             };
-            buildOptionsPanel.Controls.Add(closeButton);
+            buildPanel.Controls.Add(closeButton);
             Label titleLabel = new Label
             {
                 Text = "Choose Building",
@@ -542,7 +508,7 @@ namespace factordictatorship
                 Location = new Point(10, 10),
                 AutoSize = true
             };
-            buildOptionsPanel.Controls.Add(titleLabel);
+            buildPanel.Controls.Add(titleLabel);
 
             var buildings = new List<String>
             {
@@ -566,10 +532,9 @@ namespace factordictatorship
                     buildPanel.Visible = false;
                     this.Focus();
                 };
-                buildOptionsPanel.Controls.Add(btn);
+                buildPanel.Controls.Add(btn);
                 y += 45;
             }
-            buildPanel.Controls.Add(buildOptionsPanel);
         }
         private void ToogleMenuPanel()
         {
@@ -688,17 +653,22 @@ namespace factordictatorship
             };
             konInterface.Controls.Add(resourceCountLabel);
             y += 35;
-            Button takeResourceBtn = new Button
+            Button takeBtn = new Button
             {
                 Text = "Take resource",
-                Size = new Size(200, 30),
-                Location = new Point(10, y)
-            };
-            takeResourceBtn.Click += (s, e) =>
+                Location = new Point(10, y),
+                Size = new Size(150, 30)
+            };         
+            takeBtn.Click += (s, e) =>
             {
-                // inventory
+                foreach (var res in miner.Recurse.ToList())
+                {
+                    player.AddResource(res);
+                    miner.Recurse.Remove(res);
+                }
+                ShowMinerInterface(miner);
             };
-            konInterface.Controls.Add(takeResourceBtn);
+            konInterface.Controls.Add(takeBtn);
             y += 40;
             Button closeBtn = new Button
             {
@@ -716,8 +686,47 @@ namespace factordictatorship
         }
         public void DisplayData()
         {
-            //moneyAmount.Location = new Point(this.ClientSize.Width - 50, this.ClientSize.Height - 20);
             moneyAmount.Text = player.displayData();
+        }
+        public void ShowInventory()
+        {
+            inventoryPanel.Visible = true;
+            inventoryPanel.Controls.Clear();
+            inventoryPanel.BringToFront();
+            Label title = new Label
+            {
+                Text = "Inventory",
+                Font = new Font("Arial", 12, FontStyle.Bold),
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
+            inventoryPanel.Controls.Add(title);
+            int y = 40;
+            foreach(var inv in player.inventories)
+            {
+                int totalQuantity = inv.Items.Count();
+                Label entry = new Label
+                {
+                    Text = $"{inv.Type}: {totalQuantity} / {inv.maxStack}",
+                    Location = new Point(10, y),
+                    AutoSize = true
+                };
+                inventoryPanel.Controls.Add(entry);
+                y += 25;
+            }
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(inventoryPanel.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => inventoryPanel.Visible = false;
+            inventoryPanel.Controls.Add(closeBtn);
+
+            inventoryPanel.Visible = true;
+            inventoryPanel.BringToFront();
         }
     }
 } 
