@@ -42,13 +42,14 @@ namespace factordictatorship
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenplatte", autoritaereFactory.ResourceType.IronPlate, 2, 1500)
         };
         public bool isDragging = false;
-        public Point beltStart;
+        public Point dragStart;
         public Point beltEnd;
         public Panel konInterface;
         public PlayerData player = new PlayerData(0);
         public Panel inventoryPanel;
         public Miner aktuellerMiner = null;
         public Label resourceCountLabel = null;
+        public Point dragPanelPoint;
 
         public world()
         {
@@ -97,7 +98,7 @@ namespace factordictatorship
             if (aktuellerModus == "Belt" && e.Button == MouseButtons.Left)
             {
                 isDragging = true;
-                beltStart = wlrdDrawer.TranslateScreen2World(e.Location);
+                dragStart = wlrdDrawer.TranslateScreen2World(e.Location);
             }
         }
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -106,7 +107,7 @@ namespace factordictatorship
             {
                 isDragging = false;
                 beltEnd = wlrdDrawer.TranslateScreen2World(e.Location);
-                PlaceBeltLine(beltStart, beltEnd);
+                PlaceBeltLine(dragStart, beltEnd);
                 aktuellerModus = null;
             }
         }
@@ -245,7 +246,7 @@ namespace factordictatorship
                 {
                     if (isDragging)
                     {
-                        List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
+                        List<Point> beltLine = GetLinePoints(dragStart, worldPoint);
                         foreach (var pt in beltLine)
                         {
                             Band belt = new Band(3, 20, pt.X, pt.Y);
@@ -464,6 +465,9 @@ namespace factordictatorship
                 Visible = false
             };
             inventoryPanel.Location = new Point((this.ClientSize.Width - inventoryPanel.Width) / 2, (this.ClientSize.Height - inventoryPanel.Height) / 2);
+            inventoryPanel.MouseDown += InventoryPanel_MouseDown;
+            inventoryPanel.MouseUp += InventoryPanel_MouseUp;
+            inventoryPanel.MouseMove += InventoryPanel_MoseMove;
             Controls.Add(inventoryPanel);
         }
 
@@ -667,6 +671,8 @@ namespace factordictatorship
                     miner.Recurse.Remove(res);
                 }
                 ShowMinerInterface(miner);
+                if (inventoryPanel.Visible)
+                    ShowInventory();
             };
             konInterface.Controls.Add(takeBtn);
             y += 40;
@@ -692,7 +698,6 @@ namespace factordictatorship
         {
             inventoryPanel.Visible = true;
             inventoryPanel.Controls.Clear();
-            inventoryPanel.BringToFront();
             Label title = new Label
             {
                 Text = "Inventory",
@@ -700,9 +705,19 @@ namespace factordictatorship
                 Location = new Point(10, 10),
                 AutoSize = true
             };
+            Button inventoryCloseBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(inventoryPanel.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            inventoryCloseBtn.Click += (s, e) => inventoryPanel.Visible = false;
+            inventoryPanel.Controls.Add(inventoryCloseBtn);
             inventoryPanel.Controls.Add(title);
             int y = 40;
-            foreach(var inv in player.inventories)
+            foreach (var inv in player.inventories)
             {
                 int totalQuantity = inv.Items.Count();
                 Label entry = new Label
@@ -714,19 +729,25 @@ namespace factordictatorship
                 inventoryPanel.Controls.Add(entry);
                 y += 25;
             }
-            Button closeBtn = new Button
-            {
-                Text = "X",
-                Size = new Size(30, 30),
-                Location = new Point(inventoryPanel.Width - 35, 5),
-                BackColor = Color.Red,
-                ForeColor = Color.White
-            };
-            closeBtn.Click += (s, e) => inventoryPanel.Visible = false;
-            inventoryPanel.Controls.Add(closeBtn);
-
             inventoryPanel.Visible = true;
-            inventoryPanel.BringToFront();
+        }
+        private void InventoryPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            isDragging = true;
+            dragStart = Cursor.Position; // dragStart is Cursor Position
+            dragPanelPoint = inventoryPanel.Location;
+        }
+        private void InventoryPanel_MoseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                Point diff = Point.Subtract(Cursor.Position, new Size(dragStart));
+                inventoryPanel.Location = Point.Add(dragPanelPoint, new Size(diff));
+            }
+        }
+        private void InventoryPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
         }
     }
 } 
