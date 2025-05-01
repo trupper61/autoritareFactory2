@@ -48,7 +48,9 @@ namespace factordictatorship
         public PlayerData player = new PlayerData(0);
         public Panel inventoryPanel;
         public Miner aktuellerMiner = null;
+        public Konstrucktor aktuellerKon = null;
         public Label resourceCountLabel = null;
+        public Label resourceCountLabelKon = null;
         public Point dragPanelPoint;
 
         public world()
@@ -200,6 +202,11 @@ namespace factordictatorship
             if (konInterface.Visible  && aktuellerMiner != null && resourceCountLabel != null)
             {
                 resourceCountLabel.Text = $"Gesammelt: {aktuellerMiner.Recurse.Count} / {aktuellerMiner.MaxAnzalRecurse}";
+            }
+            if (konInterface.Visible && aktuellerKon != null && resourceCountLabelKon != null)
+            {
+                resourceCountLabelKon.Text = $"Gelagert: {aktuellerKon.ErgebnissRecurse1.Count} / {aktuellerKon.MaxAnzalErgebnissRecurse1}";
+                
             }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
@@ -556,6 +563,7 @@ namespace factordictatorship
         {
             konInterface.Visible = true;
             konInterface.Controls.Clear();
+            aktuellerKon = kon;
             Label name = new Label()
             {
                 Text = "Konstruktor",
@@ -573,7 +581,15 @@ namespace factordictatorship
                     AutoSize = true
                 };
                 konInterface.Controls.Add(productInfo);
-                y += 35;
+                y += 25;
+                resourceCountLabelKon = new Label
+                {
+                    Text = $"Gelagert: {kon.ErgebnissRecurse1.Count} / {kon.MaxAnzalErgebnissRecurse1}",
+                    Location = new Point(10, y),
+                    AutoSize = true
+                };
+                konInterface.Controls.Add(resourceCountLabelKon);
+                y += 30;
                 Button productBtn = new Button
                 {
                     Text = $"Produkt nehmen",
@@ -582,7 +598,13 @@ namespace factordictatorship
                 };
                 productBtn.Click += (s, e) =>
                 {
-
+                    foreach (var res in kon.ErgebnissRecurse1.ToList())
+                    {
+                        player.AddResource(res);
+                        kon.ErgebnissRecurse1.Remove(res);
+                    }
+                    if (inventoryPanel.Visible)
+                        ShowInventory();
                 };
                 konInterface.Controls.Add(productBtn);
             }
@@ -620,7 +642,11 @@ namespace factordictatorship
                 BackColor = Color.Red,
                 ForeColor = Color.White
             };
-            closeBtn.Click += (s, e) => konInterface.Visible = false;
+            closeBtn.Click += (s, e) =>
+            {
+                konInterface.Visible = false;
+                aktuellerKon = null;
+            };
             konInterface.Controls.Add(closeBtn);
             closeBtn.BringToFront();
 
@@ -727,7 +753,25 @@ namespace factordictatorship
                     AutoSize = true
                 };
                 inventoryPanel.Controls.Add(entry);
-                y += 25;
+
+                Button giveBtn = new Button
+                {
+                    Text = "→",
+                    Location = new Point(100, y - 3),
+                    Size = new Size(30, 23)
+                };
+                giveBtn.Click += (s, e) =>
+                {
+                    if (aktuellerKon != null)
+                    {
+                        aktuellerKon.NimmRessourceAusInventar(inv.Items, inv.Type, 5); // oder beliebige Anzahl
+                        player.CheckForEmptyInventory();
+                        ShowInventory();
+                    }
+                };
+                inventoryPanel.Controls.Add(giveBtn);
+                giveBtn.BringToFront();
+                y += 20;
             }
             inventoryPanel.Visible = true;
         }

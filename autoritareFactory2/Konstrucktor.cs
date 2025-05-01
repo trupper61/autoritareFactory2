@@ -71,10 +71,10 @@ namespace factordictatorship
         {
             if (verbleibendeProduktionsdauer > 0)
             {
-                //if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
-                //{
-                //    verbleibendeProduktionsdauer -= 100;
-                //}
+                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
+                {
+                    verbleibendeProduktionsdauer -= 100;
+                }
             }
             else
             {
@@ -152,6 +152,21 @@ namespace factordictatorship
         public override string ToString()
         {
             return "Konstruktor";
+        }
+        public void NimmRessourceAusInventar(List<Resource> inventarRes, ResourceType resourceType, int maxMenge)
+        {
+            int count = 0;
+            for (int i = inventarRes.Count - 1; i >= 0 && count < maxMenge; i--)
+            {
+                if (inventarRes[i].Type == resourceType)
+                {
+                    Resource res = inventarRes[i];
+                    inventarRes.RemoveAt(i);
+                    benotigteRecurse1.Add(res);
+                    count++;
+                }
+            }
+
         }
     }
 }

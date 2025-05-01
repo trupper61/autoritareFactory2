@@ -32,6 +32,16 @@ namespace factordictatorship
                 inventories.Add(inv);
             }
         }
+        public void CheckForEmptyInventory()
+        {
+            foreach(Inventory inv in inventories.ToList())
+            {
+                if (inv.Items.Count == 0)
+                {
+                    inventories.Remove(inv);
+                }
+            }
+        }
         public string displayData()
         {
             return money.ToString();
