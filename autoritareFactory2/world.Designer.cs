@@ -42,25 +42,21 @@ namespace factordictatorship
             this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
             this.pictureBox1.BackgroundImage = global::factordictatorship.Properties.Resources.money;
             this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(717, 82);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pictureBox1.Location = new System.Drawing.Point(538, 67);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(67, 52);
+            this.pictureBox1.Size = new System.Drawing.Size(50, 42);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
             // 
             // moneyAmount
             // 
             this.moneyAmount.AutoSize = true;
             this.moneyAmount.BackColor = System.Drawing.Color.Transparent;
-            this.moneyAmount.Location = new System.Drawing.Point(680, 101);
-            this.moneyAmount.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.moneyAmount.Location = new System.Drawing.Point(510, 82);
             this.moneyAmount.Name = "moneyAmount";
-            this.moneyAmount.Size = new System.Drawing.Size(44, 16);
+            this.moneyAmount.Size = new System.Drawing.Size(35, 13);
             this.moneyAmount.TabIndex = 2;
             this.moneyAmount.Text = "label1";
-            this.moneyAmount.Visible = false;
             // 
             // noFocusButton
             // 

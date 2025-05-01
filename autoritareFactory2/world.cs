@@ -34,16 +34,26 @@ namespace factordictatorship
         public string aktuellerModus = "";
         public Panel buildPanel;
         public Panel menuPanel;
+        public Rezepte Eisenbarren = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000);
+        public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
+        public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
+        public PlayerData player = new PlayerData(0);
         public Rezepte[] rezepte =
         {
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800),
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenplatte", autoritaereFactory.ResourceType.IronPlate, 2, 1500)
         };
+        public Resource[] rescourcen =
+        {
+            new Resource(autoritaereFactory.ResourceType.IronOre),
+            new Resource(autoritaereFactory.ResourceType.IronIngot)
+        };
         public bool isDragging = false;
         public Point beltStart;
         public Point beltEnd;
         public Panel konInterface;
+        public Panel banInterface;
         public PlayerData player = new PlayerData(0);
         public world()
         {
@@ -181,6 +191,10 @@ namespace factordictatorship
                     {
                         ShowKonInterface(f as Konstrucktor);
                     }
+                    if(f is Band) 
+                    {
+                        ShowBandInterface(f as Band);
+                    }
                 }
             }
         }
@@ -235,7 +249,7 @@ namespace factordictatorship
                         List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
                         foreach (var pt in beltLine)
                         {
-                            Band belt = new Band(3, 20, pt.X, pt.Y);
+                            Band belt = new Band(1, 0, pt.X, pt.Y, mapWorld);
                             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                             if (lffb.Count == 0)
                             {
@@ -249,7 +263,7 @@ namespace factordictatorship
                     }
                     else
                     {
-                        Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
+                        Band belt = new Band(1, 0, worldPoint.X, worldPoint.Y, mapWorld);
                         List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                         if (lffb.Count == 0)
                         {
@@ -338,7 +352,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(3, 20, x, y);
+            Band belt = new Band(1, 0, x, y, mapWorld);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {
@@ -440,6 +454,15 @@ namespace factordictatorship
             };
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
             Controls.Add(konInterface);
+
+            banInterface = new Panel
+            {
+                Size = new Size(250, 300),
+                Location = new Point(50, 50),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            Controls.Add(banInterface);
         }
 
         // BuildPanel Resize Event
@@ -549,6 +572,11 @@ namespace factordictatorship
                 menuPanel.Visible = true;
             }
         }
+
+        public void DisplayData()
+        {
+            moneyAmount.Text = player.displayData();
+        }
         public void ShowKonInterface(Konstrucktor kon)
         {
             konInterface.Visible = true;
@@ -590,6 +618,47 @@ namespace factordictatorship
             closeBtn.Click += (s, e) => konInterface.Visible = false;
             konInterface.Controls.Add(closeBtn);
         }
+
+        public void ShowBandInterface(Band ban) 
+        {
+            banInterface.Visible = true;
+            banInterface.Controls.Clear();
+
+            Label name = new Label();
+            name.Text = ban.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+
+            int y = 50;
+            int maxRight = name.Right;
+
+            foreach(Resource resc in rescourcen) 
+            {
+                Label resBand = new Label();
+                resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
+                resBand.Location = new Point(10, y);
+                resBand.AutoSize = true;
+
+                banInterface.Controls.Add(resBand);
+                y += 40;
+
+                
+            }
+            
+            banInterface.Controls.Add(name);
+            banInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            banInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => banInterface.Visible = false;
+            banInterface.Controls.Add(closeBtn);
         public void DisplayData()
         {
             //moneyAmount.Location = new Point(this.ClientSize.Width - 50, this.ClientSize.Height - 20);
