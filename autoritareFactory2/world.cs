@@ -54,7 +54,6 @@ namespace factordictatorship
         public Point beltEnd;
         public Panel konInterface;
         public Panel banInterface;
-        public PlayerData player = new PlayerData(0);
         public world()
         {
             InitializeComponent();
@@ -191,7 +190,7 @@ namespace factordictatorship
                     {
                         ShowKonInterface(f as Konstrucktor);
                     }
-                    if(f is Band) 
+                    if (f is Band)
                     {
                         ShowBandInterface(f as Band);
                     }
@@ -572,11 +571,6 @@ namespace factordictatorship
                 menuPanel.Visible = true;
             }
         }
-
-        public void DisplayData()
-        {
-            moneyAmount.Text = player.displayData();
-        }
         public void ShowKonInterface(Konstrucktor kon)
         {
             konInterface.Visible = true;
@@ -619,7 +613,7 @@ namespace factordictatorship
             konInterface.Controls.Add(closeBtn);
         }
 
-        public void ShowBandInterface(Band ban) 
+        public void ShowBandInterface(Band ban)
         {
             banInterface.Visible = true;
             banInterface.Controls.Clear();
@@ -632,7 +626,7 @@ namespace factordictatorship
             int y = 50;
             int maxRight = name.Right;
 
-            foreach(Resource resc in rescourcen) 
+            foreach (Resource resc in rescourcen)
             {
                 Label resBand = new Label();
                 resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
@@ -642,9 +636,9 @@ namespace factordictatorship
                 banInterface.Controls.Add(resBand);
                 y += 40;
 
-                
+
             }
-            
+
             banInterface.Controls.Add(name);
             banInterface.Size = new Size(275, Math.Max(y + 10, 150));
             banInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
@@ -659,11 +653,12 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
+        }
         public void DisplayData()
         {
-            //moneyAmount.Location = new Point(this.ClientSize.Width - 50, this.ClientSize.Height - 20);
             moneyAmount.Text = player.displayData();
         }
     }
 } 
+
 
