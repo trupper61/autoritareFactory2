@@ -56,7 +56,6 @@
     <Compile Include="PlayerData.cs" />
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />
-    <Compile Include="setup\BaenderTypes\CurvedBand2.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
