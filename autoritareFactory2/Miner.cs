@@ -54,7 +54,6 @@ namespace factordictatorship
                     Band band = (Band)entitys[0];
                     if (band != null)
                     {
-                        band.ErkenneRescourcen();
                         while (band.ItemAnzahlMoment < band.ItemAnzahlMax & gebendeRecursenListe.Count > 0)
                         {
                             band.RescourceKommtAufBand(gebendeRecursenListe[0]);

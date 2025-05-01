@@ -248,7 +248,7 @@ namespace factordictatorship
                         List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
                         foreach (var pt in beltLine)
                         {
-                            Band belt = new Band(1, 20, pt.X, pt.Y, mapWorld);
+                            Band belt = new Band(1, 0, pt.X, pt.Y, mapWorld);
                             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                             if (lffb.Count == 0)
                             {
@@ -262,7 +262,7 @@ namespace factordictatorship
                     }
                     else
                     {
-                        Band belt = new Band(1, 20, worldPoint.X, worldPoint.Y, mapWorld);
+                        Band belt = new Band(1, 0, worldPoint.X, worldPoint.Y, mapWorld);
                         List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                         if (lffb.Count == 0)
                         {
@@ -351,7 +351,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(3, 20, x, y, mapWorld);
+            Band belt = new Band(1, 0, x, y, mapWorld);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {

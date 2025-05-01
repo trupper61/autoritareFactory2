@@ -91,7 +91,7 @@ namespace factordictatorship.setup.BaenderTypes
 
             if (BandNxt.Richtung == band.Richtung)
             {
-                foreach (Resource resources in band.resource)
+                foreach (Resource resources in band.currentRescourceList)
                 {
                     cooldownTimer.Interval = BandGeschwindigkeit;
                     cooldownTimer.Start();
@@ -99,7 +99,7 @@ namespace factordictatorship.setup.BaenderTypes
                     if (cooldownTimer.Interval == 0)
                     {
                         BandNxt.RescourceKommtAufBand(resources);
-                        band.resource.Remove(resources);
+                        band.currentRescourceList.Remove(resources);
                         cooldownTimer.Dispose();
                     }
 
@@ -111,7 +111,7 @@ namespace factordictatorship.setup.BaenderTypes
         {
             if (BandNxt.Richtung == band.Richtung)
             {
-                foreach (Resource resources in band.resource)
+                foreach (Resource resources in band.currentRescourceList)
                 {
                     cooldownTimer.Interval = BandGeschwindigkeit;
                     cooldownTimer.Start();
@@ -119,7 +119,7 @@ namespace factordictatorship.setup.BaenderTypes
                     if (cooldownTimer.Interval == 0)
                     {
                         BandNxt.RescourceKommtAufBand(resources);
-                        band.resource.Remove(resources);
+                        band.currentRescourceList.Remove(resources);
                         cooldownTimer.Dispose();
                     }
 

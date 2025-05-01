@@ -16,8 +16,9 @@ namespace factordictatorship.setup
 {
     public class Band : Fabrikgebeude
     {
-        public List<Resource> resource = new List<Resource>();
+        //public List<Resource> resource = new List<Resource>();
         public List<Resource> currentRescourceList = new List<Resource>();
+        public List<Resource> removedRescources = new List<Resource>();
         public WorldMap wrld;
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
@@ -32,7 +33,7 @@ namespace factordictatorship.setup
             : base(positionX, positionY)
         {
             itemAnzahlMoment = ItemAnzahlMoment;
-            richtung = Richtung;
+            Richtung = richtung;
             längeInXRichtung = 1;
             längeInYRichtung = 1;
             this.wrld = wrld;
@@ -46,9 +47,9 @@ namespace factordictatorship.setup
         }
         public void ErkenneRescourcen()
         {
-            if (resource != null && ItemAnzahlMoment < ItemAnzahlMax)
+            if (currentRescourceList != null && ItemAnzahlMoment < ItemAnzahlMax)
             {
-                foreach (Resource r in resource)
+                foreach (Resource r in currentRescourceList)
                 {
                     if (r.Type == ResourceType.IronOre)
                     {
@@ -65,12 +66,12 @@ namespace factordictatorship.setup
         }
         public void UpdateRescourceList()
         {
-            currentRescourceList = resource;
+            //currentRescourceList = resource;
         }
         public Resource NimmRescourceVomBand(int stelleInResourcedieGenommenWerdenSoll)//von Markus ich brauche den zukrifsrecht um auch (List<Resource> resource) zu ändern
         {
-            Resource r = resource[stelleInResourcedieGenommenWerdenSoll];
-            resource.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
+            Resource r = currentRescourceList[stelleInResourcedieGenommenWerdenSoll];
+            currentRescourceList.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
             return r;
         }
         public virtual void InNaechsteBand(Band band, WorldMap world)
@@ -81,71 +82,61 @@ namespace factordictatorship.setup
             int wertRotX = 0;
             int wertRotY = 0;
 
-            
 
-            for (int i = 4; i > 0; i--)
+            switch (band.Richtung)
             {
-                switch (i)
-                {
-                    case 4:
-                        wertRotX = -1;
-                        break;
-                    case 3:
-                        wertRotX = 1;
-                        break;
-                    case 2:
-                        wertRotY = -1;
-                        wertRotX = 0;
-                        break;
-                    case 1:
-                        wertRotY = 1;
-                        break;
-                }
+                case 1:
+                    wertRotX = 1;
+                    break;
+                case 2:
+                    wertRotY = -1;
+                    break;
+                case 3:
+                    wertRotX = -1;
+                    break;
+                case 4:
+                    wertRotY = 1;
+                    break;
+            }
 
-                List<Fabrikgebeude> values = world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
+            List<Fabrikgebeude> values = world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
 
-                foreach(Fabrikgebeude v in values) 
+            foreach (Fabrikgebeude v in values)
+            {
+                if (v is Band)
                 {
-                    if(v is Band) 
+                    if (values.Count == 1)
                     {
-                        if (values.Count >= 1)
+                        BandNxt = (Band)v;
+                        determineTransfer(band, BandNxt);
+                        //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
+                        foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                         {
-                            //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
-                            foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
-                            {
-                                BandNxt = gb;
-                                if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
-                                if (BandNxt != gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+                            //BandNxt = gb;
+                            //if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
 
-                                determineTransfer(band, BandNxt);
-                            }
-
-                            /*
-                            foreach(Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXRichtung, konstrucktor.längeInYRichtung)) 
-                            {
-
-                            }
-                            */
+                            
                         }
                     }
                 }
             }
         }
-        // NEEEEEDSSSS FIXIIIIIIINGNGNGNGNGNGNGNGGNNGGNGNGNGNGN!!!!111111!!!11!!
         public virtual void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
         {
-            if (BandNxt.RichtungEingang == band.RichtungAusgang && BandNxt.ItemAnzahlMoment < band.ItemAnzahlMax)
+            foreach (Resource resources in band.currentRescourceList)
             {
-                
+                if(BandNxt.ItemAnzahlMoment < BandNxt.ItemAnzahlMax) 
+                {
+                    BandNxt.RescourceKommtAufBand(resources);
+                    BandNxt.ErkenneRescourcen();
+                    
+                    band.removedRescources.Add(resources);
+                }
             }
-            foreach (Resource resources in band.resource)
+            foreach(Resource resources in band.removedRescources) 
             {
-                BandNxt.RescourceKommtAufBand(resources);
-                BandNxt.ErkenneRescourcen();
-                //band.currentRescourceList.Remove(resources);
+                band.currentRescourceList.Remove(resources);
             }
-            //band.resource = band.currentRescourceList;
-            //BandNxt.resource = BandNxt.currentRescourceList;
         }
 
         public override string ToString()
