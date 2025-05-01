@@ -2,6 +2,7 @@
 using autoritaereFactory.setup;
 using autoritaereFactory.world;
 using factordictatorship.drawing;
+using factordictatorship.formsElement;
 using factordictatorship.Resources;
 using factordictatorship.setup;
 using System;
@@ -412,7 +413,7 @@ namespace factordictatorship
                 BackColor = Color.LightGray,
                 Visible = false
             };
-            Button backBtn = new Button
+            Button backBtn = new NoFocusButton
             {
                 Text = "Back To Game",
                 Size = new Size(180, 30),
@@ -424,7 +425,7 @@ namespace factordictatorship
                 this.Focus();
             };
             menuPanel.Controls.Add(backBtn);
-            Button saveBtn = new Button
+            Button saveBtn = new NoFocusButton
             {
                 Text = "Speichern",
                 Size = new Size(180, 30),
@@ -437,7 +438,7 @@ namespace factordictatorship
                 fptr.Close();
             };
             menuPanel.Controls.Add(saveBtn);
-            Button loadBtn = new Button
+            Button loadBtn = new NoFocusButton
             {
                 Text = "Load",
                 Size = new Size(180, 30),
@@ -467,7 +468,7 @@ namespace factordictatorship
                 }
             };
             menuPanel.Controls.Add(loadBtn);
-            Button closeBtn = new Button
+            Button closeBtn = new NoFocusButton
             {
                 Text = "Close Game",
                 Size = new Size(180, 30),
@@ -532,7 +533,7 @@ namespace factordictatorship
                 Location = new Point(panelWidth / 2, 0),
                 BackColor = Color.LightBlue
             };
-            Button closeButton = new Button
+            Button closeButton = new NoFocusButton
             {
                 Text = "X",
                 Size = new Size(30, 30),
@@ -565,7 +566,7 @@ namespace factordictatorship
             int y = 50;
             foreach (var name in buildings)
             {
-                Button btn = new Button
+                Button btn = new NoFocusButton
                 {
                     Text = name,
                     Size = new Size(120, 35),
@@ -625,7 +626,7 @@ namespace factordictatorship
             }
             konInterface.Size = new Size(275, Math.Max(y + 10, 150));
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
-            Button closeBtn = new Button
+            Button closeBtn = new NoFocusButton
             {
                 Text = "X",
                 Size = new Size(30, 30),
