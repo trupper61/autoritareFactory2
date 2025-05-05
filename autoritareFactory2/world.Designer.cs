@@ -48,7 +48,6 @@ namespace factordictatorship
             this.pictureBox1.Size = new System.Drawing.Size(50, 42);
             this.pictureBox1.TabIndex = 1;
             this.pictureBox1.TabStop = false;
-            this.pictureBox1.Visible = false;
             // 
             // moneyAmount
             // 
@@ -59,7 +58,6 @@ namespace factordictatorship
             this.moneyAmount.Size = new System.Drawing.Size(35, 13);
             this.moneyAmount.TabIndex = 2;
             this.moneyAmount.Text = "label1";
-            this.moneyAmount.Visible = false;
             // 
             // noFocusButton
             // 

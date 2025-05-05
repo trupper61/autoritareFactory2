@@ -12,23 +12,25 @@ namespace factordictatorship.setup.BaenderTypes
     //Curved Band Von Links nach Oben
     public class CurveBand : Band
     {
-        public int RichtungAusgang;
-        public int RichtungEingang; // Darf nicht selbe und nicht verkehrt herum wie Ausgang sein! Sollte ebenfalls die Richtung sein!.
+        public int DrehungAusgang;
+        public int DrehungEingang; // Darf nicht selbe und nicht verkehrt herum wie Ausgang sein! Sollte ebenfalls die Drehung sein!.
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
-        public CurveBand(int richtung, int itemAnzahlMoment, int positionX, int positionY, int richtungEingang, int richtungAusgang)
-            : base(richtung, itemAnzahlMoment, positionX, positionY)
+        public CurveBand(int richtung, int itemAnzahlMoment, int positionX, int positionY, int richtungEingang, int richtungAusgang, WorldMap world)
+            : base(richtungEingang, itemAnzahlMoment, positionX, positionY, world)
         {
-            richtungEingang = RichtungEingang;
-            richtungAusgang = RichtungAusgang;
-            richtung = RichtungEingang;
+            this.DrehungEingang = richtungEingang;
+            this.DrehungAusgang = richtungAusgang;
+            //Drehung = DrehungEingang;
         }
 
-        public override void InNaechsteBand(Band band, Band BandNxt, CurveBand curveBand, WorldMap world, Konstrucktor konstrucktor)
+        public override void InNaechsteBand(Band band, WorldMap world)
         {
-            base.InNaechsteBand(band, BandNxt, curveBand, world, konstrucktor);
-
+            base.InNaechsteBand(band, world);
+            Band BandNxt;
+            CurveBand curveBandNxt;
+            CurveBand Band = (CurveBand)band;
             //Schaue alle benachbarten tiles
-            //Wenn die Richtung des Ausgangs gleich die Richtung des Eingangs des nächsten Bandes ist, übergebe rescourcen.
+            //Wenn die Drehung des Ausgangs gleich die Drehung des Eingangs des nächsten Bandes ist, übergebe rescourcen.
 
             int wertRotX = 0;
             int wertRotY = 0;
@@ -53,17 +55,27 @@ namespace factordictatorship.setup.BaenderTypes
                 }
                 if (world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY).Count == 1)
                 {
-                    //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
+                    //Damit man die Drehung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
                     foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                     {
-                        if (BandNxt.drehung != curveBand.RichtungAusgang) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
-                        if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
                         BandNxt = gb;
-                        //determineTransfer(band, BandNxt);
+                        if (BandNxt.Drehung != band.Drehung) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop
+                        if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+                        
+                        determineTransfer(band, BandNxt);
+                    }
+
+                    foreach (CurveBand gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                    {
+                        curveBandNxt = gb;
+                        if (curveBandNxt.Drehung != curveBandNxt.DrehungAusgang) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop
+                        if (curveBandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+
+                        determineTransferCurve(Band, curveBandNxt);
                     }
 
                     /*
-                    foreach (Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXRichtung, konstrucktor.längeInYRichtung))
+                    foreach (Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXDrehung, konstrucktor.längeInYDrehung))
                     {
 
                     }
@@ -73,13 +85,13 @@ namespace factordictatorship.setup.BaenderTypes
             }
         }
 
-        public override void determineTransfer(Band band, Band BandNxt, CurveBand curveBand)
+        public override void determineTransfer(Band band, Band BandNxt)
         {
-            base.determineTransfer(band, BandNxt, curveBand);
+            base.determineTransfer(band, BandNxt);
 
-            if (BandNxt.drehung == curveBand.RichtungAusgang)
+            if (BandNxt.Drehung == band.Drehung)
             {
-                foreach (Resource resources in band.resource)
+                foreach (Resource resources in band.currentRescourceList)
                 {
                     cooldownTimer.Interval = BandGeschwindigkeit;
                     cooldownTimer.Start();
@@ -87,7 +99,27 @@ namespace factordictatorship.setup.BaenderTypes
                     if (cooldownTimer.Interval == 0)
                     {
                         BandNxt.RescourceKommtAufBand(resources);
-                        band.resource.Remove(resources);
+                        band.currentRescourceList.Remove(resources);
+                        cooldownTimer.Dispose();
+                    }
+
+                }
+            }
+        }
+
+        public void determineTransferCurve(CurveBand band, CurveBand BandNxt) 
+        {
+            if (BandNxt.Drehung == band.Drehung)
+            {
+                foreach (Resource resources in band.currentRescourceList)
+                {
+                    cooldownTimer.Interval = BandGeschwindigkeit;
+                    cooldownTimer.Start();
+
+                    if (cooldownTimer.Interval == 0)
+                    {
+                        BandNxt.RescourceKommtAufBand(resources);
+                        band.currentRescourceList.Remove(resources);
                         cooldownTimer.Dispose();
                     }
 
