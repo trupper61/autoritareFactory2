@@ -47,7 +47,9 @@ namespace factordictatorship
         public Resource[] rescourcen =
         {
             new Resource(autoritaereFactory.ResourceType.IronOre),
-            new Resource(autoritaereFactory.ResourceType.IronIngot)
+            new Resource(autoritaereFactory.ResourceType.IronIngot),
+            new Resource(autoritaereFactory.ResourceType.IronPlate),
+            new Resource(autoritaereFactory.ResourceType.IronStick)
         };
         public bool isDragging = false;
         public Point beltStart;
@@ -675,14 +677,30 @@ namespace factordictatorship
             foreach (Resource resc in rescourcen)
             {
                 Label resBand = new Label();
-                resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
+                //if(resc.Type == ResourceType.IronOre) 
+                //{
+                //    resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
+                //}
+                switch(resc.Type) 
+                {
+                    case ResourceType.IronOre:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
+                        break;
+                    case ResourceType.IronPlate:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
+                        break;
+                    case ResourceType.IronStick:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
+                        break;
+                    case ResourceType.IronIngot:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
+                        break;
+                }
                 resBand.Location = new Point(10, y);
                 resBand.AutoSize = true;
 
                 banInterface.Controls.Add(resBand);
                 y += 40;
-
-
             }
 
             banInterface.Controls.Add(name);
