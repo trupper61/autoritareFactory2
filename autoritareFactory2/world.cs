@@ -629,14 +629,15 @@ namespace factordictatorship
             foreach (Resource resc in rescourcen)
             {
                 Label resBand = new Label();
-                resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
+                if(resc.Type == ResourceType.IronOre) 
+                {
+                    resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
+                }
                 resBand.Location = new Point(10, y);
                 resBand.AutoSize = true;
 
                 banInterface.Controls.Add(resBand);
                 y += 40;
-
-
             }
 
             banInterface.Controls.Add(name);
