@@ -2,6 +2,7 @@
 using autoritaereFactory.setup;
 using autoritaereFactory.world;
 using factordictatorship.drawing;
+using factordictatorship.formsElement;
 using factordictatorship.Resources;
 using factordictatorship.setup;
 using System;
@@ -10,6 +11,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -34,11 +36,9 @@ namespace factordictatorship
         public string aktuellerModus = "";
         public Panel buildPanel;
         public Panel menuPanel;
-        public Rezepte Eisenbarren = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000);
-        public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
-        public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
+        public int rotateState = 1;
         public PlayerData player = new PlayerData(0);
-        public Rezepte[] rezepte =
+        public static Rezepte[] rezepte =
         {
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800),
@@ -125,6 +125,7 @@ namespace factordictatorship
             switch (grs)
             {
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.ColeOre:throw new Exception("Hey Markus insert stuff here!"); return autoritaereFactory.ResourceType.IronOre;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -136,7 +137,7 @@ namespace factordictatorship
             if (aktuellerModus == "Constructor")
             {
 
-                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
+                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y, rotateState);
                 List<Fabrikgebeude> conflictingEntities = mapWorld.GetEntityInBox(kon.PositionX, kon.PositionY, kon.SizeX, kon.SizeY);
                 if (conflictingEntities.Count == 0)
                 {
@@ -153,7 +154,7 @@ namespace factordictatorship
             {
                 GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
                 // TODO Miner Resource zu GroundResource ändern
-                Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
+                Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                 if (lffb.Count == 0 && resource == GroundResource.IronOre)
                 {
@@ -170,7 +171,7 @@ namespace factordictatorship
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
                 if (fab.Count == 0)
                 {
-                    MessageBox.Show("Nix zum Löschen");
+                    //MessageBox.Show("Nix zum Löschen");
                 }
                 else
                 {
@@ -178,7 +179,7 @@ namespace factordictatorship
                     {
                         mapWorld.RemoveEntity(f);
                     }
-                    aktuellerModus = null;
+                    //aktuellerModus = null;
                 }
             }
             else
@@ -219,7 +220,7 @@ namespace factordictatorship
                 // this is really badly optimised... (Who cares)
                 if (aktuellerModus == "Constructor")
                 {
-                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
+                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y, rotateState);
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
                     if (lffb.Count == 0)
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
@@ -232,7 +233,7 @@ namespace factordictatorship
                     GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
 
                     // TODO: Miner resource to GroundType!
-                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
+                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                     if (lffb.Count == 0 && resource == GroundResource.IronOre)
                     {
@@ -248,9 +249,16 @@ namespace factordictatorship
                     if (isDragging)
                     {
                         List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
+                        if(beltLine.Count > 1)
+                        {// auto rotate the lines
+                            if (beltLine[0].X < beltLine[1].X) rotateState = 1;
+                            if (beltLine[0].Y < beltLine[1].Y) rotateState = 2;
+                            if (beltLine[0].X > beltLine[1].X) rotateState = 3;
+                            if (beltLine[0].Y > beltLine[1].Y) rotateState = 4;
+                        }
                         foreach (var pt in beltLine)
                         {
-                            Band belt = new Band(1, 0, pt.X, pt.Y, mapWorld);
+                            Band belt = new Band(rotateState, 20, pt.X, pt.Y,mapWorld);
                             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                             if (lffb.Count == 0)
                             {
@@ -264,7 +272,7 @@ namespace factordictatorship
                     }
                     else
                     {
-                        Band belt = new Band(1, 0, worldPoint.X, worldPoint.Y, mapWorld);
+                        Band belt = new Band(rotateState, 20, worldPoint.X, worldPoint.Y,mapWorld);
                         List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                         if (lffb.Count == 0)
                         {
@@ -353,7 +361,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(1, 0, x, y, mapWorld);
+            Band belt = new Band(rotateState, 20, x, y,mapWorld);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {
@@ -398,6 +406,13 @@ namespace factordictatorship
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
             destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy";
             toolStrip.Items.Add(destroyBtn);
+            ToolStripButton rotateBtn = new ToolStripButton("Rotate");
+            rotateBtn.Click += (s, e) =>
+            {
+                rotateState %= 4;
+                rotateState ++;
+            };
+            toolStrip.Items.Add(rotateBtn);
 
             Controls.Add(toolStrip);
             this.Resize += new EventHandler(OnFormResize);
@@ -410,7 +425,7 @@ namespace factordictatorship
                 BackColor = Color.LightGray,
                 Visible = false
             };
-            Button backBtn = new Button
+            Button backBtn = new NoFocusButton
             {
                 Text = "Back To Game",
                 Size = new Size(180, 30),
@@ -422,21 +437,52 @@ namespace factordictatorship
                 this.Focus();
             };
             menuPanel.Controls.Add(backBtn);
-            Button saveBtn = new Button
+            Button saveBtn = new NoFocusButton
             {
                 Text = "Speichern",
                 Size = new Size(180, 30),
                 Location = new Point(10, 50)
             };
+            saveBtn.Click += (s, e) => {
+                byte[] worldData = mapWorld.GetAsBytes();
+                FileStream fptr = File.OpenWrite(mapWorld.worldName + ".world");
+                fptr.Write(worldData,0, worldData.Length);
+                fptr.Close();
+            };
             menuPanel.Controls.Add(saveBtn);
-            Button loadBtn = new Button
+            Button loadBtn = new NoFocusButton
             {
                 Text = "Load",
                 Size = new Size(180, 30),
                 Location = new Point(10, 90)
             };
+            loadBtn.Click += (s, e) => {
+                //openWorldFile.DefaultExt = ".world";
+                openWorldFile.Filter = "WorldFiles (*.world)|*.world";
+                openWorldFile.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
+                //openWorldFile.CustomPlaces.Add(FileDialogCustomPlace.)
+                DialogResult status = openWorldFile.ShowDialog();
+                if (status != DialogResult.OK)
+                    return;
+                Stream worldFptr = openWorldFile.OpenFile();
+                byte[] allData = new byte[worldFptr.Length];
+                int offset = 0;
+                worldFptr.Read(allData,offset,allData.Length);
+                WorldMap newMap = WorldMap.FromByteArray(allData, ref offset);
+                worldFptr.Close();
+                if (newMap != null)
+                {
+                    mapWorld.Dispose();
+                    mapWorld.AwaitThread();
+                    newMap.worldName = openWorldFile.FileName;
+                    if (newMap.worldName.EndsWith(".world"))
+                        newMap.worldName = newMap.worldName.Substring(0, newMap.worldName.Length - 6);
+                    mapWorld = newMap;
+                    mapWorld._StartThread();
+                }
+            };
             menuPanel.Controls.Add(loadBtn);
-            Button closeBtn = new Button
+            Button closeBtn = new NoFocusButton
             {
                 Text = "Close Game",
                 Size = new Size(180, 30),
@@ -510,7 +556,7 @@ namespace factordictatorship
                 Location = new Point(panelWidth / 2, 0),
                 BackColor = Color.LightBlue
             };
-            Button closeButton = new Button
+            Button closeButton = new NoFocusButton
             {
                 Text = "X",
                 Size = new Size(30, 30),
@@ -543,7 +589,7 @@ namespace factordictatorship
             int y = 50;
             foreach (var name in buildings)
             {
-                Button btn = new Button
+                Button btn = new NoFocusButton
                 {
                     Text = name,
                     Size = new Size(120, 35),
@@ -603,7 +649,7 @@ namespace factordictatorship
             }
             konInterface.Size = new Size(275, Math.Max(y + 10, 150));
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
-            Button closeBtn = new Button
+            Button closeBtn = new NoFocusButton
             {
                 Text = "X",
                 Size = new Size(30, 30),

@@ -32,7 +32,7 @@ namespace factordictatorship.setup.BaenderTypes
             base.InNaechsteBand(band, world);
             Band BandNxt;
             //Schaue alle benachbarten tiles
-            //Wenn die Richtung des Ausgangs gleich die Richtung des Eingangs des nächsten Bandes ist, übergebe rescourcen.
+            //Wenn die Drehung des Ausgangs gleich die Drehung des Eingangs des nächsten Bandes ist, übergebe rescourcen.
 
             int wertRotX = 0;
             int wertRotY = 0;
@@ -59,6 +59,28 @@ namespace factordictatorship.setup.BaenderTypes
             {
                 if (v is Band)
                 {
+                    //Damit man die Drehung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
+                    foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                    {
+                        BandNxt = gb;
+                        if (BandNxt.Drehung != band.Drehung) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop
+                        if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+                        
+                        determineTransfer(band, BandNxt);
+                    }
+
+                    foreach (CurveBand gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                    {
+                        curveBandNxt = gb;
+                        if (curveBandNxt.Drehung != curveBandNxt.DrehungAusgang) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop
+                        if (curveBandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+
+                        determineTransferCurve(Band, curveBandNxt);
+                    }
+
+                    /*
+                    foreach (Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXDrehung, konstrucktor.längeInYDrehung))
+                    {
                     if (values.Count == 1)
                     {
                         BandNxt = (Band)v;
@@ -80,6 +102,7 @@ namespace factordictatorship.setup.BaenderTypes
         {
             //base.determineTransfer(band, BandNxt);
 
+            if (BandNxt.Drehung == band.Drehung)
             foreach (Resource resources in band.currentRescourceList)
             {
                 if (BandNxt.ItemAnzahlMoment < BandNxt.ItemAnzahlMax)
@@ -90,6 +113,11 @@ namespace factordictatorship.setup.BaenderTypes
                     band.removedRescources.Add(resources);
                 }
             }
+        }
+
+        public void determineTransferCurve(CurveBand band, CurveBand BandNxt) 
+        {
+            if (BandNxt.Drehung == band.Drehung)
             foreach (Resource resources in band.removedRescources)
             {
                 band.currentRescourceList.Remove(resources);

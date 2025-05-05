@@ -24,13 +24,18 @@ namespace factordictatorship.setup
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
-        public int Richtung; //1 -> Links nach Rechts||| 2 -> Oben nach Unten||| 3 -> Rechts nach Links||| 4 -> Unten nach Oben|||
+        internal Band() : base()
+        {
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+        }
+
         public int RichtungEingang; //1 -> Eingang Links //2 -> Eingang Oben //3 -> Eingang Rechts // 4 -> Eingang Unten
         public int RichtungAusgang; //1 -> Ausgang Rechts //2 -> Ausgang Unten //3 -> Ausgang Links //4 -> Ausgang Oben
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
 
         public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY, WorldMap wrld)
-            : base(positionX, positionY)
+            : base(positionX, positionY,richtung)
         {
             itemAnzahlMoment = ItemAnzahlMoment;
             Richtung = richtung;
@@ -84,7 +89,7 @@ namespace factordictatorship.setup
             int wertRotY = 0;
 
 
-            switch (band.Richtung)
+            switch (band.Drehung)
             {
                 case 1:
                     wertRotX = 1;
@@ -100,7 +105,7 @@ namespace factordictatorship.setup
                     break;
             }
 
-            List<Fabrikgebeude> values = world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
+            List<Fabrikgebeude> values = WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
 
             foreach (Fabrikgebeude v in values)
             {
@@ -111,12 +116,10 @@ namespace factordictatorship.setup
                         BandNxt = (Band)v;
                         determineTransfer(band, BandNxt);
                         //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
-                        foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                        foreach (Band gb in WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                         {
                             //BandNxt = gb;
                             //if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
-
-                            
                         }
                     }
                 }
@@ -145,6 +148,40 @@ namespace factordictatorship.setup
         public override string ToString()
         {
             return "Band";
+        }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.AddRange(BitConverter.GetBytes((int)removedRescources.Count));
+            for (int i = 0; i < removedRescources.Count; i++)
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)removedRescources[i].Type));
+            }
+            bytes.AddRange(BitConverter.GetBytes((int)currentRescourceList.Count));
+            for (int i = 0; i < currentRescourceList.Count; i++)
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)currentRescourceList[i].Type));
+            }
+            return bytes;
+        }
+        public static Band FromByteArray(byte[] bytes, ref int offset)
+        {
+            Band newBand = new Band();
+            int resourceCount = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newBand.removedRescources.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            resourceCount = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newBand.currentRescourceList.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            return newBand;
         }
 
         public string RetWantedRescource(ResourceType type, Band band) 
