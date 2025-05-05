@@ -52,6 +52,7 @@
     <Compile Include="formsElement\NoFocusButton.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Inventory.cs" />
     <Compile Include="PlayerData.cs" />
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />

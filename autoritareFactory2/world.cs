@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
 using System.Text;
@@ -52,10 +53,18 @@ namespace factordictatorship
             new Resource(autoritaereFactory.ResourceType.IronStick)
         };
         public bool isDragging = false;
-        public Point beltStart;
+        public Point dragStart;
         public Point beltEnd;
         public Panel konInterface;
         public Panel banInterface;
+        public PlayerData player = new PlayerData(0);
+        public Panel inventoryPanel;
+        public Miner aktuellerMiner = null;
+        public Konstrucktor aktuellerKon = null;
+        public Label resourceCountLabel = null;
+        public Label resourceCountLabelKon = null;
+        public Point dragPanelPoint;
+
         public world()
         {
             InitializeComponent();
@@ -103,7 +112,7 @@ namespace factordictatorship
             if (aktuellerModus == "Belt" && e.Button == MouseButtons.Left)
             {
                 isDragging = true;
-                beltStart = wlrdDrawer.TranslateScreen2World(e.Location);
+                dragStart = wlrdDrawer.TranslateScreen2World(e.Location);
             }
         }
         private void OnMouseUp(object sender, MouseEventArgs e)
@@ -112,7 +121,7 @@ namespace factordictatorship
             {
                 isDragging = false;
                 beltEnd = wlrdDrawer.TranslateScreen2World(e.Location);
-                PlaceBeltLine(beltStart, beltEnd);
+                PlaceBeltLine(dragStart, beltEnd);
                 aktuellerModus = null;
             }
         }
@@ -196,6 +205,9 @@ namespace factordictatorship
                     if (f is Band)
                     {
                         ShowBandInterface(f as Band);
+                    else if (f is Miner)
+                    {
+                        ShowMinerInterface(f as Miner);
                     }
                 }
             }
@@ -203,6 +215,15 @@ namespace factordictatorship
         public void RefreshLoop(object sender, EventArgs e)
         {
             this.Invalidate(DisplayRectangle);
+            if (konInterface.Visible  && aktuellerMiner != null && resourceCountLabel != null)
+            {
+                resourceCountLabel.Text = $"Gesammelt: {aktuellerMiner.Recurse.Count} / {aktuellerMiner.MaxAnzalRecurse}";
+            }
+            if (konInterface.Visible && aktuellerKon != null && resourceCountLabelKon != null)
+            {
+                resourceCountLabelKon.Text = $"Gelagert: {aktuellerKon.ErgebnissRecurse1.Count} / {aktuellerKon.MaxAnzalErgebnissRecurse1}";
+                
+            }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
         {
@@ -414,6 +435,9 @@ namespace factordictatorship
             };
             toolStrip.Items.Add(rotateBtn);
 
+            ToolStripButton inventoryBtn = new ToolStripButton("Inventory");
+            inventoryBtn.Click += (s, e) => ShowInventory();
+            toolStrip.Items.Add(inventoryBtn);
             Controls.Add(toolStrip);
             this.Resize += new EventHandler(OnFormResize);
 
@@ -510,6 +534,18 @@ namespace factordictatorship
                 Visible = false
             };
             Controls.Add(banInterface);
+            inventoryPanel = new Panel
+            {
+                Size = new Size((int)(this.ClientSize.Width * 0.3), (int)(this.ClientSize.Height * 0.6)),
+                Location = new Point(5, 5),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            inventoryPanel.Location = new Point((this.ClientSize.Width - inventoryPanel.Width) / 2, (this.ClientSize.Height - inventoryPanel.Height) / 2);
+            inventoryPanel.MouseDown += InventoryPanel_MouseDown;
+            inventoryPanel.MouseUp += InventoryPanel_MouseUp;
+            inventoryPanel.MouseMove += InventoryPanel_MoseMove;
+            Controls.Add(inventoryPanel);
         }
 
         // BuildPanel Resize Event
@@ -530,37 +566,12 @@ namespace factordictatorship
         private void SetupBuildPanel()
         {
             buildPanel.Controls.Clear();
-            int panelWidth = buildPanel.Width;
-            int panelHeight = buildPanel.Height;
 
-            Panel inventoryPanel = new Panel
-            {
-                Size = new Size(panelWidth / 2, panelHeight),
-                Location = new Point(0, 0),
-                BackColor = Color.DarkGray
-            };
-            Label inventoryLabel = new Label
-            {
-                Text = "Inventar (WIP)",
-                AutoSize = false,
-                Size = new Size(inventoryPanel.Width, 30),
-                TextAlign = ContentAlignment.MiddleCenter,
-                Location = new Point(0, 20)
-            };
-            inventoryPanel.Controls.Add(inventoryLabel);
-            buildPanel.Controls.Add(inventoryPanel);
-
-            Panel buildOptionsPanel = new Panel
-            {
-                Size = new Size(panelWidth / 2, panelHeight),
-                Location = new Point(panelWidth / 2, 0),
-                BackColor = Color.LightBlue
-            };
-            Button closeButton = new NoFocusButton
+            Button closeButton = new Button
             {
                 Text = "X",
                 Size = new Size(30, 30),
-                Location = new Point(buildOptionsPanel.Width - 40, 10),
+                Location = new Point(buildPanel.Width - 40, 10),
                 BackColor = Color.Red,
                 ForeColor = Color.White
             };
@@ -570,7 +581,7 @@ namespace factordictatorship
                 aktuellerModus = null;
                 this.Focus();
             };
-            buildOptionsPanel.Controls.Add(closeButton);
+            buildPanel.Controls.Add(closeButton);
             Label titleLabel = new Label
             {
                 Text = "Choose Building",
@@ -578,7 +589,7 @@ namespace factordictatorship
                 Location = new Point(10, 10),
                 AutoSize = true
             };
-            buildOptionsPanel.Controls.Add(titleLabel);
+            buildPanel.Controls.Add(titleLabel);
 
             var buildings = new List<String>
             {
@@ -602,10 +613,9 @@ namespace factordictatorship
                     buildPanel.Visible = false;
                     this.Focus();
                 };
-                buildOptionsPanel.Controls.Add(btn);
+                buildPanel.Controls.Add(btn);
                 y += 45;
             }
-            buildPanel.Controls.Add(buildOptionsPanel);
         }
         private void ToogleMenuPanel()
         {
@@ -623,33 +633,147 @@ namespace factordictatorship
         {
             konInterface.Visible = true;
             konInterface.Controls.Clear();
-            Label name = new Label();
-            name.Text = kon.ToString();
-            name.Location = new Point(10, 10);
-            name.AutoSize = true;
+            aktuellerKon = kon;
+            Label name = new Label()
+            {
+                Text = "Konstruktor",
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
             konInterface.Controls.Add(name);
-            int y = 50;
-            int maxRight = name.Right;
+            int y = 40;
+            if (kon.TypErgebnissRecurse1 != null)
+            {
+                Label productInfo = new Label
+                {
+                    Text = $"Produces: {kon.MengenErgebnissRecursen1} x {kon.TypErgebnissRecurse1}",
+                    Location = new Point(10, y),
+                    AutoSize = true
+                };
+                konInterface.Controls.Add(productInfo);
+                y += 25;
+                resourceCountLabelKon = new Label
+                {
+                    Text = $"Gelagert: {kon.ErgebnissRecurse1.Count} / {kon.MaxAnzalErgebnissRecurse1}",
+                    Location = new Point(10, y),
+                    AutoSize = true
+                };
+                konInterface.Controls.Add(resourceCountLabelKon);
+                y += 30;
+                Button productBtn = new Button
+                {
+                    Text = $"Produkt nehmen",
+                    Size = new Size(200, 30),
+                    Location = new Point(10, y)
+                };
+                productBtn.Click += (s, e) =>
+                {
+                    foreach (var res in kon.ErgebnissRecurse1.ToList())
+                    {
+                        player.AddResource(res);
+                        kon.ErgebnissRecurse1.Remove(res);
+                    }
+                    if (inventoryPanel.Visible)
+                        ShowInventory();
+                };
+                konInterface.Controls.Add(productBtn);
+            }
+            y += 40;
+            Label rezepteLbl = new Label
+            {
+                Text = "Rezepte:",
+                Location = new Point(10, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(rezepteLbl);
+            y += 25;
             foreach (Rezepte rezept in rezepte)
             {
-                Button rezeptBtn = new Button();
-                rezeptBtn.Text = rezept.RezeptName + $" ({rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenErgebnissRecursen[0]} {rezept.ErgebnissRecursen[0]})";
-                rezeptBtn.Size = new Size(200, 30);
-                rezeptBtn.Location = new Point(10, y);
-                rezeptBtn.AutoSize = true;
-                rezeptBtn.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+                Button rezeptBtn = new Button
+                {
+                    Text = rezept.RezeptName + $" ({rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenErgebnissRecursen[0]} {rezept.ErgebnissRecursen[0]})",
+                    Size = new Size(240, 30),
+                    Location = new Point(10, y)
+                };
                 rezeptBtn.Click += (s, e) =>
                 {
                     kon.SpeichereRezept(rezept);
-                    konInterface.Visible = false;
+                    ShowKonInterface(kon); // Neu laden nach Auswahl
                 };
                 konInterface.Controls.Add(rezeptBtn);
-                maxRight = Math.Max(maxRight, rezeptBtn.Right);
-                y += 40;
+                y += 35;
+
             }
-            konInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) =>
+            {
+                konInterface.Visible = false;
+                aktuellerKon = null;
+            };
+            konInterface.Controls.Add(closeBtn);
+            closeBtn.BringToFront();
+
+            konInterface.Size = new Size(270, Math.Max(y + 10, 200));
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
             Button closeBtn = new NoFocusButton
+        }
+        public void ShowMinerInterface(Miner miner)
+        {
+            konInterface.Visible = true;
+            konInterface.Controls.Clear();
+            aktuellerMiner = miner;
+            Label name = new Label
+            {
+                Text = "Miner",
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(name);
+
+            int y = 40;
+            Label resourceTypelb = new Label
+            {
+                Text = $"Ressourcentyp: {miner.TypResurce}",
+                Location = new Point(10, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(resourceTypelb);
+            y += 25;
+            resourceCountLabel = new Label
+            {
+                Text = $"Gesammelt: {miner.Recurse.Count} / {miner.MaxAnzalRecurse}",
+                Location = new Point(10, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(resourceCountLabel);
+            y += 35;
+            Button takeBtn = new Button
+            {
+                Text = "Take resource",
+                Location = new Point(10, y),
+                Size = new Size(150, 30)
+            };         
+            takeBtn.Click += (s, e) =>
+            {
+                foreach (var res in miner.Recurse.ToList())
+                {
+                    player.AddResource(res);
+                    miner.Recurse.Remove(res);
+                }
+                ShowMinerInterface(miner);
+                if (inventoryPanel.Visible)
+                    ShowInventory();
+            };
+            konInterface.Controls.Add(takeBtn);
+            y += 40;
+            Button closeBtn = new Button
             {
                 Text = "X",
                 Size = new Size(30, 30),
@@ -659,6 +783,9 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => konInterface.Visible = false;
             konInterface.Controls.Add(closeBtn);
+            closeBtn.BringToFront();
+            konInterface.Size = new Size(270, Math.Max(y + 10, 150));
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
         }
 
         public void ShowBandInterface(Band ban)
@@ -721,6 +848,79 @@ namespace factordictatorship
         public void DisplayData()
         {
             moneyAmount.Text = player.displayData();
+        }
+        public void ShowInventory()
+        {
+            inventoryPanel.Visible = true;
+            inventoryPanel.Controls.Clear();
+            Label title = new Label
+            {
+                Text = "Inventory",
+                Font = new Font("Arial", 12, FontStyle.Bold),
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
+            Button inventoryCloseBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(inventoryPanel.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            inventoryCloseBtn.Click += (s, e) => inventoryPanel.Visible = false;
+            inventoryPanel.Controls.Add(inventoryCloseBtn);
+            inventoryPanel.Controls.Add(title);
+            int y = 40;
+            foreach (var inv in player.inventories)
+            {
+                int totalQuantity = inv.Items.Count();
+                Label entry = new Label
+                {
+                    Text = $"{inv.Type}: {totalQuantity} / {inv.maxStack}",
+                    Location = new Point(10, y),
+                    AutoSize = true
+                };
+                inventoryPanel.Controls.Add(entry);
+
+                Button giveBtn = new Button
+                {
+                    Text = "→",
+                    Location = new Point(100, y - 3),
+                    Size = new Size(30, 23)
+                };
+                giveBtn.Click += (s, e) =>
+                {
+                    if (aktuellerKon != null)
+                    {
+                        aktuellerKon.NimmRessourceAusInventar(inv.Items, inv.Type, 5); // oder beliebige Anzahl
+                        player.CheckForEmptyInventory();
+                        ShowInventory();
+                    }
+                };
+                inventoryPanel.Controls.Add(giveBtn);
+                giveBtn.BringToFront();
+                y += 20;
+            }
+            inventoryPanel.Visible = true;
+        }
+        private void InventoryPanel_MouseDown(object sender, MouseEventArgs e)
+        {
+            isDragging = true;
+            dragStart = Cursor.Position; // dragStart is Cursor Position
+            dragPanelPoint = inventoryPanel.Location;
+        }
+        private void InventoryPanel_MoseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging)
+            {
+                Point diff = Point.Subtract(Cursor.Position, new Size(dragStart));
+                inventoryPanel.Location = Point.Add(dragPanelPoint, new Size(diff));
+            }
+        }
+        private void InventoryPanel_MouseUp(object sender, MouseEventArgs e)
+        {
+            isDragging = false;
         }
     }
 } 
