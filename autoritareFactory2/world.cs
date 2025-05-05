@@ -57,7 +57,6 @@ namespace factordictatorship
         public Point beltEnd;
         public Panel konInterface;
         public Panel banInterface;
-        public PlayerData player = new PlayerData(0);
         public Panel inventoryPanel;
         public Miner aktuellerMiner = null;
         public Konstrucktor aktuellerKon = null;
@@ -134,7 +133,7 @@ namespace factordictatorship
             switch (grs)
             {
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
-                case GroundResource.ColeOre:throw new Exception("Hey Markus insert stuff here!"); return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.ColeOre: throw new Exception("Hey Markus insert stuff here!"); return autoritaereFactory.ResourceType.IronOre;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -205,24 +204,26 @@ namespace factordictatorship
                     if (f is Band)
                     {
                         ShowBandInterface(f as Band);
+                    }
                     else if (f is Miner)
                     {
                         ShowMinerInterface(f as Miner);
                     }
+
                 }
             }
         }
         public void RefreshLoop(object sender, EventArgs e)
         {
             this.Invalidate(DisplayRectangle);
-            if (konInterface.Visible  && aktuellerMiner != null && resourceCountLabel != null)
+            if (konInterface.Visible && aktuellerMiner != null && resourceCountLabel != null)
             {
                 resourceCountLabel.Text = $"Gesammelt: {aktuellerMiner.Recurse.Count} / {aktuellerMiner.MaxAnzalRecurse}";
             }
             if (konInterface.Visible && aktuellerKon != null && resourceCountLabelKon != null)
             {
                 resourceCountLabelKon.Text = $"Gelagert: {aktuellerKon.ErgebnissRecurse1.Count} / {aktuellerKon.MaxAnzalErgebnissRecurse1}";
-                
+
             }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
@@ -269,8 +270,8 @@ namespace factordictatorship
                 {
                     if (isDragging)
                     {
-                        List<Point> beltLine = GetLinePoints(beltStart, worldPoint);
-                        if(beltLine.Count > 1)
+                        List<Point> beltLine = GetLinePoints(dragStart, worldPoint);
+                        if (beltLine.Count > 1)
                         {// auto rotate the lines
                             if (beltLine[0].X < beltLine[1].X) rotateState = 1;
                             if (beltLine[0].Y < beltLine[1].Y) rotateState = 2;
@@ -279,7 +280,7 @@ namespace factordictatorship
                         }
                         foreach (var pt in beltLine)
                         {
-                            Band belt = new Band(rotateState, 20, pt.X, pt.Y,mapWorld);
+                            Band belt = new Band(rotateState, 20, pt.X, pt.Y, mapWorld);
                             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                             if (lffb.Count == 0)
                             {
@@ -293,7 +294,7 @@ namespace factordictatorship
                     }
                     else
                     {
-                        Band belt = new Band(rotateState, 20, worldPoint.X, worldPoint.Y,mapWorld);
+                        Band belt = new Band(rotateState, 20, worldPoint.X, worldPoint.Y, mapWorld);
                         List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                         if (lffb.Count == 0)
                         {
@@ -382,7 +383,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(rotateState, 20, x, y,mapWorld);
+            Band belt = new Band(rotateState, 20, x, y, mapWorld);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {
@@ -431,7 +432,7 @@ namespace factordictatorship
             rotateBtn.Click += (s, e) =>
             {
                 rotateState %= 4;
-                rotateState ++;
+                rotateState++;
             };
             toolStrip.Items.Add(rotateBtn);
 
@@ -470,7 +471,7 @@ namespace factordictatorship
             saveBtn.Click += (s, e) => {
                 byte[] worldData = mapWorld.GetAsBytes();
                 FileStream fptr = File.OpenWrite(mapWorld.worldName + ".world");
-                fptr.Write(worldData,0, worldData.Length);
+                fptr.Write(worldData, 0, worldData.Length);
                 fptr.Close();
             };
             menuPanel.Controls.Add(saveBtn);
@@ -491,7 +492,7 @@ namespace factordictatorship
                 Stream worldFptr = openWorldFile.OpenFile();
                 byte[] allData = new byte[worldFptr.Length];
                 int offset = 0;
-                worldFptr.Read(allData,offset,allData.Length);
+                worldFptr.Read(allData, offset, allData.Length);
                 WorldMap newMap = WorldMap.FromByteArray(allData, ref offset);
                 worldFptr.Close();
                 if (newMap != null)
@@ -592,11 +593,11 @@ namespace factordictatorship
             buildPanel.Controls.Add(titleLabel);
 
             var buildings = new List<String>
-            {
-                "Miner",
-                "Constructor",
-                "Belt"
-            };
+        {
+            "Miner",
+            "Constructor",
+            "Belt"
+        };
             int y = 50;
             foreach (var name in buildings)
             {
@@ -722,7 +723,7 @@ namespace factordictatorship
 
             konInterface.Size = new Size(270, Math.Max(y + 10, 200));
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
-            Button closeBtn = new NoFocusButton
+            //Button closeBtn = new NoFocusButton;
         }
         public void ShowMinerInterface(Miner miner)
         {
@@ -759,7 +760,7 @@ namespace factordictatorship
                 Text = "Take resource",
                 Location = new Point(10, y),
                 Size = new Size(150, 30)
-            };         
+            };
             takeBtn.Click += (s, e) =>
             {
                 foreach (var res in miner.Recurse.ToList())
@@ -808,7 +809,7 @@ namespace factordictatorship
                 //{
                 //    resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
                 //}
-                switch(resc.Type) 
+                switch (resc.Type)
                 {
                     case ResourceType.IronOre:
                         resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
@@ -923,6 +924,7 @@ namespace factordictatorship
             isDragging = false;
         }
     }
-} 
+}
+
 
 
