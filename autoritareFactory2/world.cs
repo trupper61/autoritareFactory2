@@ -445,6 +445,8 @@ namespace factordictatorship
                 Location = new Point(10, 90)
             };
             loadBtn.Click += (s, e) => {
+                //openWorldFile.DefaultExt = ".world";
+                openWorldFile.Filter = "WorldFiles (*.world)|*.world";
                 openWorldFile.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
                 //openWorldFile.CustomPlaces.Add(FileDialogCustomPlace.)
                 DialogResult status = openWorldFile.ShowDialog();
