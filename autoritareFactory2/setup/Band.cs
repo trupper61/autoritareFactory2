@@ -56,7 +56,6 @@ namespace factordictatorship.setup
                     {
                         anzahlEisen++;
                     }
-                    ItemAnzahlMoment++;
                 }
             }
         }
@@ -64,6 +63,7 @@ namespace factordictatorship.setup
         public void RescourceKommtAufBand(Resource r)
         {
             currentRescourceList.Add(r);
+            ItemAnzahlMoment++;
         }
         public void UpdateRescourceList()
         {
@@ -132,17 +132,33 @@ namespace factordictatorship.setup
                     BandNxt.ErkenneRescourcen();
                     
                     band.removedRescources.Add(resources);
+                    band.ItemAnzahlMoment--;
                 }
             }
             foreach(Resource resources in band.removedRescources) 
             {
                 band.currentRescourceList.Remove(resources);
             }
+            band.removedRescources.Clear();
         }
 
         public override string ToString()
         {
             return "Band";
+        }
+
+        public string RetWantedRescource(ResourceType type, Band band) 
+        {
+            int zaehler = 0;
+            foreach(Resource res in band.currentRescourceList) 
+            {
+                if(res.Type == type) 
+                {
+                    zaehler++;
+                }
+            }
+
+            return zaehler.ToString();
         }
     }
 }
