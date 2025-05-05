@@ -33,6 +33,7 @@ namespace factordictatorship.setup
         public int RichtungEingang; //1 -> Eingang Links //2 -> Eingang Oben //3 -> Eingang Rechts // 4 -> Eingang Unten
         public int RichtungAusgang; //1 -> Ausgang Rechts //2 -> Ausgang Unten //3 -> Ausgang Links //4 -> Ausgang Oben
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
+        public int Richtung; // For Merge-Fix
 
         public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY, WorldMap wrld)
             : base(positionX, positionY,richtung)

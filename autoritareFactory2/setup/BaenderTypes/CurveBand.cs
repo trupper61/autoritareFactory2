@@ -54,7 +54,7 @@ namespace factordictatorship.setup.BaenderTypes
             }
 
             List<Fabrikgebeude> values = world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
-
+            CurveBand curveBandNxt;
             foreach (Fabrikgebeude v in values)
             {
                 if (v is Band)
@@ -65,18 +65,21 @@ namespace factordictatorship.setup.BaenderTypes
                         BandNxt = gb;
                         if (BandNxt.Drehung != band.Drehung) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop
                         if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
-                        
+
                         determineTransfer(band, BandNxt);
                     }
 
                     foreach (CurveBand gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                     {
                         curveBandNxt = gb;
-                        if (curveBandNxt.Drehung != curveBandNxt.DrehungAusgang) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop
+                        if (curveBandNxt.Drehung != curveBandNxt.Drehung) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop // Merge: curveBandNxt.DrehungAusgang?
                         if (curveBandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
 
-                        determineTransferCurve(Band, curveBandNxt);
+                        determineTransferCurve(gb, curveBandNxt); // Needs second curveBand variable.
                     }
+                }
+            }
+        }
 
                     /*
                     foreach (Konstrucktor ko in world.GetEntityInBox(band.PositionX + wertRotX, band.PositionY + wertRotY, konstrucktor.längeInXDrehung, konstrucktor.längeInYDrehung))
@@ -96,7 +99,7 @@ namespace factordictatorship.setup.BaenderTypes
                     }
                 }
             }
-        }
+        }*/
 
         public override void determineTransfer(Band band, Band BandNxt)
         {
