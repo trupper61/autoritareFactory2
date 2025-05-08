@@ -417,8 +417,8 @@ namespace factordictatorship
             int panelHeight = (int)(this.Height * 0.7);
             buildPanel = new Panel
             {
-                Size = new Size(panelWidth, panelHeight),
-                Location = new Point((this.Width - panelWidth) / 2, (this.Height - panelHeight) / 2),
+                Size = new Size(200, 260),
+                Location = new Point((this.Width - 160) / 2, (this.Height - 220) / 2),
                 BackColor = Color.LightGray,
                 Visible = false,
             };
@@ -573,10 +573,7 @@ namespace factordictatorship
         // BuildPanel Resize Event
         private void OnFormResize(object sender, EventArgs e)
         {
-            int width = (int)(this.Width * 0.7);
-            int height = (int)(this.Height * 0.7);
-            buildPanel.Size = new Size(width, height);
-            buildPanel.Location = new Point((this.Width - width) / 2, (this.Height - height) / 2);
+            buildPanel.Location = new Point((this.Width - buildPanel.Width) / 2, (this.Height - buildPanel.Height) / 2);
 
             menuPanel.Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75);
 
