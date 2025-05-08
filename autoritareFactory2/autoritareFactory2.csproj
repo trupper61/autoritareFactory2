@@ -50,13 +50,16 @@
     <Compile Include="drawing\WorldPartImage.cs" />
     <Compile Include="Fabrikator.cs" />
     <Compile Include="Fabrikgebeude.cs" />
+    <Compile Include="Finishinator.cs" />
     <Compile Include="formsElement\NoFocusButton.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Inventory.cs" />
+    <Compile Include="Merger.cs" />
     <Compile Include="PlayerData.cs" />
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />
+    <Compile Include="Splitter.cs" />
     <Compile Include="world.cs">
       <SubType>Form</SubType>
     </Compile>
