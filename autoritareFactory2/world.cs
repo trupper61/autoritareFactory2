@@ -575,6 +575,17 @@ namespace factordictatorship
             inventoryPanel.MouseUp += Panel_MouseUp;
             inventoryPanel.MouseMove += Panel_MoseMove;
             Controls.Add(inventoryPanel);
+            portPanel = new Panel
+            {
+                Size = new Size(250, 200),
+                Location = new Point((this.ClientSize.Width - 300) / 2, (this.ClientSize.Height - 250) / 2),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            portPanel.MouseDown += Panel_MouseDown;
+            portPanel.MouseMove += Panel_MoseMove;
+            portPanel.MouseUp += Panel_MouseUp;
+            this.Controls.Add(portPanel);
         }
 
         // BuildPanel Resize Event
@@ -725,6 +736,8 @@ namespace factordictatorship
                 {
                     aktuellerKon.SpeichereRezept(rezept);
                     ShowKonInterface(aktuellerKon); // Neu laden nach Auswahl
+                    if (portPanel != null && portPanel.Visible)
+                        ShowKonstruktorPorts();
                 };
                 rezeptPanel.Controls.Add(rezeptBtn);
                 rezeptY += 35;
@@ -1031,13 +1044,8 @@ namespace factordictatorship
         }
         private void ShowKonstruktorPorts()
         {
-            portPanel = new Panel
-            {
-                Size = new Size(250, 200),
-                Location = new Point((this.ClientSize.Width - 300) / 2, (this.ClientSize.Height - 250) / 2),
-                BackColor = Color.LightGray,
-                Visible = true
-            };
+            portPanel.Controls.Clear();
+            portPanel.Visible = true;
             ResourceType inRes = aktuellerKon.TypBenotigteRecurse1;
             ResourceType outRes = aktuellerKon.TypErgebnissRecurse1;
             Label inTxt = new Label
@@ -1121,10 +1129,6 @@ namespace factordictatorship
             ToolTip tt = new ToolTip();
             tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes}"); // Shows small PopUp-Window, for UserHelp
             tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
-            portPanel.MouseDown += Panel_MouseDown;
-            portPanel.MouseMove += Panel_MoseMove;
-            portPanel.MouseUp += Panel_MouseUp;
-            this.Controls.Add(portPanel);
             portPanel.BringToFront();
         }
     }
