@@ -76,6 +76,7 @@ namespace factordictatorship
         public Label resourceCountLabel = null;
         public Label resourceCountLabelKon = null;
         public Point dragPanelPoint;
+        public Panel dragPanel;
         public Panel portPanel;
         public Label inCount;
         public Label outCount;
@@ -422,6 +423,9 @@ namespace factordictatorship
                 BackColor = Color.LightGray,
                 Visible = false,
             };
+            buildPanel.MouseDown += Panel_MouseDown;
+            buildPanel.MouseMove += Panel_MoseMove;
+            buildPanel.MouseUp += Panel_MouseUp;
             Controls.Add(buildPanel);
             SetupBuildPanel();
             ToolStrip toolStrip = new ToolStrip();
@@ -545,6 +549,9 @@ namespace factordictatorship
                 BackColor = Color.LightGray,
                 Visible = false
             };
+            konInterface.MouseDown += Panel_MouseDown;
+            konInterface.MouseMove += Panel_MoseMove;
+            konInterface.MouseUp += Panel_MouseUp;
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
             Controls.Add(konInterface);
 
@@ -564,9 +571,9 @@ namespace factordictatorship
                 Visible = false
             };
             inventoryPanel.Location = new Point((this.ClientSize.Width - inventoryPanel.Width) / 2, (this.ClientSize.Height - inventoryPanel.Height) / 2);
-            inventoryPanel.MouseDown += InventoryPanel_MouseDown;
-            inventoryPanel.MouseUp += InventoryPanel_MouseUp;
-            inventoryPanel.MouseMove += InventoryPanel_MoseMove;
+            inventoryPanel.MouseDown += Panel_MouseDown;
+            inventoryPanel.MouseUp += Panel_MouseUp;
+            inventoryPanel.MouseMove += Panel_MoseMove;
             Controls.Add(inventoryPanel);
         }
 
@@ -999,23 +1006,28 @@ namespace factordictatorship
                     return null;
             }
         }
-        private void InventoryPanel_MouseDown(object sender, MouseEventArgs e)
+        private void Panel_MouseDown(object sender, MouseEventArgs e)
         {
-            isDragging = true;
-            dragStart = Cursor.Position; // dragStart is Cursor Position
-            dragPanelPoint = inventoryPanel.Location;
-        }
-        private void InventoryPanel_MoseMove(object sender, MouseEventArgs e)
-        {
-            if (isDragging)
+            if (sender is Panel panel)
             {
-                Point diff = Point.Subtract(Cursor.Position, new Size(dragStart));
-                inventoryPanel.Location = Point.Add(dragPanelPoint, new Size(diff));
+                isDragging = true;
+                dragStart = Cursor.Position; // dragStart is Cursor Position
+                dragPanelPoint = panel.Location;
+                dragPanel = panel;
             }
         }
-        private void InventoryPanel_MouseUp(object sender, MouseEventArgs e)
+        private void Panel_MoseMove(object sender, MouseEventArgs e)
+        {
+            if (isDragging && dragPanel != null)
+            {
+                Point diff = Point.Subtract(Cursor.Position, new Size(dragStart));
+                dragPanel.Location = Point.Add(dragPanelPoint, new Size(diff));
+            }
+        }
+        private void Panel_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
+            dragPanel = null;
         }
         private void ShowKonstruktorPorts()
         {
@@ -1109,6 +1121,9 @@ namespace factordictatorship
             ToolTip tt = new ToolTip();
             tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes}"); // Shows small PopUp-Window, for UserHelp
             tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
+            portPanel.MouseDown += Panel_MouseDown;
+            portPanel.MouseMove += Panel_MoseMove;
+            portPanel.MouseUp += Panel_MouseUp;
             this.Controls.Add(portPanel);
             portPanel.BringToFront();
         }
