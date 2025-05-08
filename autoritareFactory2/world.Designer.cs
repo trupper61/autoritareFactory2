@@ -34,6 +34,7 @@ namespace factordictatorship
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.moneyAmount = new System.Windows.Forms.Label();
             this.noFocusButton = new factordictatorship.formsElement.NoFocusButton();
+            this.openWorldFile = new System.Windows.Forms.OpenFileDialog();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -61,25 +62,29 @@ namespace factordictatorship
             // noFocusButton
             // 
             this.noFocusButton.CausesValidation = false;
-            this.noFocusButton.Location = new System.Drawing.Point(84, 393);
-            this.noFocusButton.Margin = new System.Windows.Forms.Padding(4);
+            this.noFocusButton.Location = new System.Drawing.Point(63, 319);
             this.noFocusButton.Name = "noFocusButton";
-            this.noFocusButton.Size = new System.Drawing.Size(133, 43);
+            this.noFocusButton.Size = new System.Drawing.Size(100, 35);
             this.noFocusButton.TabIndex = 0;
             this.noFocusButton.Text = "Not Focusable Button";
             this.noFocusButton.UseVisualStyleBackColor = true;
             this.noFocusButton.Visible = false;
             // 
+            // openWorldFile
+            // 
+            this.openWorldFile.DefaultExt = "world";
+            this.openWorldFile.FileName = "open World";
+            // 
             // world
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(600, 366);
             this.Controls.Add(this.moneyAmount);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.noFocusButton);
             this.DoubleBuffered = true;
-            this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.Name = "world";
             this.Text = "FactoriaAutoritaet";
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
@@ -93,6 +98,7 @@ namespace factordictatorship
         private NoFocusButton noFocusButton;
         private PictureBox pictureBox1;
         private Label moneyAmount;
+        private OpenFileDialog openWorldFile;
     }
 }
 

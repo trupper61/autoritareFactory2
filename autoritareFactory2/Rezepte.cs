@@ -15,6 +15,8 @@ namespace factordictatorship
 
     public class Rezepte
     {
+        private static int rezeptIndexer = 0;
+        public int rezeptIndex;
         private zugehörigesGebeude gebeudeTyp;
         public zugehörigesGebeude GebeudeTyp { get { return gebeudeTyp; } }
         private List<ResourceType> benotigteRecursen = new List<ResourceType>();
@@ -39,6 +41,9 @@ namespace factordictatorship
             mengenBenotigteRecurse.Add(anzahlbenotigteRecursen1);
             ergebnissRecursen.Add(ergebnissRecurse1);
             mengenErgebnissRecursen.Add(anzahlergebnissRecursen);
+
+            // for saving data
+            rezeptIndex = rezeptIndexer++;
         }
 
         public Rezepte(zugehörigesGebeude gebeudeTyp, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, ResourceType benotigteRecurse2, int anzahlbenotigteRecursen2, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
