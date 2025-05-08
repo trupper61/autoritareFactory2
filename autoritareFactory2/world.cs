@@ -2,6 +2,7 @@
 using autoritaereFactory.setup;
 using autoritaereFactory.world;
 using factordictatorship.drawing;
+using factordictatorship.formsElement;
 using factordictatorship.Resources;
 using factordictatorship.setup;
 using System;
@@ -10,6 +11,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -35,17 +37,26 @@ namespace factordictatorship
         public string aktuellerModus = "";
         public Panel buildPanel;
         public Panel menuPanel;
-        public Rezepte[] rezepte =
+        public int rotateState = 1;
+        public PlayerData player = new PlayerData(0);
+        public static Rezepte[] rezepte =
         {
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000),
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800),
             new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenplatte", autoritaereFactory.ResourceType.IronPlate, 2, 1500)
         };
+        public Resource[] rescourcen =
+        {
+            new Resource(autoritaereFactory.ResourceType.IronOre),
+            new Resource(autoritaereFactory.ResourceType.IronIngot),
+            new Resource(autoritaereFactory.ResourceType.IronPlate),
+            new Resource(autoritaereFactory.ResourceType.IronStick)
+        };
         public bool isDragging = false;
         public Point dragStart;
         public Point beltEnd;
         public Panel konInterface;
-        public PlayerData player = new PlayerData(0);
+        public Panel banInterface;
         public Panel inventoryPanel;
         public Miner aktuellerMiner = null;
         public Konstrucktor aktuellerKon = null;
@@ -122,6 +133,7 @@ namespace factordictatorship
             switch (grs)
             {
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.ColeOre: throw new Exception("Hey Markus insert stuff here!"); return autoritaereFactory.ResourceType.IronOre;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -133,7 +145,7 @@ namespace factordictatorship
             if (aktuellerModus == "Constructor")
             {
 
-                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
+                Konstrucktor kon = new Konstrucktor(worldPoint.X, worldPoint.Y, rotateState);
                 List<Fabrikgebeude> conflictingEntities = mapWorld.GetEntityInBox(kon.PositionX, kon.PositionY, kon.SizeX, kon.SizeY);
                 if (conflictingEntities.Count == 0)
                 {
@@ -150,7 +162,7 @@ namespace factordictatorship
             {
                 GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
                 // TODO Miner Resource zu GroundResource ändern
-                Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
+                Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                 if (lffb.Count == 0 && resource == GroundResource.IronOre)
                 {
@@ -167,7 +179,7 @@ namespace factordictatorship
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
                 if (fab.Count == 0)
                 {
-                    MessageBox.Show("Nix zum Löschen");
+                    //MessageBox.Show("Nix zum Löschen");
                 }
                 else
                 {
@@ -175,7 +187,7 @@ namespace factordictatorship
                     {
                         mapWorld.RemoveEntity(f);
                     }
-                    aktuellerModus = null;
+                    //aktuellerModus = null;
                 }
             }
             else
@@ -189,24 +201,29 @@ namespace factordictatorship
                     {
                         ShowKonInterface(f as Konstrucktor);
                     }
+                    if (f is Band)
+                    {
+                        ShowBandInterface(f as Band);
+                    }
                     else if (f is Miner)
                     {
                         ShowMinerInterface(f as Miner);
                     }
+
                 }
             }
         }
         public void RefreshLoop(object sender, EventArgs e)
         {
             this.Invalidate(DisplayRectangle);
-            if (konInterface.Visible  && aktuellerMiner != null && resourceCountLabel != null)
+            if (konInterface.Visible && aktuellerMiner != null && resourceCountLabel != null)
             {
                 resourceCountLabel.Text = $"Gesammelt: {aktuellerMiner.Recurse.Count} / {aktuellerMiner.MaxAnzalRecurse}";
             }
             if (konInterface.Visible && aktuellerKon != null && resourceCountLabelKon != null)
             {
                 resourceCountLabelKon.Text = $"Gelagert: {aktuellerKon.ErgebnissRecurse1.Count} / {aktuellerKon.MaxAnzalErgebnissRecurse1}";
-                
+
             }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
@@ -225,7 +242,7 @@ namespace factordictatorship
                 // this is really badly optimised... (Who cares)
                 if (aktuellerModus == "Constructor")
                 {
-                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y, 1);
+                    Konstrucktor kot = new Konstrucktor(worldPoint.X, worldPoint.Y, rotateState);
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(kot.PositionX, kot.PositionY, kot.SizeX, kot.SizeY);
                     if (lffb.Count == 0)
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, kot, Color.FromArgb(127, 127, 255, 95));
@@ -238,7 +255,7 @@ namespace factordictatorship
                     GroundResource resource = mapWorld.GetBlockState(worldPoint.X, worldPoint.Y);
 
                     // TODO: Miner resource to GroundType!
-                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, 1, GetResourceFromGround(resource));
+                    Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
                     if (lffb.Count == 0 && resource == GroundResource.IronOre)
                     {
@@ -254,9 +271,16 @@ namespace factordictatorship
                     if (isDragging)
                     {
                         List<Point> beltLine = GetLinePoints(dragStart, worldPoint);
+                        if (beltLine.Count > 1)
+                        {// auto rotate the lines
+                            if (beltLine[0].X < beltLine[1].X) rotateState = 1;
+                            if (beltLine[0].Y < beltLine[1].Y) rotateState = 2;
+                            if (beltLine[0].X > beltLine[1].X) rotateState = 3;
+                            if (beltLine[0].Y > beltLine[1].Y) rotateState = 4;
+                        }
                         foreach (var pt in beltLine)
                         {
-                            Band belt = new Band(3, 20, pt.X, pt.Y);
+                            Band belt = new Band(rotateState, 20, pt.X, pt.Y, mapWorld);
                             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                             if (lffb.Count == 0)
                             {
@@ -270,7 +294,7 @@ namespace factordictatorship
                     }
                     else
                     {
-                        Band belt = new Band(3, 20, worldPoint.X, worldPoint.Y);
+                        Band belt = new Band(rotateState, 20, worldPoint.X, worldPoint.Y, mapWorld);
                         List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(belt.PositionX, belt.PositionY, belt.SizeX, belt.SizeY);
                         if (lffb.Count == 0)
                         {
@@ -359,7 +383,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(3, 20, x, y);
+            Band belt = new Band(rotateState, 20, x, y, mapWorld);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {
@@ -404,6 +428,13 @@ namespace factordictatorship
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
             destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy";
             toolStrip.Items.Add(destroyBtn);
+            ToolStripButton rotateBtn = new ToolStripButton("Rotate");
+            rotateBtn.Click += (s, e) =>
+            {
+                rotateState %= 4;
+                rotateState++;
+            };
+            toolStrip.Items.Add(rotateBtn);
 
             ToolStripButton inventoryBtn = new ToolStripButton("Inventory");
             inventoryBtn.Click += (s, e) => ShowInventory();
@@ -419,7 +450,7 @@ namespace factordictatorship
                 BackColor = Color.LightGray,
                 Visible = false
             };
-            Button backBtn = new Button
+            Button backBtn = new NoFocusButton
             {
                 Text = "Back To Game",
                 Size = new Size(180, 30),
@@ -431,21 +462,52 @@ namespace factordictatorship
                 this.Focus();
             };
             menuPanel.Controls.Add(backBtn);
-            Button saveBtn = new Button
+            Button saveBtn = new NoFocusButton
             {
                 Text = "Speichern",
                 Size = new Size(180, 30),
                 Location = new Point(10, 50)
             };
+            saveBtn.Click += (s, e) => {
+                byte[] worldData = mapWorld.GetAsBytes();
+                FileStream fptr = File.OpenWrite(mapWorld.worldName + ".world");
+                fptr.Write(worldData, 0, worldData.Length);
+                fptr.Close();
+            };
             menuPanel.Controls.Add(saveBtn);
-            Button loadBtn = new Button
+            Button loadBtn = new NoFocusButton
             {
                 Text = "Load",
                 Size = new Size(180, 30),
                 Location = new Point(10, 90)
             };
+            loadBtn.Click += (s, e) => {
+                //openWorldFile.DefaultExt = ".world";
+                openWorldFile.Filter = "WorldFiles (*.world)|*.world";
+                openWorldFile.InitialDirectory = System.IO.Directory.GetCurrentDirectory();
+                //openWorldFile.CustomPlaces.Add(FileDialogCustomPlace.)
+                DialogResult status = openWorldFile.ShowDialog();
+                if (status != DialogResult.OK)
+                    return;
+                Stream worldFptr = openWorldFile.OpenFile();
+                byte[] allData = new byte[worldFptr.Length];
+                int offset = 0;
+                worldFptr.Read(allData, offset, allData.Length);
+                WorldMap newMap = WorldMap.FromByteArray(allData, ref offset);
+                worldFptr.Close();
+                if (newMap != null)
+                {
+                    mapWorld.Dispose();
+                    mapWorld.AwaitThread();
+                    newMap.worldName = openWorldFile.FileName;
+                    if (newMap.worldName.EndsWith(".world"))
+                        newMap.worldName = newMap.worldName.Substring(0, newMap.worldName.Length - 6);
+                    mapWorld = newMap;
+                    mapWorld._StartThread();
+                }
+            };
             menuPanel.Controls.Add(loadBtn);
-            Button closeBtn = new Button
+            Button closeBtn = new NoFocusButton
             {
                 Text = "Close Game",
                 Size = new Size(180, 30),
@@ -464,6 +526,15 @@ namespace factordictatorship
             };
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
             Controls.Add(konInterface);
+
+            banInterface = new Panel
+            {
+                Size = new Size(250, 300),
+                Location = new Point(50, 50),
+                BackColor = Color.LightGray,
+                Visible = false
+            };
+            Controls.Add(banInterface);
             inventoryPanel = new Panel
             {
                 Size = new Size((int)(this.ClientSize.Width * 0.3), (int)(this.ClientSize.Height * 0.6)),
@@ -522,15 +593,15 @@ namespace factordictatorship
             buildPanel.Controls.Add(titleLabel);
 
             var buildings = new List<String>
-            {
-                "Miner",
-                "Constructor",
-                "Belt"
-            };
+        {
+            "Miner",
+            "Constructor",
+            "Belt"
+        };
             int y = 50;
             foreach (var name in buildings)
             {
-                Button btn = new Button
+                Button btn = new NoFocusButton
                 {
                     Text = name,
                     Size = new Size(120, 35),
@@ -652,6 +723,7 @@ namespace factordictatorship
 
             konInterface.Size = new Size(270, Math.Max(y + 10, 200));
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+            //Button closeBtn = new NoFocusButton;
         }
         public void ShowMinerInterface(Miner miner)
         {
@@ -688,7 +760,7 @@ namespace factordictatorship
                 Text = "Take resource",
                 Location = new Point(10, y),
                 Size = new Size(150, 30)
-            };         
+            };
             takeBtn.Click += (s, e) =>
             {
                 foreach (var res in miner.Recurse.ToList())
@@ -715,6 +787,64 @@ namespace factordictatorship
             closeBtn.BringToFront();
             konInterface.Size = new Size(270, Math.Max(y + 10, 150));
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+        }
+
+        public void ShowBandInterface(Band ban)
+        {
+            banInterface.Visible = true;
+            banInterface.Controls.Clear();
+
+            Label name = new Label();
+            name.Text = ban.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+
+            int y = 50;
+            int maxRight = name.Right;
+
+            foreach (Resource resc in rescourcen)
+            {
+                Label resBand = new Label();
+                //if(resc.Type == ResourceType.IronOre) 
+                //{
+                //    resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
+                //}
+                switch (resc.Type)
+                {
+                    case ResourceType.IronOre:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
+                        break;
+                    case ResourceType.IronPlate:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
+                        break;
+                    case ResourceType.IronStick:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
+                        break;
+                    case ResourceType.IronIngot:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
+                        break;
+                }
+                resBand.Location = new Point(10, y);
+                resBand.AutoSize = true;
+
+                banInterface.Controls.Add(resBand);
+                y += 40;
+            }
+
+            banInterface.Controls.Add(name);
+            banInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            banInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => banInterface.Visible = false;
+            banInterface.Controls.Add(closeBtn);
         }
         public void DisplayData()
         {
@@ -857,5 +987,7 @@ namespace factordictatorship
             isDragging = false;
         }
     }
-} 
+}
+
+
 
