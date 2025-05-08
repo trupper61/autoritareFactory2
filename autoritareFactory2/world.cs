@@ -76,6 +76,9 @@ namespace factordictatorship
         public Label resourceCountLabel = null;
         public Label resourceCountLabelKon = null;
         public Point dragPanelPoint;
+        public Panel portPanel;
+        public Label inCount;
+        public Label outCount;
 
         public world()
         {
@@ -146,7 +149,7 @@ namespace factordictatorship
             switch (grs)
             {
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
-                case GroundResource.ColeOre: throw new Exception("Hey Markus insert stuff here!"); return autoritaereFactory.ResourceType.IronOre;
+                case GroundResource.ColeOre: return autoritaereFactory.ResourceType.ColeOre;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -237,6 +240,11 @@ namespace factordictatorship
             {
                 resourceCountLabelKon.Text = $"Gelagert: {aktuellerKon.ErgebnissRecurse1.Count} / {aktuellerKon.MaxAnzalErgebnissRecurse1}";
 
+            }
+            if (portPanel != null && portPanel.Visible)
+            {
+                inCount.Text = $"Anzahl: {aktuellerKon.BenotigteRecurse1.Count()}";
+                outCount.Text = $"Anzahl: {aktuellerKon.ErgebnissRecurse1.Count()}";
             }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
@@ -651,6 +659,7 @@ namespace factordictatorship
             Label name = new Label()
             {
                 Text = "Konstruktor",
+                Font = new Font("Arial", 12, FontStyle.Bold),
                 Location = new Point(10, 10),
                 AutoSize = true
             };
@@ -658,12 +667,13 @@ namespace factordictatorship
             int y = 40;
             if (kon.TypErgebnissRecurse1 != null)
             {
-                Label productInfo = new Label
+                Button productInfo = new Button
                 {
-                    Text = $"Produces: {kon.MengenErgebnissRecursen1} x {kon.TypErgebnissRecurse1}",
+                    Text = $"Siehe Ports",
                     Location = new Point(10, y),
                     AutoSize = true
                 };
+                productInfo.Click += (s, e) => ShowKonstruktorPorts();
                 konInterface.Controls.Add(productInfo);
                 y += 25;
                 resourceCountLabelKon = new Label
@@ -730,6 +740,7 @@ namespace factordictatorship
             {
                 konInterface.Visible = false;
                 aktuellerKon = null;
+                portPanel.Visible = false;
             };
             konInterface.Controls.Add(closeBtn);
             closeBtn.BringToFront();
@@ -746,6 +757,7 @@ namespace factordictatorship
             Label name = new Label
             {
                 Text = "Miner",
+                Font = new Font("Arial", 12, FontStyle.Bold),
                 Location = new Point(10, 10),
                 AutoSize = true
             };
@@ -998,6 +1010,110 @@ namespace factordictatorship
         private void InventoryPanel_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
+        }
+        private void ShowKonstruktorPorts()
+        {
+            portPanel = new Panel
+            {
+                Size = new Size(300, 250),
+                Location = new Point((this.ClientSize.Width - 300) / 2, (this.ClientSize.Height - 250) / 2),
+                BackColor = Color.LightGray,
+                Visible = true
+            };
+            ResourceType inRes = aktuellerKon.TypBenotigteRecurse1;
+            ResourceType outRes = aktuellerKon.TypErgebnissRecurse1;
+            Label inTxt = new Label
+            {
+                AutoSize = true,
+                Text = "Incomming Port:",
+                Font = new Font("Arial", 8, FontStyle.Bold)
+            };
+            inTxt.Location = new Point((portPanel.Width / 4) - (inTxt.PreferredWidth / 2), 40);
+            portPanel.Controls.Add(inTxt);
+            PictureBox inPb = new PictureBox
+            {
+                Size = new Size(45, 45),
+                Location = new Point((portPanel.Width / 4) - (45/2), 60),
+                BackColor = Color.LightGreen,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Image = ReturnResourceImage(inRes)
+            };
+            inPb.Click += (s, e) =>
+            {
+                foreach (var res in aktuellerKon.BenotigteRecurse1.ToList())
+                {
+                    player.AddResource(res);
+                    aktuellerKon.BenotigteRecurse1.Remove(res);
+                }
+                if (inventoryPanel.Visible)
+                    ShowInventory();
+            };
+            portPanel.Controls.Add(inPb);
+            inCount = new Label
+            {
+                AutoSize = true,
+                Location = new Point(inPb.Left, inPb.Bottom + 5),
+                Text = $"Anzahl: {aktuellerKon.BenotigteRecurse1.Count()}"
+            };
+            portPanel.Controls.Add(inCount);
+            Label outTxt = new Label
+            {
+                AutoSize = true,
+                Text = "Outgoing Port:",
+                Font = new Font("Arial", 8, FontStyle.Bold)
+            };
+            outTxt.Location = new Point((3 * portPanel.Width / 4) - (outTxt.PreferredWidth / 2), 40);
+            portPanel.Controls.Add(outTxt);
+            PictureBox outPb = new PictureBox
+            {
+                Size = new Size(45, 45),
+                Location = new Point((3 * portPanel.Width / 4) - (45 / 2), 60),
+                BackColor = Color.LightSalmon,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Image = ReturnResourceImage(outRes)
+            };
+            outPb.Click += (s, e) =>
+            {
+                foreach (var res in aktuellerKon.ErgebnissRecurse1.ToList())
+                {
+                    player.AddResource(res);
+                    aktuellerKon.ErgebnissRecurse1.Remove(res);
+                }
+                if (inventoryPanel.Visible)
+                    ShowInventory();
+            };
+            portPanel.Controls.Add(outPb);
+            outCount = new Label
+            {
+                AutoSize = true,
+                Location = new Point(outPb.Left, outPb.Bottom + 5),
+                Text = $"Anzahl: {aktuellerKon.ErgebnissRecurse1.Count()}"
+            };
+            portPanel.Controls.Add(outCount);
+            Button closeBtn = new Button
+            {
+                Size = new Size(30, 30),
+                Location = new Point(portPanel.Width - 35, 5),
+                Text = "X",
+                ForeColor = Color.White,
+                BackColor = Color.Red
+            };
+            closeBtn.Click += (s, e) => portPanel.Visible = false;
+            portPanel.Controls.Add(closeBtn);
+            int produktMenge = aktuellerKon.MengenErgebnissRecursen1;
+            int totalProMinute = (60000 / aktuellerKon.Produktionsdauer) * produktMenge;
+            Label infoLabel = new Label
+            {
+                AutoSize = true,
+                Location = new Point((portPanel.Width - 150) / 2, 160),
+                Text = $"Produziert: {totalProMinute} {aktuellerKon.TypErgebnissRecurse1} / Min"   // Time how much is produced in one minute
+            };
+            portPanel.Controls.Add(infoLabel);
+            ToolTip tt = new ToolTip();
+            tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes}"); // Shows small PopUp-Window, for UserHelp
+            tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
+            this.Controls.Add(portPanel);
+            portPanel.BringToFront();
         }
     }
 }
