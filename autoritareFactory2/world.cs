@@ -742,38 +742,101 @@ namespace factordictatorship
             inventoryCloseBtn.Click += (s, e) => inventoryPanel.Visible = false;
             inventoryPanel.Controls.Add(inventoryCloseBtn);
             inventoryPanel.Controls.Add(title);
+
+            int slotsPerRow = 3;
+            int usedSlots = player.inventories.Count;
+            int slotsize = 45;
+            int padding = 8;
+            int x = 10;
             int y = 40;
+            int column = 0;
+
             foreach (var inv in player.inventories)
             {
-                int totalQuantity = inv.Items.Count();
-                Label entry = new Label
+                Panel slotPanel = new Panel
                 {
-                    Text = $"{inv.Type}: {totalQuantity} / {inv.maxStack}",
-                    Location = new Point(10, y),
-                    AutoSize = true
+                    Size = new Size(slotsize, slotsize + 20),
+                    Location = new Point(x, y)
                 };
-                inventoryPanel.Controls.Add(entry);
-
-                Button giveBtn = new Button
+                PictureBox resourceBox = new PictureBox
                 {
-                    Text = "→",
-                    Location = new Point(100, y - 3),
-                    Size = new Size(30, 23)
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(0, 0),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = inv.Items.Count() > 0 ? Color.LightGreen : Color.LightBlue
                 };
-                giveBtn.Click += (s, e) =>
+                resourceBox.Image = ReturnResourceImage(inv.Type);
+                resourceBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                resourceBox.Click += (s, e) =>
                 {
                     if (aktuellerKon != null)
                     {
-                        aktuellerKon.NimmRessourceAusInventar(inv.Items, inv.Type, 5); // oder beliebige Anzahl
+                        aktuellerKon.NimmRessourceAusInventar(inv.Items, inv.Type, 5);
                         player.CheckForEmptyInventory();
                         ShowInventory();
                     }
                 };
-                inventoryPanel.Controls.Add(giveBtn);
-                giveBtn.BringToFront();
-                y += 20;
+                Label countLabel = new Label
+                {
+                    Text = inv.Items.Count.ToString(),
+                    AutoSize = false,
+                    Size = new Size(slotsize, 20),
+                    TextAlign = ContentAlignment.TopCenter,
+                    Location = new Point(0, slotsize)
+                };
+                slotPanel.Controls.Add(resourceBox);
+                slotPanel.Controls.Add(countLabel);
+                inventoryPanel.Controls.Add(slotPanel);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+
             }
-            inventoryPanel.Visible = true;
+            int remainingSlots = player.slotsAvail - usedSlots;
+            for (int i = 0; i < remainingSlots; i++)
+            {
+                PictureBox pb = new PictureBox
+                {
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(x, y),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.LightBlue
+                };
+                inventoryPanel.Controls.Add(pb);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+            }
+        }
+        public static Image ReturnResourceImage(ResourceType type)
+        {
+            switch (type)
+            {
+                case ResourceType.IronOre:
+                    return Properties.Resources.iron_ore;
+                case ResourceType.IronIngot:
+                    return Properties.Resources.iron;
+                default:
+                    return null;
+            }
         }
         private void InventoryPanel_MouseDown(object sender, MouseEventArgs e)
         {

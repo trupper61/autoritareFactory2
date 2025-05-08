@@ -12,11 +12,14 @@ namespace factordictatorship
     {
         public int money;
         public List<Inventory> inventories;
+        public int slotsAvail;
 
         public PlayerData(int money)
         {
             this.money = money;
-            inventories = new List<Inventory>(5);
+            slotsAvail = 4;
+
+            inventories = new List<Inventory>(slotsAvail);
         }
         public void AddResource(Resource resource)
         {
@@ -25,7 +28,7 @@ namespace factordictatorship
             {
                 inv.Add(resource);
             }
-            else
+            else if (inventories.Count() < slotsAvail)
             {
                 inv = new Inventory(resource.Type, 500); // 500 is max Stack
                 inv.Add(resource);
