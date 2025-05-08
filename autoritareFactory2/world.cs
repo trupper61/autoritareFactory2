@@ -177,7 +177,7 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && resource == GroundResource.IronOre)
+                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre))
                 {
                     mapWorld.AddEntityAt(miner);
                     aktuellerModus = null;
@@ -270,7 +270,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && resource == GroundResource.IronOre)
+                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre))
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
@@ -701,7 +701,7 @@ namespace factordictatorship
             };
             konInterface.Controls.Add(rezepteLbl);
             y += 25;
-            foreach (Rezepte rezept in rezepte)
+            foreach (Rezepte rezept in rezepte.Where(r => r.GebeudeTyp == zugehörigesGebeude.Konstrucktor))
             {
                 Button rezeptBtn = new Button
                 {
