@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
@@ -73,8 +74,9 @@ namespace autoritaereFactory.world
             int chunkYe = endY / Chunk.chunkSize;
             List<Fabrikgebeude> entitys = new List<Fabrikgebeude>();
             // build a list of building inside the area
-            foreach (Chunk ch in chunkList)
+            for(int chIndex = 0;chIndex < chunkList.Count;chIndex++)
             {
+                Chunk ch = chunkList[chIndex];
                 if (ch.x < chunkX || ch.y < chunkY) continue;
                 if (ch.x > chunkXe || ch.y > chunkYe) continue;
 
@@ -191,8 +193,9 @@ namespace autoritaereFactory.world
             const int timerDelay = 100; // in ms
             while (!shouldStopThread)
             {
-                foreach (Chunk ch in chunkList)
+                for (int chIndex = 0; chIndex < chunkList.Count;chIndex++)
                 {
+                    Chunk ch = chunkList[chIndex];
                     foreach (Fabrikgebeude bd in ch.buildings)
                     {
                         bd.Iteration();
@@ -238,7 +241,7 @@ namespace autoritaereFactory.world
             return null; // fix from "null"
         }
         private const int SPECIAL_FILE_NUMBER = 4469;
-        public byte[] GetAsBytes()
+        public List<byte> GetAsBytes()
         {
             List<byte> bytes = new List<byte>();
             bytes.AddRange(BitConverter.GetBytes((int)SPECIAL_FILE_NUMBER));
@@ -255,7 +258,7 @@ namespace autoritaereFactory.world
                 bytes.AddRange(chunkList[ch].GetAsBytes());
             }
             // room for future stuff!
-            return bytes.ToArray();
+            return bytes;
         }
         public static WorldMap FromByteArray(byte[] bytes, ref int offset)
         {
