@@ -13,6 +13,7 @@ namespace factordictatorship
     {
         private ResourceType typBenotigteRecurse1;
         private int benutzesRezept;
+        public int BenutzesRezept { get { return benutzesRezept; } }
         public ResourceType TypBenotigteRecurse1 { get { return typBenotigteRecurse1; } }
         private List<Resource> benotigteRecurse1 = new List<Resource>();//Liste mit der ersten für die Produktion nötige Recurse 
         public List<Resource> BenotigteRecurse1 { get { return benotigteRecurse1; } }
