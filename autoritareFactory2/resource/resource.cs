@@ -1,4 +1,5 @@
-﻿using System;
+﻿using factordictatorship.Properties;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -8,23 +9,38 @@ using System.Windows.Forms;
 
 namespace autoritaereFactory
 {
-    public abstract class Resource
+    public class Resource
     {
-        public  ResourceType Type{ get; private set; }
-        public int Amount { get; private set; }
-
-        // spätere ideen:
-        //public Point Position { get; set; } Position im Feld
-        //public PictureBox Texture { get; set; } Picturebox als Texturfeld
-
-        public Resource(ResourceType type, int amount)
+        public ResourceType Type { get; private set; }
+        public Resource(ResourceType type)
         {
             Type = type;
-            Amount = amount;
         }
     }
     public enum ResourceType
     {
-        Iron
+        IronIngot,
+        IronOre,
+        IronPlate,
+        IronStick,
+        Screw,
+
+        CopperOre,
+        CopperIngot,
+        CopperWire,
+        Cable,
+
+        ColeOre,
+        SteelIngot,
+        SteelRod,
+        SteelBeam,
+        SteelConcreteBeam,
+
+        limestone,
+        Concrete,
+
+        Rotor,
+        Stator,
+        Motor
     }
 }

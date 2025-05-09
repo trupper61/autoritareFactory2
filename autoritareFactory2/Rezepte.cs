@@ -7,10 +7,18 @@ using System.Threading.Tasks;
 
 namespace factordictatorship
 {
+    public enum zugehörigesGebeude
+    {
+        Konstrucktor,
+        Fabrikator
+    }
+
     public class Rezepte
     {
-        private string zugehörigesGebeude;
-        public string ZugehörigesGebeude { get { return zugehörigesGebeude; } }
+        private static int rezeptIndexer = 0;
+        public int rezeptIndex;
+        private zugehörigesGebeude gebeudeTyp;
+        public zugehörigesGebeude GebeudeTyp { get { return gebeudeTyp; } }
         private List<ResourceType> benotigteRecursen = new List<ResourceType>();
         public List<ResourceType> BenotigteRecursen { get { return benotigteRecursen; } }
         private List<int> mengenBenotigteRecurse = new List<int>();
@@ -23,13 +31,30 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private string rezeptName;
         public string RezeptName { get { return rezeptName; } }
-        public Rezepte(string zugehörigesGebeude, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
+
+        public Rezepte(zugehörigesGebeude gebeudeTyp, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
         {
-            this.zugehörigesGebeude = zugehörigesGebeude;
+            this.gebeudeTyp = gebeudeTyp;
             this.produktionsdauer = produktionsdauer;
             this.rezeptName = rezeptName;
             benotigteRecursen.Add(benotigteRecurse1);
             mengenBenotigteRecurse.Add(anzahlbenotigteRecursen1);
+            ergebnissRecursen.Add(ergebnissRecurse1);
+            mengenErgebnissRecursen.Add(anzahlergebnissRecursen);
+
+            // for saving data
+            rezeptIndex = rezeptIndexer++;
+        }
+
+        public Rezepte(zugehörigesGebeude gebeudeTyp, ResourceType benotigteRecurse1, int anzahlbenotigteRecursen1, ResourceType benotigteRecurse2, int anzahlbenotigteRecursen2, string rezeptName, ResourceType ergebnissRecurse1, int anzahlergebnissRecursen, int produktionsdauer)
+        {
+            this.gebeudeTyp = gebeudeTyp;
+            this.produktionsdauer = produktionsdauer;
+            this.rezeptName = rezeptName;
+            benotigteRecursen.Add(benotigteRecurse1);
+            mengenBenotigteRecurse.Add(anzahlbenotigteRecursen1);
+            benotigteRecursen.Add(benotigteRecurse2);
+            mengenBenotigteRecurse.Add(anzahlbenotigteRecursen2);
             ergebnissRecursen.Add(ergebnissRecurse1);
             mengenErgebnissRecursen.Add(anzahlergebnissRecursen);
         }

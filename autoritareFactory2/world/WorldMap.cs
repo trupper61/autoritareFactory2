@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -13,21 +14,34 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 
 namespace autoritaereFactory.world
 {
-    public class WorldMap
+    public class WorldMap : IDisposable
     {
         Thread iteratorThread;
         bool shouldStopThread = false;
         int seed = (new Random()).Next();
         public static WorldMap theWorld;
         List<Chunk> chunkList;
+        public string worldName;
         public int chunkXcount, chunkYcount;
+        private WorldMap()
+        {
+            theWorld = this;
+            chunkList = new List<Chunk>();
+            iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
+        }
         public WorldMap(int sizeX, int sizeY)
         {
-            iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
+            worldName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             theWorld = this;
             chunkXcount = sizeX;
             chunkYcount = sizeY;
             chunkList = new List<Chunk>();
+            iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
+            _StartThread();
+        }
+        public void _StartThread()
+        {
+            shouldStopThread = false;
             iteratorThread.Start();
         }
         // this stops the worker thread
@@ -35,10 +49,14 @@ namespace autoritaereFactory.world
         {
             shouldStopThread = true;
         }
+        public void AwaitThread()
+        {
+            iteratorThread.Join();
+        }
         // from and including start with the size (including)
         public List<Fabrikgebeude> GetEntityInBox(int posX, int posY, int width, int height)
         {
-            return GetEntityInArea(posX, posY, posX + width, posY + height);
+            return GetEntityInArea(posX, posY, posX + width - 1, posY + height - 1);
         }
         public List<Fabrikgebeude> GetEntityInPos(int posX, int posY)
         {
@@ -64,8 +82,8 @@ namespace autoritaereFactory.world
                 {
                     if (building.PositionX > endX) continue;
                     if (building.PositionY > endY) continue;
-                    if (building.PositionX + building.SizeX < startX) continue;
-                    if (building.PositionY + building.SizeY < startY) continue;
+                    if (building.PositionX + building.SizeX <= startX) continue;
+                    if (building.PositionY + building.SizeY <= startY) continue;
                     entitys.Add(building);
                 }
             }
@@ -151,7 +169,7 @@ namespace autoritaereFactory.world
             }
         }
 
-        public GroundResource? GetBlockState(int posX, int posY)
+        public GroundResource GetBlockState(int posX, int posY)
         {
             int chunkX = posX / Chunk.chunkSize;
             int chunkY = posY / Chunk.chunkSize;
@@ -163,7 +181,7 @@ namespace autoritaereFactory.world
                     continue;
                 return ch.GetSubChunk(subChunkX, subChunkY);
             }
-            return null;
+            return (GroundResource)(-1);
         }
         // iterate over every building in the "loaded" world
         long lastTimeTick;
@@ -218,6 +236,51 @@ namespace autoritaereFactory.world
                     return ch;
             }
             return null; // fix from "null"
+        }
+        private const int SPECIAL_FILE_NUMBER = 4469;
+        public byte[] GetAsBytes()
+        {
+            List<byte> bytes = new List<byte>();
+            bytes.AddRange(BitConverter.GetBytes((int)SPECIAL_FILE_NUMBER));
+            bytes.AddRange(BitConverter.GetBytes((int)SPECIAL_FILE_NUMBER));
+            //
+            bytes.AddRange(BitConverter.GetBytes((int)Chunk.chunkSize)); // check before something bad happens
+            bytes.AddRange(BitConverter.GetBytes((int)seed));
+            // this is making someone happy, just to notice, that it won't do anything! (Ha Ha)
+            bytes.AddRange(BitConverter.GetBytes((int)chunkXcount));
+            bytes.AddRange(BitConverter.GetBytes((int)chunkYcount));
+            bytes.AddRange(BitConverter.GetBytes((int)chunkList.Count));
+            for (int ch = 0; ch < chunkList.Count;ch++)
+            {
+                bytes.AddRange(chunkList[ch].GetAsBytes());
+            }
+            // room for future stuff!
+            return bytes.ToArray();
+        }
+        public static WorldMap FromByteArray(byte[] bytes, ref int offset)
+        {
+            WorldMap newMap = new WorldMap();
+            if (BitConverter.ToInt32(bytes, offset) != SPECIAL_FILE_NUMBER)
+                return null;
+            if (BitConverter.ToInt32(bytes, offset + 4) != SPECIAL_FILE_NUMBER)
+                return null;
+            if (BitConverter.ToInt32(bytes, offset + 8) != Chunk.chunkSize)
+                return null;
+            offset += 12;
+            newMap.seed = BitConverter.ToInt32(bytes, offset);
+            newMap.chunkXcount = BitConverter.ToInt32(bytes, offset + 4);
+            newMap.chunkYcount = BitConverter.ToInt32(bytes, offset + 8);
+            int chunkCount = BitConverter.ToInt32(bytes, offset + 12);
+            offset += 16;
+            for (int ch = 0; ch < chunkCount; ch++)
+            {
+                if (bytes[offset++] == (byte)SavingPackets.ChunkPacket)
+                    newMap.chunkList.Add(Chunk.FromByteArray(bytes, ref offset));
+                else
+                    throw new Exception("this shouldn't bee here!");
+            }
+            // room for future stuff!
+            return newMap;
         }
     }
 }

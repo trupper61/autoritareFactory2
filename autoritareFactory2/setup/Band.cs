@@ -1,80 +1,205 @@
 ﻿using autoritaereFactory;
 using autoritaereFactory.setup;
+using autoritaereFactory.world;
+using factordictatorship.Properties;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Resources;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace factordictatorship.setup
 {
     public class Band : Fabrikgebeude
     {
-        public List<Resource> resource { get; }
+        public List<Resource> resource { get; } = new List<Resource>();
+        public List<Resource> currentRescourceList = new List<Resource>();
+        public List<Resource> removedRescources = new List<Resource>();
+        public WorldMap wrld;
         public int anzahlEisen;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
-        public int ItemAnzahlMoment; //Anzahl an Items, die sich gerade auf dem Band befinden.
-        public int BandGeschwindigkeit = 5; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde)
-        public int Richtung; //0 -> Rechts||| 1 -> Unten||| 2 -> Links||| 3 -> Oben|||
-
-        public Band (int bandGe, int itemAnMax, List<Resource> resources, int richtung, int anzEisen, int positionX, int positionY)
-            :base(positionX, positionY) 
+        public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
+        public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
+        internal Band() : base()
         {
-            anzEisen = anzahlEisen;
-            resources = resource;
-            richtung = Richtung;
-            ItemAnzahlMax = itemAnMax;
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+            ItemAnzahlMoment = currentRescourceList.Count();
+        }
+
+        public int RichtungEingang; //1 -> Eingang Links //2 -> Eingang Oben //3 -> Eingang Rechts // 4 -> Eingang Unten
+        public int RichtungAusgang; //1 -> Ausgang Rechts //2 -> Ausgang Unten //3 -> Ausgang Links //4 -> Ausgang Oben
+        private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
+        public int Richtung; // For Merge-Fix
+
+        public Band(int richtung, int itemAnzahlMoment, int positionX, int positionY, WorldMap wrld)
+            : base(positionX, positionY,richtung)
+        {
+            itemAnzahlMoment = ItemAnzahlMoment;
+            Richtung = richtung;
+            RichtungAusgang = richtung;
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+            this.wrld = wrld;
+
+            
         }
         public override void Iteration()
         {
-            throw new NotImplementedException();
+            InNaechsteBand(this, wrld);
+            ItemAnzahlMoment = currentRescourceList.Count();
+            UpdateRescourceList();
         }
-        public void ErkenneRescourcen() 
+        public void ErkenneRescourcen()
         {
-            if(resource != null) 
+            if (currentRescourceList != null && ItemAnzahlMoment < ItemAnzahlMax)
             {
-                foreach (Resource r in resource) 
+                foreach (Resource r in currentRescourceList)
                 {
-                    if(r.Type == ResourceType.Iron) 
+                    if (r.Type == ResourceType.IronOre)
                     {
                         anzahlEisen++;
                     }
-                    ItemAnzahlMoment++;
                 }
             }
         }
 
-        public void RescourceKommtAufBand(Resource r) 
+        public void RescourceKommtAufBand(Resource r)
         {
-            resource.Add(r);
+            currentRescourceList.Add(r);
+            ItemAnzahlMoment++;
         }
-
-        //Relevantes gebäude übergibt sich selbst. Diese Methode muss in der Klasse Konstruktor ausgeführt werden
-        public void NehmeResourcenVonBand(Konstrucktor gebauede, Band band) 
+        public void UpdateRescourceList()
         {
-            //Wenn Gebäudeeingang rechts vom Förderband, und das Gebäude noch nicht voll (Max 100 Resscourcen), dann
+            //currentRescourceList = resource;
+        }
+        public Resource NimmRescourceVomBand(int stelleInResourcedieGenommenWerdenSoll)//von Markus ich brauche den zukrifsrecht um auch (List<Resource> resource) zu ändern
+        {
+            Resource r = currentRescourceList[stelleInResourcedieGenommenWerdenSoll];
+            currentRescourceList.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
+            return r;
+        }
+        public virtual void InNaechsteBand(Band band, WorldMap world)
+        {
+            Band BandNxt;
+            //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
+            //Transfer rescourcen.
+            int wertRotX = 0;
+            int wertRotY = 0;
 
-            if (null == null) //Platzhalter | Wenn die Anzahl der Rescourcen in der Liste nicht über oder gleich 100, weiter 
+
+            switch (band.Drehung)
             {
-                //Wenn die Rescourcen auf dem Band relevant für das Gebäude sind, weiter.
-                if (null == null) //Platzhalter
+                case 1:
+                    wertRotX = 1;
+                    break;
+                case 2:
+                    wertRotY = -1;
+                    break;
+                case 3:
+                    wertRotX = -1;
+                    break;
+                case 4:
+                    wertRotY = 1;
+                    break;
+            }
+
+            List<Fabrikgebeude> values = WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
+
+            foreach (Fabrikgebeude v in values)
+            {
+                if (v is Band)
                 {
-                    foreach (Resource r in band.resource)
+                    if (values.Count == 1)
                     {
-                        if (r.Type == gebauede.TypBenotigteRecurse1)
+                        BandNxt = (Band)v;
+                        determineTransfer(band, BandNxt);
+                        //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
+                        foreach (Band gb in WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                         {
-                            band.anzahlEisen--;
-                            
+                            //BandNxt = gb;
+                            //if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
                         }
-                        band.ItemAnzahlMoment--;
                     }
                 }
             }
-
-
-            //entnehme Rescource und Füge sie in die Liste des Konstruktorgebäude-Objektes 'benötigteResscourcen' hinzu.
-            //Entferne die jeweiligen Rescourcen aus der Liste des Förderbandes
+        }
+        public virtual void determineTransfer(Band band, Band BandNxt) //Der Prozess, bei dem die Rescourcen in einem zeitlichen Rahmen auf das nächste Band transferiert werden.
+        {
+            foreach (Resource resources in band.currentRescourceList)
+            {
+                if(BandNxt.ItemAnzahlMoment < BandNxt.ItemAnzahlMax) 
+                {
+                    BandNxt.RescourceKommtAufBand(resources);
+                    BandNxt.ErkenneRescourcen();
+                    
+                    band.removedRescources.Add(resources);
+                    //band.ItemAnzahlMoment--;
+                }
+            }
+            foreach(Resource resources in band.removedRescources) 
+            {
+                band.currentRescourceList.Remove(resources);
+                ItemAnzahlMoment = currentRescourceList.Count();
+            }
+            band.removedRescources.Clear();
         }
 
+        public override string ToString()
+        {
+            return "Band";
+        }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.AddRange(BitConverter.GetBytes((int)removedRescources.Count));
+            for (int i = 0; i < removedRescources.Count; i++)
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)removedRescources[i].Type));
+            }
+            bytes.AddRange(BitConverter.GetBytes((int)currentRescourceList.Count));
+            for (int i = 0; i < currentRescourceList.Count; i++)
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)currentRescourceList[i].Type));
+            }
+            return bytes;
+        }
+        public static Band FromByteArray(byte[] bytes, ref int offset)
+        {
+            Band newBand = new Band();
+            int resourceCount = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newBand.removedRescources.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            resourceCount = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newBand.currentRescourceList.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            return newBand;
+        }
+
+        public string RetWantedRescource(ResourceType type, Band band) 
+        {
+            int zaehler = 0;
+            foreach(Resource res in band.currentRescourceList) 
+            {
+                if(res.Type == type) 
+                {
+                    zaehler++;
+                }
+            }
+
+            return zaehler.ToString();
+        }
     }
 }
