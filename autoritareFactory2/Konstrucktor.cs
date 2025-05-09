@@ -104,6 +104,8 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
+                    //if (entitys[0].GetType() == typeof(Band))
+                    //    return;
                     Band band = (Band)entitys[0];
                     if (band != null)
                     {
@@ -125,6 +127,8 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
+                    //if (entitys[0].GetType() == typeof(Band))
+                    //    return;
                     Band band = (Band)entitys[0];
                     if (band != null)
                     {
