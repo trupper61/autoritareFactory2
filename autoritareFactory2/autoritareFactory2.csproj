@@ -103,30 +103,37 @@
     <None Include="Resources\grass.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\factory.png" />
+    <None Include="Resources\building\factory.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\belt.png" />
+    <None Include="Resources\building\belt.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron.png" />
+    <None Include="Resources\ground\iron.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron-ore.png" />
+    <None Include="Resources\item\iron-ore.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron-transport.png" />
+    <None Include="Resources\item\iron-transport.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\miner.png" />
+    <None Include="Resources\building\miner.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\grass2.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\ColeOre.png" />
-    <Content Include="Resources\IndustrialWasteland2.png" />
-    <Content Include="Resources\IndustrialWasteland.png" />
+    <Content Include="Resources\ground\ColeOre.png" />
+    <Content Include="Resources\ground\CopperOre.png" />
+    <Content Include="Resources\ground\Grassland0.png" />
+    <Content Include="Resources\ground\Grassland1.png" />
+    <Content Include="Resources\ground\Grassland2.png" />
+    <Content Include="Resources\ground\Grassland3.png" />
+    <Content Include="Resources\ground\IndustrialWasteland2.png" />
+    <Content Include="Resources\ground\IndustrialWasteland.png" />
+    <Content Include="Resources\ground\LimeStone.png" />
     <None Include="Resources\money.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
