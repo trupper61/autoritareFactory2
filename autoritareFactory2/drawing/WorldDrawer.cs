@@ -1,5 +1,6 @@
 ﻿using autoritaereFactory.world;
 using factordictatorship.Resources;
+using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -124,6 +125,15 @@ namespace factordictatorship.drawing
                         TranslateWorld2Screen(new Point(fbu.PositionX, fbu.PositionY)),
                         new Size(fbu.SizeX * ResourceHandler.imageSize,fbu.SizeY * ResourceHandler.imageSize));
                     grp.DrawImage(  drawImg,pos);
+
+                    // try draw content of the Band
+                    if (fbu.GetType() != typeof(Band))
+                        continue;
+                    Band bandFbu = (Band)fbu;
+                    if (bandFbu.currentRescourceList.Count == 0)
+                        continue;
+                    if(ResourceHandler.itemSet.ContainsKey(bandFbu.currentRescourceList[0].Type))
+                        grp.DrawImage(ResourceHandler.itemSet[bandFbu.currentRescourceList[0].Type],pos);
                 }
             }
             //grp.Dispose();
