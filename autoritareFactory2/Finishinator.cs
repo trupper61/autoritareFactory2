@@ -118,7 +118,7 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(verschiebungXAchse, verschiebungYAchse);
                 if (entitys.Count == 1)
                 {
-                    if (entitys[0].GetType() == typeof(Band))
+                    if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
                     if (band != null)

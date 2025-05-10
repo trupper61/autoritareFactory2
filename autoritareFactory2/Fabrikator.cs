@@ -90,7 +90,7 @@ namespace factordictatorship
         {
             if (verbleibendeProduktionsdauer > 0)
             {
-                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 && benotigteRecurse2.Count >= nötigeMengenBenotigteRecurse2 && (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
+                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 && benotigteRecurse2.Count >= nötigeMengenBenotigteRecurse2 && (ergebnissRecurse1.Count + mengenErgebnissRecursen1) <= maxAnzalErgebnissRecurse1)
                 {
                     verbleibendeProduktionsdauer -= 100;
                 }
@@ -100,6 +100,10 @@ namespace factordictatorship
                 for (int i = nötigeMengenBenotigteRecurse1; i > 0; i--)
                 {
                     benotigteRecurse1.RemoveAt(0);
+                }
+                for (int i = nötigeMengenBenotigteRecurse1; i > 0; i--)
+                {
+                    benotigteRecurse2.RemoveAt(0);
                 }
                 for (int i = mengenErgebnissRecursen1; i > 0; i--)
                 {
@@ -115,7 +119,7 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
-                    if (entitys[0].GetType() == typeof(Band))
+                    if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
                     if (band != null)
@@ -138,7 +142,7 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
-                    if (entitys[0].GetType() == typeof(Band))
+                    if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
                     if (band != null)
