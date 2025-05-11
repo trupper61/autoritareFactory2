@@ -76,11 +76,11 @@ namespace factordictatorship
         }
         private int DrehePAufXAchse(int VX, int VY)
         {
-            return PositionX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VY + ((drehung / 2) % 2) * (SizeX - 1);
+            return PositionX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VY;
         }
         private int DrehePAufYAchse(int VX, int VY)
         {
-            return PositionY - Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VY + (drehung / 3) * (SizeY - 1);
+            return PositionY - Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VY;
         }
     }
 }

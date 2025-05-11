@@ -75,6 +75,7 @@ namespace factordictatorship
             nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource3, typBenotigteRecurse3, nötigeMengenBenotigteRecurse3);
             nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource4, typBenotigteRecurse4, nötigeMengenBenotigteRecurse4);
             nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource5, typBenotigteRecurse5, nötigeMengenBenotigteRecurse5);
+            TesteAufstiegserlaubniss();
         }
         private void nimmVonAllenBändern(int aktuelleAnzahlAbgegebeneResource, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse)
         {
@@ -86,8 +87,16 @@ namespace factordictatorship
                 nimmVomBand(aktuelleAnzahlAbgegebeneResource, i, 8, gewolteRecurse, nötigeMengenBenotigteRecurse);
             }
         }
+        private void TesteAufstiegserlaubniss()
+        {
+            if (aktuelleAnzahlAbgegebeneResource1 == nötigeMengenBenotigteRecurse1 && aktuelleAnzahlAbgegebeneResource2 == nötigeMengenBenotigteRecurse2 && aktuelleAnzahlAbgegebeneResource3 == nötigeMengenBenotigteRecurse3 && aktuelleAnzahlAbgegebeneResource4 == nötigeMengenBenotigteRecurse4 && aktuelleAnzahlAbgegebeneResource5 == nötigeMengenBenotigteRecurse5)
+            {
+                //Rupert oder wer immer für das interface des Finishinators verantwortlich ist an dieser stell einen Button oder so etwas erscheinen lassen der beim Drücken SteigeInDerStufeAuf() durchführt
+            }
+        }
         public void SteigeInDerStufeAuf()
         {
+            //den in TesteAufstiegserlaubniss() zugänglich gemachten Button wieder verschwinden lassen
             levle++;
             if (levle == 2)
             {
