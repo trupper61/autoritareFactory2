@@ -201,5 +201,13 @@ namespace factordictatorship.setup
 
             return zaehler.ToString();
         }
+        public virtual int GibRichtungAusgang()
+        {
+            return Richtung;
+        }
+        public virtual int GibRichtungEingang()
+        {
+            return Richtung;
+        }
     }
 }

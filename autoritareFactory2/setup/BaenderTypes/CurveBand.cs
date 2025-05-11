@@ -126,5 +126,13 @@ namespace factordictatorship.setup.BaenderTypes
                 band.currentRescourceList.Remove(resources);
             }
         }
+        public override int GibRichtungAusgang()
+        {
+            return RichtungAusgang;
+        }
+        public override int GibRichtungEingang()
+        {
+            return RichtungEingang;
+        }
     }
 }

@@ -130,7 +130,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungAusgang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (aktuelleAnzahlAbgegebeneResource < nötigeMengenBenotigteRecurse && band.currentRescourceList.Count > 0)

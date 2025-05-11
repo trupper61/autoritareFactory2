@@ -46,7 +46,7 @@ namespace factordictatorship
             längeInYRichtung = 1;
             //PassLängeZUDreungAn(drehung);
         }
-        /* I don't like this.
+        /* I don't like this. But I do ):
         private void PassLängeZUDreungAn(int drehungswert)
         {
             if (drehungswert % 2 == 0)
@@ -107,7 +107,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungEingang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (band.ItemAnzahlMoment < band.ItemAnzahlMax && gebendeRecursenListe.Count > 0)
@@ -130,7 +130,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungAusgang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (nehmendeRecursenListe.Count < maxRecursen && band.currentRescourceList.Count > 0)

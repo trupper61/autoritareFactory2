@@ -122,7 +122,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungEingang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (band.ItemAnzahlMoment < band.ItemAnzahlMax && gebendeRecursenListe.Count > 0)
@@ -145,7 +145,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungAusgang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (nehmendeRecursenListe.Count < maxRecursen && band.resource.Count > 0)
