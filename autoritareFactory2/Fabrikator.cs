@@ -79,7 +79,7 @@ namespace factordictatorship
             if (typBenotigteRecurse1 != null && typErgebnissRecurse1 != null)
             {
                 produziere();
-                legAufBand(ergebnissRecurse1, (längeInXRichtung - 1) + 1, 0);
+                legAufBand(ergebnissRecurse1, 3, 0);
                 nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);//heufige wiederholung damit jeder Eingang alle eingangsrecurcen nimmt
                 nimmVomBand(benotigteRecurse2, -1, 0, typBenotigteRecurse2, maxAnzalBenotigteRecurse2);
                 nimmVomBand(benotigteRecurse1, -1, 1, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);

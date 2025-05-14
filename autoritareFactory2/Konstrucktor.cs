@@ -71,7 +71,7 @@ namespace factordictatorship
             if (typBenotigteRecurse1 != null && typErgebnissRecurse1 != null)
             {
                 produziere();
-                legAufBand(ergebnissRecurse1, SizeX , 0);
+                legAufBand(ergebnissRecurse1, 2 , 0);
                 nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);
             }
         }

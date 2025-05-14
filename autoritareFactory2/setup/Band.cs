@@ -98,13 +98,13 @@ namespace factordictatorship.setup
                     wertRotX = 1;
                     break;
                 case 2:
-                    wertRotY = -1;
+                    wertRotY = 1;
                     break;
                 case 3:
                     wertRotX = -1;
                     break;
                 case 4:
-                    wertRotY = 1;
+                    wertRotY = -1;
                     break;
             }
 
