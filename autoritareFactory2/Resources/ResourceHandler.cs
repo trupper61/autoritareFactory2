@@ -1,6 +1,7 @@
 ﻿using autoritaereFactory;
 using autoritaereFactory.setup;
 using factordictatorship.setup;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -29,7 +30,9 @@ namespace factordictatorship.Resources
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("building\\belt.png") },
             {typeof(Konstrucktor).GetHashCode(),LoadImage("building\\factory.png") },
-            {typeof(Miner).GetHashCode(),LoadImage("building\\miner.png") }
+            {typeof(Miner).GetHashCode(),LoadImage("building\\miner.png") },
+            {typeof(Fabrikator).GetHashCode(),LoadImage("building\\fabricator.png") },
+            {typeof(CurveBand).GetHashCode(),LoadImage("building\\beltCorner.png") }
         };
         public static Dictionary<ResourceType, Image> itemSet = new Dictionary<ResourceType, Image>(){
             {ResourceType.IronOre,LoadImage("item\\iron-ore.png") },

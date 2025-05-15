@@ -5,6 +5,7 @@ using factordictatorship.drawing;
 using factordictatorship.formsElement;
 using factordictatorship.Resources;
 using factordictatorship.setup;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -63,7 +64,9 @@ namespace factordictatorship
             new Resource(autoritaereFactory.ResourceType.IronOre),
             new Resource(autoritaereFactory.ResourceType.IronIngot),
             new Resource(autoritaereFactory.ResourceType.IronPlate),
-            new Resource(autoritaereFactory.ResourceType.IronStick)
+            new Resource(autoritaereFactory.ResourceType.IronStick),
+            new Resource(autoritaereFactory.ResourceType.CopperIngot),
+            new Resource(autoritaereFactory.ResourceType.CopperOre)
         };
         public bool isDragging = false;
         public Point dragStart;
@@ -183,9 +186,37 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre))
+                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
                 {
                     mapWorld.AddEntityAt(miner);
+                    aktuellerModus = null;
+                }
+                else
+                {
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
+            }
+            else if (aktuellerModus == "Fabricator")
+            {
+                Fabrikator fab = new Fabrikator(worldPoint.X, worldPoint.Y, rotateState);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(fab.PositionX, fab.PositionY, fab.SizeX, fab.SizeY);
+                if(lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(fab);
+                    aktuellerModus = null;
+                }
+                else
+                {
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
+            }
+            else if (aktuellerModus == "Belt Corner")
+            {
+                CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
+                if (lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(cb);
                     aktuellerModus = null;
                 }
                 else
@@ -281,7 +312,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre))
+                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
@@ -329,6 +360,29 @@ namespace factordictatorship
                             wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
                         }
                     }
+                }
+                else if (aktuellerModus == "Belt Corner")
+                {
+                    CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
+                    if (lffb.Count == 0)
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, cb, Color.FromArgb(127, 127, 255, 95));
+
+                    }
+                    else
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, cb, Color.FromArgb(127, 255, 64, 16));
+                    }
+                }
+                else if (aktuellerModus == "Fabricator")
+                {
+                    Fabrikator fab = new Fabrikator(worldPoint.X, worldPoint.Y, rotateState);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(fab.PositionX, fab.PositionY, fab.SizeX, fab.SizeY);
+                    if (lffb.Count == 0)
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fab, Color.FromArgb(127, 127, 255, 95));
+                    else
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fab, Color.FromArgb(127, 255, 64, 16));
                 }
                 if (aktuellerModus == "Destroy")
                 {
@@ -407,7 +461,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(rotateState, 20, x, y, mapWorld);
+            Band belt = new Band(rotateState, 0, x, y, mapWorld);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {
@@ -416,20 +470,6 @@ namespace factordictatorship
         }
         private void InitUI()
         {
-            int panelWidth = (int)(this.Width * 0.7);
-            int panelHeight = (int)(this.Height * 0.7);
-            buildPanel = new Panel
-            {
-                Size = new Size(200, 260),
-                Location = new Point((this.Width - 160) / 2, (this.Height - 220) / 2),
-                BackColor = Color.LightGray,
-                Visible = false,
-            };
-            buildPanel.MouseDown += Panel_MouseDown;
-            buildPanel.MouseMove += Panel_MoseMove;
-            buildPanel.MouseUp += Panel_MouseUp;
-            Controls.Add(buildPanel);
-            SetupBuildPanel();
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
             ToolStripButton menuBtn = new ToolStripButton("Menu");
@@ -439,7 +479,7 @@ namespace factordictatorship
             ToolStripButton buildBtn = new ToolStripButton("Build");
             buildBtn.Click += (s, e) =>
             {
-                if (aktuellerModus == null)
+                if (!buildPanel.Visible)
                 {
                     buildPanel.Visible = true;
                     buildPanel.BringToFront();
@@ -453,7 +493,7 @@ namespace factordictatorship
             toolStrip.Items.Add(buildBtn);
 
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
-            destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy";
+            destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus == null || !aktuellerModus.Equals("Destroy")) ? "Destroy" : "";
             toolStrip.Items.Add(destroyBtn);
             ToolStripButton rotateBtn = new ToolStripButton("Rotate");
             rotateBtn.Click += (s, e) =>
@@ -467,6 +507,16 @@ namespace factordictatorship
             inventoryBtn.Click += (s, e) => ShowInventory();
             toolStrip.Items.Add(inventoryBtn);
             Controls.Add(toolStrip);
+            buildPanel = new Panel
+            {
+                Height = 60,
+                Dock = DockStyle.Bottom,
+                BackColor = Color.LightGray,
+                Visible = false,
+                AutoScroll = true
+            };
+            Controls.Add(buildPanel);
+            SetupBuildPanel();
             this.Resize += new EventHandler(OnFormResize);
 
             // Menu Panel
@@ -595,67 +645,40 @@ namespace factordictatorship
         // BuildPanel Resize Event
         private void OnFormResize(object sender, EventArgs e)
         {
-            buildPanel.Location = new Point((this.Width - buildPanel.Width) / 2, (this.Height - buildPanel.Height) / 2);
-
             menuPanel.Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75);
 
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
-
-            SetupBuildPanel();
         }
         // Setup for the Items inside Build Panel
         private void SetupBuildPanel()
         {
             buildPanel.Controls.Clear();
 
-            Button closeButton = new Button
-            {
-                Text = "X",
-                Size = new Size(30, 30),
-                Location = new Point(buildPanel.Width - 40, 10),
-                BackColor = Color.Red,
-                ForeColor = Color.White
-            };
-            closeButton.Click += (s, e) =>
-            {
-                buildPanel.Visible = false;
-                aktuellerModus = null;
-                this.Focus();
-            };
-            buildPanel.Controls.Add(closeButton);
-            Label titleLabel = new Label
-            {
-                Text = "Choose Building",
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Location = new Point(10, 10),
-                AutoSize = true
-            };
-            buildPanel.Controls.Add(titleLabel);
-
             var buildings = new List<String>
-        {
-            "Miner",
-            "Constructor",
-            "Belt"
-        };
-            int y = 50;
+            {
+                "Miner",
+                "Constructor",
+                "Belt",
+                "Belt Corner",
+                "Fabricator"
+            };
+            int x = 20;
             foreach (var name in buildings)
             {
                 Button btn = new NoFocusButton
                 {
                     Text = name,
-                    Size = new Size(120, 35),
-                    Location = new Point(10, y),
+                    Size = new Size(110, 35),
+                    Location = new Point(x, 10),
                     BackColor = Color.LightSteelBlue
                 };
                 btn.Click += (s, e) =>
                 {
                     aktuellerModus = name;
-                    buildPanel.Visible = false;
                     this.Focus();
                 };
                 buildPanel.Controls.Add(btn);
-                y += 45;
+                x += 115;
             }
         }
         private void ToogleMenuPanel()
@@ -878,6 +901,9 @@ namespace factordictatorship
                     case ResourceType.IronIngot:
                         resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
                         break;
+                    default:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
+                        break;
                 }
                 resBand.Location = new Point(10, y);
                 resBand.AutoSize = true;
@@ -1018,7 +1044,31 @@ namespace factordictatorship
                 case ResourceType.IronOre:
                     return Properties.Resources.iron_ore;
                 case ResourceType.IronIngot:
-                    return Properties.Resources.iron;
+                    return Properties.Resources.IronBarAsItem;
+                case ResourceType.IronStick:
+                    return Properties.Resources.IronRodAsItem;
+                case ResourceType.IronPlate:
+                    return Properties.Resources.IronPlateAsItem;
+                case ResourceType.Concrete:
+                    return Properties.Resources.concrete;
+                case ResourceType.CopperIngot:
+                    return Properties.Resources.CopperIngot;
+                case ResourceType.CopperWire:
+                    return Properties.Resources.CopperWire;
+                case ResourceType.CopperOre:
+                    return Properties.Resources.CopperOre;
+                case ResourceType.Motor:
+                    return Properties.Resources.Motor;
+                case ResourceType.Rotor:
+                    return Properties.Resources.Rotor;
+                case ResourceType.Cable:
+                    return Properties.Resources.CopperCable;
+                case ResourceType.limestone:
+                    return Properties.Resources.LimeasItem;
+                case ResourceType.Screw:
+                    return Properties.Resources.screw;
+                case ResourceType.Stator:
+                    return Properties.Resources.Stator;
                 default:
                     return null;
             }
@@ -1098,7 +1148,7 @@ namespace factordictatorship
             {
                 Size = new Size(45, 45),
                 Location = new Point((3 * portPanel.Width / 4) - (45 / 2), 60),
-                BackColor = Color.LightSalmon,
+                BackColor = Color.LightSteelBlue,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Image = ReturnResourceImage(outRes)
             };

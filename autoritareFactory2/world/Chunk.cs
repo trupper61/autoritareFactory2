@@ -143,6 +143,7 @@ namespace autoritaereFactory.world
             GenerateCircleRessource(seed + 4, GroundResource.CopperOre, 4f, 16, 0.5f,0,0.5f,0.25f); // evl Kohle
             GenerateCircleRessource(seed + 4, GroundResource.CopperOre, 4f, 16, 0.5f,1,0.5f,0.25f); // evl Kohle
             GenerateCircleRessource(seed+2, GroundResource.IronOre, 7f, 40, 0.25f); // evl hochwertiges
+            GenerateCircleRessource(seed + 3, GroundResource.CopperOre, 4.5f, 16, 1f, 0, 0.5f, 025f); // Copper Test, Zahlen später ändern!
             // fill with random grass!
             for (int ptX = 0; ptX < chunkSize; ptX++)
             {
