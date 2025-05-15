@@ -42,15 +42,14 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private int verbleibendeProduktionsdauer;//verbleibende dauer des Produktionsprozesses in millisekunden
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
-        private int drehung;//wert der Dreung 1: Eingang links, Ausgang rechts und dann im Urzeigersinn bis 4: Engang unten, Ausgang oben
-        public int Drehung { get { return drehung; } }
         public Fabrikator(int positionX, int positionY, int drehung) : base(positionX, positionY)
         {
             this.drehung = drehung;
             längeInXRichtung = 3;
             längeInYRichtung = 2;
-            PassLängeZUDreungAn(drehung);
+            //PassLängeZUDreungAn(drehung);
         }
+        /* in Woyzeck Szene [8] Beim Doktor (S.15) (V.9-10) ersetze Woyzeck mit `WWF4`
         private void PassLängeZUDreungAn(int drehungswert)
         {
             if (drehungswert % 2 == 0)
@@ -60,6 +59,7 @@ namespace factordictatorship
                 längeInYRichtung = speicherwert;
             }
         }
+        */
         public void SpeichereRezept(Rezepte gewähltesRezept)
         {
             typBenotigteRecurse1 = gewähltesRezept.BenotigteRecursen[0];
