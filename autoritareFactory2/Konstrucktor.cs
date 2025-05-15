@@ -46,7 +46,7 @@ namespace factordictatorship
             längeInYRichtung = 1;
             //PassLängeZUDreungAn(drehung);
         }
-        /* I don't like this.
+        /* I don't like this. But I do ):
         private void PassLängeZUDreungAn(int drehungswert)
         {
             if (drehungswert % 2 == 0)
@@ -71,7 +71,7 @@ namespace factordictatorship
             if (typBenotigteRecurse1 != null && typErgebnissRecurse1 != null)
             {
                 produziere();
-                legAufBand(ergebnissRecurse1, SizeX , 0);
+                legAufBand(ergebnissRecurse1, 2 , 0);
                 nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);
             }
         }
@@ -79,7 +79,7 @@ namespace factordictatorship
         {
             if (verbleibendeProduktionsdauer > 0)
             {
-                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
+                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 & (ergebnissRecurse1.Count + mengenErgebnissRecursen1) <= maxAnzalErgebnissRecurse1)
                 {
                     verbleibendeProduktionsdauer -= 100;
                 }
@@ -107,7 +107,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungEingang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (band.ItemAnzahlMoment < band.ItemAnzahlMax && gebendeRecursenListe.Count > 0)
@@ -130,7 +130,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungAusgang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (nehmendeRecursenListe.Count < maxRecursen && band.currentRescourceList.Count > 0)

@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="drawing\WorldDrawer.cs" />
     <Compile Include="drawing\WorldPartImage.cs" />
+    <Compile Include="Exporthaus.cs" />
     <Compile Include="Fabrikator.cs" />
     <Compile Include="Fabrikgebeude.cs" />
     <Compile Include="Finishinator.cs" />
@@ -106,45 +107,37 @@
     <None Include="Resources\grass.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\factory.png" />
+    <None Include="Resources\building\factory.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\belt.png" />
+    <None Include="Resources\building\belt.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron.png" />
+    <None Include="Resources\ground\iron.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron-ore.png" />
+    <None Include="Resources\item\iron-ore.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron-transport.png" />
+    <None Include="Resources\item\iron-transport.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\miner.png" />
+    <None Include="Resources\building\miner.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\grass2.png" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\ColeOre.png" />
-    <None Include="Resources\LimeasItem.png" />
-    <None Include="Resources\StealRodAsItem.png" />
-    <None Include="Resources\StealIngotAsItem.png" />
-    <None Include="Resources\Stator.png" />
-    <None Include="Resources\screw.png" />
-    <None Include="Resources\Rotor.png" />
-    <None Include="Resources\Motor.png" />
-    <None Include="Resources\concrete.png" />
-    <None Include="Resources\CopperCable.png" />
-    <None Include="Resources\CopperIngot.png" />
-    <None Include="Resources\CopperWire.png" />
-    <None Include="Resources\CopperOre.png" />
-    <Content Include="Resources\IndustrialWasteland2.png" />
-    <Content Include="Resources\IndustrialWasteland.png" />
-    <None Include="Resources\IronPlateAsItem.png" />
-    <None Include="Resources\IronBarAsItem.png" />
-    <None Include="Resources\IronRodAsItem.png" />
+    <Content Include="Resources\ground\ColeOre.png" />
+    <Content Include="Resources\ground\CopperOre.png" />
+    <Content Include="Resources\ground\Grassland0.png" />
+    <Content Include="Resources\ground\Grassland1.png" />
+    <Content Include="Resources\ground\Grassland2.png" />
+    <Content Include="Resources\ground\Grassland3.png" />
+    <Content Include="Resources\ground\IndustrialWasteland2.png" />
+    <Content Include="Resources\ground\IndustrialWasteland.png" />
+    <Content Include="Resources\ground\LimeStone.png" />
     <None Include="Resources\money.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -79,7 +79,7 @@ namespace factordictatorship
             if (typBenotigteRecurse1 != null && typErgebnissRecurse1 != null)
             {
                 produziere();
-                legAufBand(ergebnissRecurse1, (längeInXRichtung - 1) + 1, 0);
+                legAufBand(ergebnissRecurse1, 3, 0);
                 nimmVomBand(benotigteRecurse1, -1, 0, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);//heufige wiederholung damit jeder Eingang alle eingangsrecurcen nimmt
                 nimmVomBand(benotigteRecurse2, -1, 0, typBenotigteRecurse2, maxAnzalBenotigteRecurse2);
                 nimmVomBand(benotigteRecurse1, -1, 1, typBenotigteRecurse1, maxAnzalBenotigteRecurse1);
@@ -90,7 +90,7 @@ namespace factordictatorship
         {
             if (verbleibendeProduktionsdauer > 0)
             {
-                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 && benotigteRecurse2.Count >= nötigeMengenBenotigteRecurse2 && (ergebnissRecurse1.Count + mengenErgebnissRecursen1) < maxAnzalErgebnissRecurse1)
+                if (benotigteRecurse1.Count >= nötigeMengenBenotigteRecurse1 && benotigteRecurse2.Count >= nötigeMengenBenotigteRecurse2 && (ergebnissRecurse1.Count + mengenErgebnissRecursen1) <= maxAnzalErgebnissRecurse1)
                 {
                     verbleibendeProduktionsdauer -= 100;
                 }
@@ -100,6 +100,10 @@ namespace factordictatorship
                 for (int i = nötigeMengenBenotigteRecurse1; i > 0; i--)
                 {
                     benotigteRecurse1.RemoveAt(0);
+                }
+                for (int i = nötigeMengenBenotigteRecurse1; i > 0; i--)
+                {
+                    benotigteRecurse2.RemoveAt(0);
                 }
                 for (int i = mengenErgebnissRecursen1; i > 0; i--)
                 {
@@ -115,10 +119,10 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
-                    if (entitys[0].GetType() == typeof(Band))
+                    if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungEingang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (band.ItemAnzahlMoment < band.ItemAnzahlMax && gebendeRecursenListe.Count > 0)
@@ -138,10 +142,10 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(DrehePAufXAchse(verschiebungXAchse, verschiebungYAchse), DrehePAufYAchse(verschiebungXAchse, verschiebungYAchse));
                 if (entitys.Count == 1)
                 {
-                    if (entitys[0].GetType() == typeof(Band))
+                    if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungAusgang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (nehmendeRecursenListe.Count < maxRecursen && band.resource.Count > 0)

@@ -71,16 +71,17 @@ namespace autoritaereFactory.world
             return (float)Math.Sqrt(tem * tem + hum * hum);
         }
         private void GenerateBlobGround(
-            int seed, GroundResource state,int randStrength, 
+            int seed, GroundResource state,float randStrength, 
             float expTem,float expHum,float cutoff)
         {
+            Random rand = new Random(seed);
             // maybe fill the tiles with the resource
             for (int i = 0; i < chunkSize; i++)
             {
                 for (int j = 0; j < chunkSize; j++)
                 {
                     // test if outside the "circle"
-                    if (TestBiomeType(seed, i + x * chunkSize, j + y * chunkSize, expTem, expHum) > cutoff)
+                    if (TestBiomeType(seed, i + x * chunkSize, j + y * chunkSize, expTem, expHum) > cutoff + (rand.NextDouble() - 0.5) * randStrength)
                         continue;
                     // put
                     blockState[i,j] = state;
@@ -135,8 +136,12 @@ namespace autoritaereFactory.world
             Random rng = new Random(posX * 512 + posY * 4 + seed);
             blockState = new GroundResource[chunkSize, chunkSize];
             // you can put more to place more resources!
-            GenerateBlobGround(seed - 2, GroundResource.Desert,5, 1, 0,0.5f);
+            GenerateBlobGround(seed - 2, GroundResource.Desert,0.05f, 1, 0,0.5f);
             GenerateCircleRessource(seed, GroundResource.ColeOre, 4.5f, 16, 1f,0,0.5f,0.25f); // evl Kohle
+            GenerateCircleRessource(seed + 6, GroundResource.LimeStone, 10f, 30, 0.25f,0.25f,0f,0.5f); // evl Kohle
+            //GenerateCircleRessource(seed + 6, GroundResource.LimeStone, 13f, 16, 1f,0f,0.75f,0.5f); // evl Kohle
+            GenerateCircleRessource(seed + 4, GroundResource.CopperOre, 4f, 16, 0.5f,0,0.5f,0.25f); // evl Kohle
+            GenerateCircleRessource(seed + 4, GroundResource.CopperOre, 4f, 16, 0.5f,1,0.5f,0.25f); // evl Kohle
             GenerateCircleRessource(seed+2, GroundResource.IronOre, 7f, 40, 0.25f); // evl hochwertiges
             GenerateCircleRessource(seed + 3, GroundResource.CopperOre, 4.5f, 16, 1f, 0, 0.5f, 025f); // Copper Test, Zahlen später ändern!
             // fill with random grass!
@@ -144,9 +149,9 @@ namespace autoritaereFactory.world
             {
                 for (int ptY = 0; ptY < chunkSize; ptY++)
                 {
-                    if (blockState[ptX, ptY] == GroundResource.Grass)
+                    if (blockState[ptX, ptY] == GroundResource.Grass0)
                         blockState[ptX, ptY] = (GroundResource)rng.Next(
-                            (int)GroundResource.Grass, (int)GroundResource.GrassUpperBound); // Grass 1 && Grass 2
+                            (int)GroundResource.Grass0, (int)GroundResource.GrassUpperBound); // Grass 1 && Grass 2
                     if (blockState[ptX, ptY] == GroundResource.Desert)
                         blockState[ptX, ptY] = (GroundResource)rng.Next(
                             (int)GroundResource.Desert, (int)GroundResource.DesertUpperBound); // Desert 1 && Desert 2

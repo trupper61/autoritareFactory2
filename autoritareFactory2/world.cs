@@ -88,7 +88,7 @@ namespace factordictatorship
             InitializeComponent();
             DisplayData();
             InitUI();
-            mapWorld = new WorldMap(8, 8);
+            mapWorld = new WorldMap(16, 16);
             for (int wrdX = 0; wrdX < mapWorld.chunkXcount; wrdX++)
             {
                 for (int wrdY = 0; wrdY < mapWorld.chunkXcount; wrdY++)
@@ -154,6 +154,7 @@ namespace factordictatorship
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
                 case GroundResource.ColeOre: return autoritaereFactory.ResourceType.ColeOre;
                 case GroundResource.CopperOre: return autoritaereFactory.ResourceType.CopperOre;
+                case GroundResource.LimeStone: return autoritaereFactory.ResourceType.limestone;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -497,9 +498,10 @@ namespace factordictatorship
                 Location = new Point(10, 50)
             };
             saveBtn.Click += (s, e) => {
-                byte[] worldData = mapWorld.GetAsBytes();
+                List<byte> worldData = mapWorld.GetAsBytes();
+                worldData.AddRange(player.GetAsBytes());
                 FileStream fptr = File.OpenWrite(mapWorld.worldName + ".world");
-                fptr.Write(worldData, 0, worldData.Length);
+                fptr.Write(worldData.ToArray(), 0, worldData.Count);
                 fptr.Close();
             };
             menuPanel.Controls.Add(saveBtn);
@@ -522,6 +524,7 @@ namespace factordictatorship
                 int offset = 0;
                 worldFptr.Read(allData, offset, allData.Length);
                 WorldMap newMap = WorldMap.FromByteArray(allData, ref offset);
+                player = PlayerData.FromByteArray(allData, ref offset);
                 worldFptr.Close();
                 if (newMap != null)
                 {

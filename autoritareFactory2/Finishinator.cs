@@ -3,9 +3,11 @@ using autoritaereFactory.world;
 using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace factordictatorship
 {
@@ -75,6 +77,7 @@ namespace factordictatorship
             nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource3, typBenotigteRecurse3, nötigeMengenBenotigteRecurse3);
             nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource4, typBenotigteRecurse4, nötigeMengenBenotigteRecurse4);
             nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource5, typBenotigteRecurse5, nötigeMengenBenotigteRecurse5);
+            TesteAufstiegserlaubniss();
         }
         private void nimmVonAllenBändern(int aktuelleAnzahlAbgegebeneResource, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse)
         {
@@ -86,8 +89,16 @@ namespace factordictatorship
                 nimmVomBand(aktuelleAnzahlAbgegebeneResource, i, 8, gewolteRecurse, nötigeMengenBenotigteRecurse);
             }
         }
+        private void TesteAufstiegserlaubniss()
+        {
+            if (aktuelleAnzahlAbgegebeneResource1 == nötigeMengenBenotigteRecurse1 && aktuelleAnzahlAbgegebeneResource2 == nötigeMengenBenotigteRecurse2 && aktuelleAnzahlAbgegebeneResource3 == nötigeMengenBenotigteRecurse3 && aktuelleAnzahlAbgegebeneResource4 == nötigeMengenBenotigteRecurse4 && aktuelleAnzahlAbgegebeneResource5 == nötigeMengenBenotigteRecurse5)
+            {
+                //Rupert oder wer immer für das interface des Finishinators verantwortlich ist an dieser stell einen Button oder so etwas erscheinen lassen der beim Drücken SteigeInDerStufeAuf() durchführt
+            }
+        }
         public void SteigeInDerStufeAuf()
         {
+            //den in TesteAufstiegserlaubniss() zugänglich gemachten Button wieder verschwinden lassen
             levle++;
             if (levle == 2)
             {
@@ -108,7 +119,10 @@ namespace factordictatorship
             }
             if (levle == 3)
             {
-                //hier schreibt Florian code hinein der die welt Schließt und den speicherstand Löscht
+                File.Delete(WorldMap.theWorld.worldName);
+                long ticks = WorldMap.theWorld.tickTimer;
+                MessageBox.Show($"You have finished the Game with:\n{ticks / 600} min {ticks / 10 % 60}.{ticks % 10} sec ");
+                // should throw new error?
             }
         }
         private void nimmVomBand(int aktuelleAnzahlAbgegebeneResource, int verschiebungXAchse, int verschiebungYAchse, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
@@ -118,10 +132,10 @@ namespace factordictatorship
                 List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(verschiebungXAchse, verschiebungYAchse);
                 if (entitys.Count == 1)
                 {
-                    if (entitys[0].GetType() == typeof(Band))
+                    if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null)
+                    if (band != null && band.GibRichtungAusgang() == drehung)
                     {
                         band.ErkenneRescourcen();
                         while (aktuelleAnzahlAbgegebeneResource < nötigeMengenBenotigteRecurse && band.currentRescourceList.Count > 0)

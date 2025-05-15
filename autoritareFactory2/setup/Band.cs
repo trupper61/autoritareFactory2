@@ -108,13 +108,13 @@ namespace factordictatorship.setup
                     wertRotX = 1;
                     break;
                 case 2:
-                    wertRotY = -1;
+                    wertRotY = 1;
                     break;
                 case 3:
                     wertRotX = -1;
                     break;
                 case 4:
-                    wertRotY = 1;
+                    wertRotY = -1;
                     break;
             }
 
@@ -210,6 +210,14 @@ namespace factordictatorship.setup
             }
 
             return zaehler.ToString();
+        }
+        public virtual int GibRichtungAusgang()
+        {
+            return Richtung;
+        }
+        public virtual int GibRichtungEingang()
+        {
+            return Richtung;
         }
     }
 }
