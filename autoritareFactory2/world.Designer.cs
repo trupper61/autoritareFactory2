@@ -33,8 +33,8 @@ namespace factordictatorship
         {
             this.moneyAmount = new System.Windows.Forms.Label();
             this.openWorldFile = new System.Windows.Forms.OpenFileDialog();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.noFocusButton = new factordictatorship.formsElement.NoFocusButton();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,18 +54,6 @@ namespace factordictatorship
             this.openWorldFile.DefaultExt = "world";
             this.openWorldFile.FileName = "open World";
             // 
-            // pictureBox1
-            // 
-            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
-            this.pictureBox1.BackgroundImage = global::factordictatorship.Properties.Resources.money;
-            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.pictureBox1.Location = new System.Drawing.Point(717, 82);
-            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(67, 52);
-            this.pictureBox1.TabIndex = 1;
-            this.pictureBox1.TabStop = false;
-            // 
             // noFocusButton
             // 
             this.noFocusButton.CausesValidation = false;
@@ -77,6 +65,18 @@ namespace factordictatorship
             this.noFocusButton.Text = "Not Focusable Button";
             this.noFocusButton.UseVisualStyleBackColor = true;
             this.noFocusButton.Visible = false;
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.BackColor = System.Drawing.Color.Transparent;
+            this.pictureBox1.BackgroundImage = global::factordictatorship.Properties.Resources.money;
+            this.pictureBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.pictureBox1.Location = new System.Drawing.Point(717, 82);
+            this.pictureBox1.Margin = new System.Windows.Forms.Padding(4);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(67, 52);
+            this.pictureBox1.TabIndex = 1;
+            this.pictureBox1.TabStop = false;
             // 
             // world
             // 
