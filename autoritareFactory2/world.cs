@@ -212,7 +212,17 @@ namespace factordictatorship
             }
             else if (aktuellerModus == "Belt Corner")
             {
-                //CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y) // What rotation status?
+                CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
+                if (lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(cb);
+                    aktuellerModus = null;
+                }
+                else
+                {
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
             }
             else if (aktuellerModus == "Destroy")
             {
@@ -349,6 +359,20 @@ namespace factordictatorship
                         {
                             wlrdDrawer.DrawPlacableBuilding(e, worldPoint, belt, Color.FromArgb(127, 255, 64, 16));
                         }
+                    }
+                }
+                else if (aktuellerModus == "Belt Corner")
+                {
+                    CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
+                    if (lffb.Count == 0)
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, cb, Color.FromArgb(127, 127, 255, 95));
+
+                    }
+                    else
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, cb, Color.FromArgb(127, 255, 64, 16));
                     }
                 }
                 else if (aktuellerModus == "Fabricator")
