@@ -28,6 +28,7 @@ namespace factordictatorship.setup
         {
             längeInXRichtung = 1;
             längeInYRichtung = 1;
+            ItemAnzahlMoment = currentRescourceList.Count();
         }
 
         public int RichtungEingang; //1 -> Eingang Links //2 -> Eingang Oben //3 -> Eingang Rechts // 4 -> Eingang Unten
@@ -50,6 +51,7 @@ namespace factordictatorship.setup
         public override void Iteration()
         {
             InNaechsteBand(this, wrld);
+            ItemAnzahlMoment = currentRescourceList.Count();
             UpdateRescourceList();
         }
         public void ErkenneRescourcen()
@@ -96,13 +98,13 @@ namespace factordictatorship.setup
                     wertRotX = 1;
                     break;
                 case 2:
-                    wertRotY = -1;
+                    wertRotY = 1;
                     break;
                 case 3:
                     wertRotX = -1;
                     break;
                 case 4:
-                    wertRotY = 1;
+                    wertRotY = -1;
                     break;
             }
 
@@ -136,12 +138,13 @@ namespace factordictatorship.setup
                     BandNxt.ErkenneRescourcen();
                     
                     band.removedRescources.Add(resources);
-                    band.ItemAnzahlMoment--;
+                    //band.ItemAnzahlMoment--;
                 }
             }
             foreach(Resource resources in band.removedRescources) 
             {
                 band.currentRescourceList.Remove(resources);
+                ItemAnzahlMoment = currentRescourceList.Count();
             }
             band.removedRescources.Clear();
         }
@@ -197,6 +200,14 @@ namespace factordictatorship.setup
             }
 
             return zaehler.ToString();
+        }
+        public virtual int GibRichtungAusgang()
+        {
+            return Richtung;
+        }
+        public virtual int GibRichtungEingang()
+        {
+            return Richtung;
         }
     }
 }
