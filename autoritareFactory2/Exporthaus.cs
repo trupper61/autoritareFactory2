@@ -6,26 +6,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace factordictatorship
 {
     public class Exporthaus : Fabrikgebeude
     {
         public List<Resource> rescourcenInLager = new List<Resource>();
-
-        public Exporthaus(int positionX, int positionY, int drehung) 
+        public WorldMap wrld;
+        public Exporthaus(int positionX, int positionY, int drehung, WorldMap wrld) 
             : base(positionX, positionY, drehung)
         {
             längeInXRichtung = 1;
             längeInYRichtung = 1;
+            this.wrld = wrld;
         }
 
         public override void Iteration() 
-        { 
-                
+        {
+            ErkenneBandInNähe(wrld, this);
         }
 
-        public void ErkenneBandInNähe(Band band, Exporthaus exporthaus) 
+        public void ErkenneBandInNähe(WorldMap wrld, Exporthaus exporthaus) 
         {
             int wertRotX = 0;
             int wertRotY = 0;
@@ -35,13 +37,13 @@ namespace factordictatorship
                 switch(i) 
                 {
                     case 1:
-                        wertRotX = -1;
+                        wertRotX = 1;
                         break;
                     case 2:
                         wertRotY = 1;
                         break;
                     case 3:
-                        wertRotX = 1;
+                        wertRotX = -1;
                         break;
                     case 4:
                         wertRotY -= 1;
@@ -52,20 +54,20 @@ namespace factordictatorship
 
                 foreach (Fabrikgebeude v in values)
                 {
-                    if (v is Band)
+                    if (v is factordictatorship.setup.Band)
                     {
                         switch(wertRotX) 
                         {
                             case -1:
                                 if(v.drehung == 1) 
                                 {
-                                    NimmVomBand(band);
+                                    nimmVomBand(wrld, wertRotX, values, this);
                                 }
                                 break;
                             case 1:
                                 if (v.drehung == 3)
                                 {
-                                    NimmVomBand(band);
+                                    nimmVomBand(wrld, wertRotX, values, this);
                                 }
                                 break;
                         }
@@ -74,13 +76,13 @@ namespace factordictatorship
                             case -1:
                                 if (v.drehung == 4)
                                 {
-                                    NimmVomBand(band);
+                                    nimmVomBand(wrld, wertRotY, values, this);
                                 }
                                 break;
                             case 1:
                                 if (v.drehung == 2)
                                 {
-                                    NimmVomBand(band);
+                                    nimmVomBand(wrld, wertRotY, values, this);
                                 }
                                 break;
                         }
@@ -91,13 +93,29 @@ namespace factordictatorship
             
         }
 
-        public void NimmVomBand(Band band) 
+        private void nimmVomBand(WorldMap wrld, int Pos, List<Fabrikgebeude> gebauede, Exporthaus exp) 
         {
-            //TBD
+            factordictatorship.setup.Band band;
+
+            int bandPosX = 0;
+            int bandPosY = 0;
+            foreach (Fabrikgebeude baender in gebauede) 
+            {
+                bandPosX = baender.PositionX;
+                bandPosY = baender.PositionY;
+                band = (factordictatorship.setup.Band)baender;
+
+                foreach (Resource resources in band.currentRescourceList)
+                {
+                    band.removedRescources.Add(resources);
+                }
+                foreach (Resource resources in band.removedRescources)
+                {
+                    band.currentRescourceList.Remove(resources);
+                    band.ItemAnzahlMoment = band.currentRescourceList.Count();
+                }
+                band.removedRescources.Clear();
+            }
         }
-
-
-
-
     }
 }
