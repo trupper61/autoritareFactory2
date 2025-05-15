@@ -108,6 +108,7 @@ namespace factordictatorship
                 foreach (Resource resources in band.currentRescourceList)
                 {
                     band.removedRescources.Add(resources);
+                    exp.rescourcenInLager.Add(resources);
                 }
                 foreach (Resource resources in band.removedRescources)
                 {
