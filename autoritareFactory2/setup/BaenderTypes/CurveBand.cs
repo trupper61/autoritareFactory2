@@ -67,16 +67,18 @@ namespace factordictatorship.setup.BaenderTypes
                         if (BandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
 
                         determineTransfer(band, BandNxt);
+                        return;
                     }
 
-                    foreach (CurveBand gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
-                    {
-                        curveBandNxt = gb;
-                        if (curveBandNxt.Drehung != curveBandNxt.Drehung) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop // Merge: curveBandNxt.DrehungAusgang?
-                        if (curveBandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
+                    //foreach (CurveBand gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                    //{
+                    //    curveBandNxt = gb;
+                    //    if (curveBandNxt.Drehung != curveBandNxt.Drehung) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop // Merge: curveBandNxt.DrehungAusgang?
+                    //    if (curveBandNxt == gb) continue; //Wenn bereits etwas gefunden wurde, alles überspringen.
 
-                        determineTransferCurve(gb, curveBandNxt); // Needs second curveBand variable.
-                    }
+                    //    determineTransferCurve(gb, curveBandNxt); // Needs second curveBand variable.
+                    //    return;
+                    //}
                 }
             }
         }
