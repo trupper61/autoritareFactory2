@@ -9,8 +9,10 @@ namespace autoritaereFactory.setup
     public enum GroundResource
     {
         AnyTile = -1,
-        Grass = 0,
+        Grass0,
+        Grass1,
         Grass2,
+        Grass3,
         // insert Grass Tiles here!
         GrassUpperBound,
         Desert,
@@ -21,6 +23,8 @@ namespace autoritaereFactory.setup
         // Ore Start
         IronOre,
         ColeOre,
+        CopperOre,
+        LimeStone,
 
         // always on the end!
         UpperBound
@@ -30,5 +34,6 @@ namespace autoritaereFactory.setup
     {
         ChunkPacket,
         EntityPacket,
+        PlayerDataPacket,
     }
 }

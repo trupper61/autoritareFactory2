@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
@@ -16,6 +17,7 @@ namespace autoritaereFactory.world
 {
     public class WorldMap : IDisposable
     {
+        public long tickTimer = 0;
         Thread iteratorThread;
         bool shouldStopThread = false;
         int seed = (new Random()).Next();
@@ -73,8 +75,9 @@ namespace autoritaereFactory.world
             int chunkYe = endY / Chunk.chunkSize;
             List<Fabrikgebeude> entitys = new List<Fabrikgebeude>();
             // build a list of building inside the area
-            foreach (Chunk ch in chunkList)
+            for(int chIndex = 0;chIndex < chunkList.Count;chIndex++)
             {
+                Chunk ch = chunkList[chIndex];
                 if (ch.x < chunkX || ch.y < chunkY) continue;
                 if (ch.x > chunkXe || ch.y > chunkYe) continue;
 
@@ -191,8 +194,10 @@ namespace autoritaereFactory.world
             const int timerDelay = 100; // in ms
             while (!shouldStopThread)
             {
-                foreach (Chunk ch in chunkList)
+                tickTimer++;
+                for (int chIndex = 0; chIndex < chunkList.Count;chIndex++)
                 {
+                    Chunk ch = chunkList[chIndex];
                     foreach (Fabrikgebeude bd in ch.buildings)
                     {
                         bd.Iteration();
@@ -238,7 +243,7 @@ namespace autoritaereFactory.world
             return null; // fix from "null"
         }
         private const int SPECIAL_FILE_NUMBER = 4469;
-        public byte[] GetAsBytes()
+        public List<byte> GetAsBytes()
         {
             List<byte> bytes = new List<byte>();
             bytes.AddRange(BitConverter.GetBytes((int)SPECIAL_FILE_NUMBER));
@@ -246,6 +251,8 @@ namespace autoritaereFactory.world
             //
             bytes.AddRange(BitConverter.GetBytes((int)Chunk.chunkSize)); // check before something bad happens
             bytes.AddRange(BitConverter.GetBytes((int)seed));
+            //
+            bytes.AddRange(BitConverter.GetBytes((long)tickTimer));
             // this is making someone happy, just to notice, that it won't do anything! (Ha Ha)
             bytes.AddRange(BitConverter.GetBytes((int)chunkXcount));
             bytes.AddRange(BitConverter.GetBytes((int)chunkYcount));
@@ -255,7 +262,7 @@ namespace autoritaereFactory.world
                 bytes.AddRange(chunkList[ch].GetAsBytes());
             }
             // room for future stuff!
-            return bytes.ToArray();
+            return bytes;
         }
         public static WorldMap FromByteArray(byte[] bytes, ref int offset)
         {
@@ -268,10 +275,11 @@ namespace autoritaereFactory.world
                 return null;
             offset += 12;
             newMap.seed = BitConverter.ToInt32(bytes, offset);
-            newMap.chunkXcount = BitConverter.ToInt32(bytes, offset + 4);
-            newMap.chunkYcount = BitConverter.ToInt32(bytes, offset + 8);
-            int chunkCount = BitConverter.ToInt32(bytes, offset + 12);
-            offset += 16;
+            newMap.tickTimer = BitConverter.ToInt64(bytes, offset + 4);
+            newMap.chunkXcount = BitConverter.ToInt32(bytes, offset + 12);
+            newMap.chunkYcount = BitConverter.ToInt32(bytes, offset + 16);
+            int chunkCount = BitConverter.ToInt32(bytes, offset + 20);
+            offset += 24;
             for (int ch = 0; ch < chunkCount; ch++)
             {
                 if (bytes[offset++] == (byte)SavingPackets.ChunkPacket)
