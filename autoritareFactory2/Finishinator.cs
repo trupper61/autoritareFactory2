@@ -3,9 +3,11 @@ using autoritaereFactory.world;
 using factordictatorship.setup;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace factordictatorship
 {
@@ -117,7 +119,10 @@ namespace factordictatorship
             }
             if (levle == 3)
             {
-                //hier schreibt Florian code hinein der die welt Schließt und den speicherstand Löscht
+                File.Delete(WorldMap.theWorld.worldName);
+                long ticks = WorldMap.theWorld.tickTimer;
+                MessageBox.Show($"You have finished the Game with:\n{ticks / 600} min {ticks / 10 % 60}.{ticks % 10} sec ");
+                // should throw new error?
             }
         }
         private void nimmVomBand(int aktuelleAnzahlAbgegebeneResource, int verschiebungXAchse, int verschiebungYAchse, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird

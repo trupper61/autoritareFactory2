@@ -118,28 +118,73 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="grass" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\grass.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="StealRodAsItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StealRodAsItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="factory" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\factory.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="belt" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\belt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="iron" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\iron.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="iron-ore" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\iron-ore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="iron-transport" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\iron-transport.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="miner" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\miner.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="IronRodAsItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IronRodAsItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="money" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\money.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="belt" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\building\belt.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="miner" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\building\miner.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="grass" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ground\Grassland1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IronPlateAsItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IronPlateAsItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="screw" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\screw.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="concrete" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\concrete.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CopperCable" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CopperCable.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Motor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Motor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CopperIngot" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CopperIngot.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="LimeasItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LimeasItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Rotor" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Rotor.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="iron-ore" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\item\iron-ore.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="StealIngotAsItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\StealIngotAsItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Stator" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Stator.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CopperOre" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CopperOre.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="iron-transport" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\item\iron-transport.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="iron" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\ground\iron.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="factory" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\building\factory.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="IronBarAsItem" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\IronBarAsItem.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="CopperWire" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\CopperWire.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

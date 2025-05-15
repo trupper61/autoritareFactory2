@@ -58,6 +58,11 @@
     <Compile Include="Inventory.cs" />
     <Compile Include="Merger.cs" />
     <Compile Include="PlayerData.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Resources\ResourceHandler.cs" />
     <Compile Include="setup\BaenderTypes\CurveBand.cs" />
     <Compile Include="Splitter.cs" />
@@ -79,14 +84,9 @@
     <Compile Include="world\WorldMap.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="world.resx">
       <DependentUpon>world.cs</DependentUpon>
     </EmbeddedResource>
@@ -104,33 +104,36 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\grass.png" />
+    <None Include="Resources\building\factory.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\factory.png" />
+    <None Include="Resources\building\belt.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\belt.png" />
+    <None Include="Resources\ground\iron.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron.png" />
+    <None Include="Resources\item\iron-ore.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron-ore.png" />
+    <None Include="Resources\item\iron-transport.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\iron-transport.png" />
+    <None Include="Resources\building\miner.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\miner.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\grass2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Resources\ColeOre.png" />
-    <Content Include="Resources\IndustrialWasteland2.png" />
-    <Content Include="Resources\IndustrialWasteland.png" />
+    <None Include="Resources\CopperWire.png" />
+    <Content Include="Resources\building\beltCorner.png" />
+    <Content Include="Resources\building\fabricator.png" />
+    <Content Include="Resources\ground\ColeOre.png" />
+    <Content Include="Resources\ground\CopperOre.png" />
+    <Content Include="Resources\ground\Grassland0.png" />
+    <Content Include="Resources\ground\Grassland1.png" />
+    <Content Include="Resources\ground\Grassland2.png" />
+    <Content Include="Resources\ground\Grassland3.png" />
+    <Content Include="Resources\ground\IndustrialWasteland2.png" />
+    <Content Include="Resources\ground\IndustrialWasteland.png" />
+    <Content Include="Resources\ground\LimeStone.png" />
     <None Include="Resources\money.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,5 +1,7 @@
-﻿using autoritaereFactory.setup;
+﻿using autoritaereFactory;
+using autoritaereFactory.setup;
 using factordictatorship.setup;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;
@@ -14,16 +16,26 @@ namespace factordictatorship.Resources
     public class ResourceHandler
     {
         public static Dictionary<GroundResource, Image> tileSet = new Dictionary<GroundResource, Image>(){
-            { GroundResource.Grass , LoadImage("grass.png") },
-            { GroundResource.Grass2 , LoadImage("grass2.png") },
-            { GroundResource.Desert , LoadImage("IndustrialWasteland.png") },
-            { GroundResource.Desert2, LoadImage("IndustrialWasteland2.png") },
-            { GroundResource.ColeOre, LoadImage("ColeOre.png") },
-            { GroundResource.IronOre, LoadImage("iron.png") } };
+            { GroundResource.Grass0 , LoadImage("ground\\Grassland0.png") },
+            { GroundResource.Grass1 , LoadImage("ground\\Grassland1.png") },
+            { GroundResource.Grass2 , LoadImage("ground\\Grassland2.png") },
+            { GroundResource.Grass3 , LoadImage("ground\\Grassland3.png") },
+            { GroundResource.Desert , LoadImage("ground\\IndustrialWasteland.png") },
+            { GroundResource.Desert2, LoadImage("ground\\IndustrialWasteland2.png") },
+            { GroundResource.ColeOre, LoadImage("ground\\ColeOre.png") },
+            { GroundResource.IronOre, LoadImage("ground\\iron.png") },
+            { GroundResource.CopperOre, LoadImage("ground\\CopperOre.png") },
+            { GroundResource.LimeStone, LoadImage("ground\\LimeStone.png") },
+        };
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
-            {typeof(Band).GetHashCode(),LoadImage("belt.png") },
-            {typeof(Konstrucktor).GetHashCode(),LoadImage("factory.png") },
-            {typeof(Miner).GetHashCode(),LoadImage("miner.png") } 
+            {typeof(Band).GetHashCode(),LoadImage("building\\belt.png") },
+            {typeof(Konstrucktor).GetHashCode(),LoadImage("building\\factory.png") },
+            {typeof(Miner).GetHashCode(),LoadImage("building\\miner.png") },
+            {typeof(Fabrikator).GetHashCode(),LoadImage("building\\fabricator.png") },
+            {typeof(CurveBand).GetHashCode(),LoadImage("building\\beltCorner.png") }
+        };
+        public static Dictionary<ResourceType, Image> itemSet = new Dictionary<ResourceType, Image>(){
+            {ResourceType.IronOre,LoadImage("item\\iron-ore.png") },
         };
         public const int imageSize = 32;
         private static Image LoadImage(string path)
