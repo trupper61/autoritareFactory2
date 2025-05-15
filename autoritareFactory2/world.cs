@@ -63,7 +63,9 @@ namespace factordictatorship
             new Resource(autoritaereFactory.ResourceType.IronOre),
             new Resource(autoritaereFactory.ResourceType.IronIngot),
             new Resource(autoritaereFactory.ResourceType.IronPlate),
-            new Resource(autoritaereFactory.ResourceType.IronStick)
+            new Resource(autoritaereFactory.ResourceType.IronStick),
+            new Resource(autoritaereFactory.ResourceType.CopperIngot),
+            new Resource(autoritaereFactory.ResourceType.CopperOre)
         };
         public bool isDragging = false;
         public Point dragStart;
@@ -151,6 +153,7 @@ namespace factordictatorship
             {
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
                 case GroundResource.ColeOre: return autoritaereFactory.ResourceType.ColeOre;
+                case GroundResource.CopperOre: return autoritaereFactory.ResourceType.CopperOre;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -181,7 +184,7 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre))
+                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
                 {
                     mapWorld.AddEntityAt(miner);
                     aktuellerModus = null;
@@ -279,7 +282,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre))
+                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
@@ -874,6 +877,9 @@ namespace factordictatorship
                     case ResourceType.IronIngot:
                         resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
                         break;
+                    default:
+                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
+                        break;
                 }
                 resBand.Location = new Point(10, y);
                 resBand.AutoSize = true;
@@ -1014,7 +1020,31 @@ namespace factordictatorship
                 case ResourceType.IronOre:
                     return Properties.Resources.iron_ore;
                 case ResourceType.IronIngot:
-                    return Properties.Resources.iron;
+                    return Properties.Resources.IronBarAsItem;
+                case ResourceType.IronStick:
+                    return Properties.Resources.IronRodAsItem;
+                case ResourceType.IronPlate:
+                    return Properties.Resources.IronPlateAsItem;
+                case ResourceType.Concrete:
+                    return Properties.Resources.concrete;
+                case ResourceType.CopperIngot:
+                    return Properties.Resources.CopperIngot;
+                case ResourceType.CopperWire:
+                    return Properties.Resources.CopperWire;
+                case ResourceType.CopperOre:
+                    return Properties.Resources.CopperOre;
+                case ResourceType.Motor:
+                    return Properties.Resources.Motor;
+                case ResourceType.Rotor:
+                    return Properties.Resources.Rotor;
+                case ResourceType.Cable:
+                    return Properties.Resources.CopperCable;
+                case ResourceType.limestone:
+                    return Properties.Resources.LimeasItem;
+                case ResourceType.Screw:
+                    return Properties.Resources.screw;
+                case ResourceType.Stator:
+                    return Properties.Resources.Stator;
                 default:
                     return null;
             }
@@ -1094,7 +1124,7 @@ namespace factordictatorship
             {
                 Size = new Size(45, 45),
                 Location = new Point((3 * portPanel.Width / 4) - (45 / 2), 60),
-                BackColor = Color.LightSalmon,
+                BackColor = Color.LightSteelBlue,
                 SizeMode = PictureBoxSizeMode.StretchImage,
                 Image = ReturnResourceImage(outRes)
             };

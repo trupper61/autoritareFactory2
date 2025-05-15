@@ -21,6 +21,8 @@ namespace factordictatorship.setup
         public List<Resource> removedRescources = new List<Resource>();
         public WorldMap wrld;
         public int anzahlEisen;
+        public int anzahlCopper;
+        public int anzahlKohle;
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
@@ -63,6 +65,14 @@ namespace factordictatorship.setup
                     if (r.Type == ResourceType.IronOre)
                     {
                         anzahlEisen++;
+                    }
+                    else if (r.Type == ResourceType.CopperOre)
+                    {
+                        anzahlCopper++;
+                    }
+                    else if (r.Type == ResourceType.ColeOre)
+                    {
+                        anzahlCopper++;
                     }
                 }
             }

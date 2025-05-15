@@ -19,6 +19,7 @@ namespace factordictatorship.Resources
             { GroundResource.Desert , LoadImage("IndustrialWasteland.png") },
             { GroundResource.Desert2, LoadImage("IndustrialWasteland2.png") },
             { GroundResource.ColeOre, LoadImage("ColeOre.png") },
+            { GroundResource.CopperOre, LoadImage("CopperOre.png") },
             { GroundResource.IronOre, LoadImage("iron.png") } };
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("belt.png") },

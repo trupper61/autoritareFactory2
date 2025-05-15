@@ -21,6 +21,7 @@ namespace autoritaereFactory.setup
         // Ore Start
         IronOre,
         ColeOre,
+        CopperOre,
 
         // always on the end!
         UpperBound
