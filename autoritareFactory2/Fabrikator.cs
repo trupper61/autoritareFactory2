@@ -12,6 +12,8 @@ namespace factordictatorship
     public class Fabrikator : Fabrikgebeude
     {
         private ResourceType typBenotigteRecurse1;
+        private int benutzesRezept = -1;
+        public int BenutzesRezept { get { return benutzesRezept; } }
         public ResourceType TypBenotigteRecurse1 { get { return typBenotigteRecurse1; } }
         private List<Resource> benotigteRecurse1 = new List<Resource>();//Liste mit der ersten für die Produktion nötige Recurse 
         public List<Resource> BenotigteRecurse1 { get { return benotigteRecurse1; } }
@@ -73,6 +75,7 @@ namespace factordictatorship
 
             produktionsdauer = gewähltesRezept.Produktionsdauer;
             verbleibendeProduktionsdauer = produktionsdauer;
+            benutzesRezept = gewähltesRezept.rezeptIndex;
         }
         public override void Iteration()
         {
@@ -179,6 +182,26 @@ namespace factordictatorship
         public override string ToString()
         {
             return "Fabrikator";
+        }
+        internal Fabrikator() : base()
+        {
+            längeInXRichtung = 3;
+            längeInYRichtung = 2;
+        }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.AddRange(BitConverter.GetBytes((int)benutzesRezept));
+            return bytes;
+        }
+        public static new Fabrikator FromByteArray(byte[] bytes, ref int offset)
+        {
+            Fabrikator newKonstrucktor = new Fabrikator();
+            int benutzesRezept = BitConverter.ToInt32(bytes, offset);
+            if (benutzesRezept > -1)
+                newKonstrucktor.SpeichereRezept(world.rezepte[benutzesRezept]);
+            offset += 4;
+            return newKonstrucktor;
         }
     }
 }
