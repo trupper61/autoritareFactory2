@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace factordictatorship
 {
@@ -119,6 +120,8 @@ namespace factordictatorship
             if (levle == 3)
             {
                 File.Delete(WorldMap.theWorld.worldName);
+                long ticks = WorldMap.theWorld.tickTimer;
+                MessageBox.Show($"You have finished the Game with:\n{ticks / 600} min {ticks / 10 % 60}.{ticks % 10} sec ");
                 // should throw new error?
             }
         }

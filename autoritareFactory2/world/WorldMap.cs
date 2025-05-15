@@ -17,6 +17,7 @@ namespace autoritaereFactory.world
 {
     public class WorldMap : IDisposable
     {
+        public long tickTimer = 0;
         Thread iteratorThread;
         bool shouldStopThread = false;
         int seed = (new Random()).Next();
@@ -193,6 +194,7 @@ namespace autoritaereFactory.world
             const int timerDelay = 100; // in ms
             while (!shouldStopThread)
             {
+                tickTimer++;
                 for (int chIndex = 0; chIndex < chunkList.Count;chIndex++)
                 {
                     Chunk ch = chunkList[chIndex];
@@ -249,6 +251,8 @@ namespace autoritaereFactory.world
             //
             bytes.AddRange(BitConverter.GetBytes((int)Chunk.chunkSize)); // check before something bad happens
             bytes.AddRange(BitConverter.GetBytes((int)seed));
+            //
+            bytes.AddRange(BitConverter.GetBytes((long)tickTimer));
             // this is making someone happy, just to notice, that it won't do anything! (Ha Ha)
             bytes.AddRange(BitConverter.GetBytes((int)chunkXcount));
             bytes.AddRange(BitConverter.GetBytes((int)chunkYcount));
@@ -271,10 +275,11 @@ namespace autoritaereFactory.world
                 return null;
             offset += 12;
             newMap.seed = BitConverter.ToInt32(bytes, offset);
-            newMap.chunkXcount = BitConverter.ToInt32(bytes, offset + 4);
-            newMap.chunkYcount = BitConverter.ToInt32(bytes, offset + 8);
-            int chunkCount = BitConverter.ToInt32(bytes, offset + 12);
-            offset += 16;
+            newMap.tickTimer = BitConverter.ToInt64(bytes, offset + 4);
+            newMap.chunkXcount = BitConverter.ToInt32(bytes, offset + 12);
+            newMap.chunkYcount = BitConverter.ToInt32(bytes, offset + 16);
+            int chunkCount = BitConverter.ToInt32(bytes, offset + 20);
+            offset += 24;
             for (int ch = 0; ch < chunkCount; ch++)
             {
                 if (bytes[offset++] == (byte)SavingPackets.ChunkPacket)
