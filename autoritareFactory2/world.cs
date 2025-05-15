@@ -5,6 +5,7 @@ using factordictatorship.drawing;
 using factordictatorship.formsElement;
 using factordictatorship.Resources;
 using factordictatorship.setup;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -195,6 +196,24 @@ namespace factordictatorship
                     MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
                 }
             }
+            else if (aktuellerModus == "Fabricator")
+            {
+                Fabrikator fab = new Fabrikator(worldPoint.X, worldPoint.Y, rotateState);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(fab.PositionX, fab.PositionY, fab.SizeX, fab.SizeY);
+                if(lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(fab);
+                    aktuellerModus = null;
+                }
+                else
+                {
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+                }
+            }
+            else if (aktuellerModus == "Belt Corner")
+            {
+                //CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y) // What rotation status?
+            }
             else if (aktuellerModus == "Destroy")
             {
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
@@ -332,6 +351,15 @@ namespace factordictatorship
                         }
                     }
                 }
+                else if (aktuellerModus == "Fabricator")
+                {
+                    Fabrikator fab = new Fabrikator(worldPoint.X, worldPoint.Y, rotateState);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(fab.PositionX, fab.PositionY, fab.SizeX, fab.SizeY);
+                    if (lffb.Count == 0)
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fab, Color.FromArgb(127, 127, 255, 95));
+                    else
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fab, Color.FromArgb(127, 255, 64, 16));
+                }
                 if (aktuellerModus == "Destroy")
                 {
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
@@ -409,7 +437,7 @@ namespace factordictatorship
         }
         private void TryPlaceBeltAt(int x, int y)
         {
-            Band belt = new Band(rotateState, 20, x, y, mapWorld);
+            Band belt = new Band(rotateState, 0, x, y, mapWorld);
             List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(x, y, belt.SizeX, belt.SizeY);
             if (lffb.Count == 0)
             {
@@ -418,20 +446,6 @@ namespace factordictatorship
         }
         private void InitUI()
         {
-            int panelWidth = (int)(this.Width * 0.7);
-            int panelHeight = (int)(this.Height * 0.7);
-            buildPanel = new Panel
-            {
-                Size = new Size(200, 260),
-                Location = new Point((this.Width - 160) / 2, (this.Height - 220) / 2),
-                BackColor = Color.LightGray,
-                Visible = false,
-            };
-            buildPanel.MouseDown += Panel_MouseDown;
-            buildPanel.MouseMove += Panel_MoseMove;
-            buildPanel.MouseUp += Panel_MouseUp;
-            Controls.Add(buildPanel);
-            SetupBuildPanel();
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
             ToolStripButton menuBtn = new ToolStripButton("Menu");
@@ -441,7 +455,7 @@ namespace factordictatorship
             ToolStripButton buildBtn = new ToolStripButton("Build");
             buildBtn.Click += (s, e) =>
             {
-                if (aktuellerModus == null)
+                if (!buildPanel.Visible)
                 {
                     buildPanel.Visible = true;
                     buildPanel.BringToFront();
@@ -455,7 +469,7 @@ namespace factordictatorship
             toolStrip.Items.Add(buildBtn);
 
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
-            destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus is null || aktuellerModus.Equals("Destroy")) ? "" : "Destroy";
+            destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus == null || !aktuellerModus.Equals("Destroy")) ? "Destroy" : "";
             toolStrip.Items.Add(destroyBtn);
             ToolStripButton rotateBtn = new ToolStripButton("Rotate");
             rotateBtn.Click += (s, e) =>
@@ -469,6 +483,16 @@ namespace factordictatorship
             inventoryBtn.Click += (s, e) => ShowInventory();
             toolStrip.Items.Add(inventoryBtn);
             Controls.Add(toolStrip);
+            buildPanel = new Panel
+            {
+                Height = 60,
+                Dock = DockStyle.Bottom,
+                BackColor = Color.LightGray,
+                Visible = false,
+                AutoScroll = true
+            };
+            Controls.Add(buildPanel);
+            SetupBuildPanel();
             this.Resize += new EventHandler(OnFormResize);
 
             // Menu Panel
@@ -597,67 +621,40 @@ namespace factordictatorship
         // BuildPanel Resize Event
         private void OnFormResize(object sender, EventArgs e)
         {
-            buildPanel.Location = new Point((this.Width - buildPanel.Width) / 2, (this.Height - buildPanel.Height) / 2);
-
             menuPanel.Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75);
 
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
-
-            SetupBuildPanel();
         }
         // Setup for the Items inside Build Panel
         private void SetupBuildPanel()
         {
             buildPanel.Controls.Clear();
 
-            Button closeButton = new Button
-            {
-                Text = "X",
-                Size = new Size(30, 30),
-                Location = new Point(buildPanel.Width - 40, 10),
-                BackColor = Color.Red,
-                ForeColor = Color.White
-            };
-            closeButton.Click += (s, e) =>
-            {
-                buildPanel.Visible = false;
-                aktuellerModus = null;
-                this.Focus();
-            };
-            buildPanel.Controls.Add(closeButton);
-            Label titleLabel = new Label
-            {
-                Text = "Choose Building",
-                Font = new Font("Segoe UI", 11, FontStyle.Bold),
-                Location = new Point(10, 10),
-                AutoSize = true
-            };
-            buildPanel.Controls.Add(titleLabel);
-
             var buildings = new List<String>
-        {
-            "Miner",
-            "Constructor",
-            "Belt"
-        };
-            int y = 50;
+            {
+                "Miner",
+                "Constructor",
+                "Belt",
+                "Belt Corner",
+                "Fabricator"
+            };
+            int x = 20;
             foreach (var name in buildings)
             {
                 Button btn = new NoFocusButton
                 {
                     Text = name,
-                    Size = new Size(120, 35),
-                    Location = new Point(10, y),
+                    Size = new Size(110, 35),
+                    Location = new Point(x, 10),
                     BackColor = Color.LightSteelBlue
                 };
                 btn.Click += (s, e) =>
                 {
                     aktuellerModus = name;
-                    buildPanel.Visible = false;
                     this.Focus();
                 };
                 buildPanel.Controls.Add(btn);
-                y += 45;
+                x += 115;
             }
         }
         private void ToogleMenuPanel()

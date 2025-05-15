@@ -123,6 +123,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\CopperWire.png" />
+    <Content Include="Resources\building\beltCorner.png" />
+    <Content Include="Resources\building\fabricator.png" />
     <Content Include="Resources\ground\ColeOre.png" />
     <Content Include="Resources\ground\CopperOre.png" />
     <Content Include="Resources\ground\Grassland0.png" />
