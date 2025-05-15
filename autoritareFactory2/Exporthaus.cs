@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Rebar;
 
 namespace factordictatorship
 {
@@ -53,20 +54,20 @@ namespace factordictatorship
 
                 foreach (Fabrikgebeude v in values)
                 {
-                    if (v is Band)
+                    if (v is factordictatorship.setup.Band)
                     {
                         switch(wertRotX) 
                         {
                             case -1:
                                 if(v.drehung == 1) 
                                 {
-                                    nimmVomBand(wrld);
+                                    nimmVomBand(wrld, wertRotX, values, this);
                                 }
                                 break;
                             case 1:
                                 if (v.drehung == 3)
                                 {
-                                    nimmVomBand(wrld);
+                                    nimmVomBand(wrld, wertRotX, values, this);
                                 }
                                 break;
                         }
@@ -75,13 +76,13 @@ namespace factordictatorship
                             case -1:
                                 if (v.drehung == 4)
                                 {
-                                    nimmVomBand(wrld);
+                                    nimmVomBand(wrld, wertRotY, values, this);
                                 }
                                 break;
                             case 1:
                                 if (v.drehung == 2)
                                 {
-                                    nimmVomBand(wrld);
+                                    nimmVomBand(wrld, wertRotY, values, this);
                                 }
                                 break;
                         }
@@ -92,13 +93,29 @@ namespace factordictatorship
             
         }
 
-        private void nimmVomBand(WorldMap wrld) 
+        private void nimmVomBand(WorldMap wrld, int Pos, List<Fabrikgebeude> gebauede, Exporthaus exp) 
         {
-        
+            factordictatorship.setup.Band band;
+
+            int bandPosX = 0;
+            int bandPosY = 0;
+            foreach (Fabrikgebeude baender in gebauede) 
+            {
+                bandPosX = baender.PositionX;
+                bandPosY = baender.PositionY;
+                band = (factordictatorship.setup.Band)baender;
+
+                foreach (Resource resources in band.currentRescourceList)
+                {
+                    band.removedRescources.Add(resources);
+                }
+                foreach (Resource resources in band.removedRescources)
+                {
+                    band.currentRescourceList.Remove(resources);
+                    band.ItemAnzahlMoment = band.currentRescourceList.Count();
+                }
+                band.removedRescources.Clear();
+            }
         }
-
-
-
-
     }
 }
