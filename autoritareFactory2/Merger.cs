@@ -43,8 +43,7 @@ namespace factordictatorship
                     Band band = (Band)entitys[0];
                     if (band != null && band.GibRichtungEingang() == drehung)
                     {
-                        band.ErkenneRescourcen();
-                        if (band.ItemAnzahlMoment < band.ItemAnzahlMax && gebendeRecursenListe.Count > 0)
+                        if (band.currentRescourceList.Count < band.ItemAnzahlMax && gebendeRecursenListe.Count > 0)
                         {
                             band.RescourceKommtAufBand(gebendeRecursenListe[0]);
                             gebendeRecursenListe.RemoveAt(0);
@@ -65,7 +64,6 @@ namespace factordictatorship
                     Band band = (Band)entitys[0];
                     if (band != null && band.GibRichtungAusgang() == drehung)
                     {
-                        band.ErkenneRescourcen();
                         if (nehmendeRecursenListe.Count < maxRecursen && band.currentRescourceList.Count > 0)
                         {
                             nehmendeRecursenListe.Add(band.NimmRescourceVomBand(0));
