@@ -13,6 +13,7 @@ namespace factordictatorship
     public class Exporthaus : Fabrikgebeude
     {
         public List<Resource> rescourcenInLager = new List<Resource>();
+        public List<Resource> verkaufteRescourcen = new List<Resource>();
         public WorldMap wrld;
         public Exporthaus(int positionX, int positionY, int drehung, WorldMap wrld) 
             : base(positionX, positionY, drehung)
@@ -117,6 +118,11 @@ namespace factordictatorship
                 }
                 band.removedRescources.Clear();
             }
+        }
+
+        public override string ToString()
+        {
+            return "Exporthaus";
         }
     }
 }
