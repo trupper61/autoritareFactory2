@@ -124,5 +124,21 @@ namespace factordictatorship
         {
             return "Exporthaus";
         }
+
+        public void Verkaufen(Resource resource) 
+        {
+            foreach(Resource resc in rescourcenInLager) 
+            {
+                if(resource.Type == resc.Type) 
+                {
+                    verkaufteRescourcen.Add(resc);
+                }
+            }
+            foreach(Resource resc in verkaufteRescourcen) 
+            {
+                rescourcenInLager.Remove(resc);
+            }
+            verkaufteRescourcen.Clear();
+        }
     }
 }
