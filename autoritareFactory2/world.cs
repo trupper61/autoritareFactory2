@@ -73,6 +73,7 @@ namespace factordictatorship
         public Point beltEnd;
         public Panel konInterface;
         public Panel banInterface;
+        public Panel ExporthausInterface;
         public Panel inventoryPanel;
         public Miner aktuellerMiner = null;
         public Konstrucktor aktuellerKon = null;
@@ -259,7 +260,10 @@ namespace factordictatorship
                     {
                         ShowMinerInterface(f as Miner);
                     }
-
+                    if(f is Exporthaus) 
+                    {
+                        ShowExportInterface(f as Exporthaus);
+                    }
                 }
             }
         }
@@ -882,39 +886,78 @@ namespace factordictatorship
 
             foreach (Resource resc in rescourcen)
             {
-                Label resBand = new Label();
+                if(ban.RetWantedRescource(resc.Type, ban) != "0")
+                {
+                    Label resBand = new Label();
+
+                    switch (resc.Type)
+                    {
+                        case ResourceType.IronOre:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
+                            break;
+                        case ResourceType.IronPlate:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
+                            break;
+                        case ResourceType.IronStick:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
+                            break;
+                        case ResourceType.IronIngot:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
+                            break;
+                        default:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
+                            break;
+                    }
+                    resBand.Location = new Point(10, y);
+                    resBand.AutoSize = true;
+
+                    banInterface.Controls.Add(resBand);
+                    y += 40;
+                }
                 //if(resc.Type == ResourceType.IronOre) 
                 //{
                 //    resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
                 //}
-                switch (resc.Type)
-                {
-                    case ResourceType.IronOre:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
-                        break;
-                    case ResourceType.IronPlate:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
-                        break;
-                    case ResourceType.IronStick:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
-                        break;
-                    case ResourceType.IronIngot:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
-                        break;
-                    default:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
-                        break;
-                }
-                resBand.Location = new Point(10, y);
-                resBand.AutoSize = true;
-
-                banInterface.Controls.Add(resBand);
-                y += 40;
+                
             }
 
             banInterface.Controls.Add(name);
             banInterface.Size = new Size(275, Math.Max(y + 10, 150));
             banInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => banInterface.Visible = false;
+            banInterface.Controls.Add(closeBtn);
+        }
+
+        public void ShowExportInterface(Exporthaus exp) 
+        {
+            banInterface.Visible = true;
+            banInterface.Controls.Clear();
+
+            Label name = new Label();
+            name.Text = exp.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+
+            int y = 50;
+            int maxRight = name.Right;
+
+            foreach (Resource resc in rescourcen)
+            {
+                
+            }
+
+            ExporthausInterface.Controls.Add(name);
+            ExporthausInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            ExporthausInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
 
             Button closeBtn = new Button
             {
