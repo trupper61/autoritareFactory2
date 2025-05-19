@@ -14,6 +14,8 @@ namespace factordictatorship
     {
         public List<Resource> rescourcenInLager = new List<Resource>();
         public List<Resource> verkaufteRescourcen = new List<Resource>();
+        public List<Inventory> inventories = new List<Inventory>();
+        public int slotsAvail;
         public WorldMap wrld;
         public Exporthaus(int positionX, int positionY, int drehung, WorldMap wrld) 
             : base(positionX, positionY, drehung)
@@ -21,6 +23,7 @@ namespace factordictatorship
             längeInXRichtung = 1;
             längeInYRichtung = 1;
             this.wrld = wrld;
+            slotsAvail = 6;
         }
 
         public override void Iteration() 

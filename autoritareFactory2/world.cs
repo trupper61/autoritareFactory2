@@ -939,8 +939,8 @@ namespace factordictatorship
 
         public void ShowExportInterface(Exporthaus exp) 
         {
-            banInterface.Visible = true;
-            banInterface.Controls.Clear();
+            ExporthausInterface.Visible = true;
+            ExporthausInterface.Controls.Clear();
 
             Label name = new Label();
             name.Text = exp.ToString();
@@ -970,7 +970,7 @@ namespace factordictatorship
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
 
-            ShowExportHausRes();
+            ShowExportHausRes(exp, ExporthausInterface);
         }
         public void DisplayData()
         {
@@ -1231,9 +1231,75 @@ namespace factordictatorship
             portPanel.BringToFront();
         }
 
-        private void ShowExportHausRes() 
+        private void ShowExportHausRes(Exporthaus exporthaus, Panel panel) 
         {
-            
+            int slotsPerRow = 3;
+            int usedSlots = exporthaus.inventories.Count;
+            int slotsize = 45;
+            int padding = 8;
+            int x = 10;
+            int y = 40;
+            int column = 0;
+
+            foreach (var inv in exporthaus.inventories)
+            {
+                PictureBox resourceBox = new PictureBox
+                {
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(0, 0),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = inv.Items.Count() > 0 ? Color.LightGreen : Color.LightBlue
+                };
+                resourceBox.Image = ReturnResourceImage(inv.Type);
+                resourceBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                Label countLabel = new Label
+                {
+                    Text = inv.Items.Count.ToString(),
+                    AutoSize = false,
+                    Size = new Size(slotsize, 20),
+                    TextAlign = ContentAlignment.TopCenter,
+                    Location = new Point(0, slotsize)
+                };
+                panel.Controls.Add(resourceBox);
+                panel.Controls.Add(countLabel);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+
+            }
+            int remainingSlots = exporthaus.slotsAvail - usedSlots;
+            for (int i = 0; i < remainingSlots; i++)
+            {
+                PictureBox pb = new PictureBox
+                {
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(x, y),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.LightBlue
+                };
+                panel.Controls.Add(pb);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+            }
         }
     }
 }
