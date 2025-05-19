@@ -77,7 +77,7 @@ namespace factordictatorship
             else if (classHash == typeof(Fabrikator).GetHashCode())
                 newFbu = Fabrikator.FromByteArray(bytes, ref offset);
             else if (classHash == typeof(Finishinator).GetHashCode()) { return null; }
-                //newFbu = Finishinator.FromByteArray(bytes, ref offset);
+                newFbu = Finishinator.FromByteArray(bytes, ref offset);
             newFbu.gebeudeID = gebId;
             newFbu.positionX = positionX;
             newFbu.positionY = positionY;
