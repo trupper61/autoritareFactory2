@@ -1039,6 +1039,12 @@ namespace factordictatorship
         }
         public static Image ReturnResourceImage(ResourceType type)
         {
+            if (ResourceHandler.itemSet.ContainsKey(type))
+            {
+                return ResourceHandler.itemSet[type];
+            }
+            return null;
+            /*
             switch (type)
             {
                 case ResourceType.IronOre:
@@ -1071,7 +1077,7 @@ namespace factordictatorship
                     return Properties.Resources.Stator;
                 default:
                     return null;
-            }
+            }*/
         }
         private void Panel_MouseDown(object sender, MouseEventArgs e)
         {
