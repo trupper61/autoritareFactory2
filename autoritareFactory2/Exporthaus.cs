@@ -28,6 +28,31 @@ namespace factordictatorship
             ErkenneBandInNähe(wrld, this);
         }
 
+        private static readonly Dictionary<ResourceType, int> resourcePrices = new Dictionary<ResourceType, int>
+        {
+            { ResourceType.IronIngot, 10 },
+            { ResourceType.IronOre, 4 },
+            { ResourceType.IronPlate, 15 },
+            { ResourceType.IronStick, 10 },
+            { ResourceType.Screw, 7 },
+
+            { ResourceType.CopperOre, 4 },
+            { ResourceType.CopperIngot, 10 },
+            { ResourceType.CopperWire, 7 },
+            { ResourceType.Cable, 10 },
+
+            { ResourceType.ColeOre, 10 },
+            { ResourceType.SteelIngot, 15 },
+            { ResourceType.SteelRod, 10 },
+            { ResourceType.SteelBeam, 10 },
+            { ResourceType.SteelConcreteBeam, 14 },
+            { ResourceType.limestone, 10 },
+            { ResourceType.Concrete, 10 },
+            { ResourceType.Rotor, 25 },
+            { ResourceType.Stator, 20 },
+            { ResourceType.Motor, 30 },
+        };
+
         public void ErkenneBandInNähe(WorldMap wrld, Exporthaus exporthaus) 
         {
             int wertRotX = 0;
@@ -125,13 +150,18 @@ namespace factordictatorship
             return "Exporthaus";
         }
 
-        public void Verkaufen(Resource resource) 
+        public void Verkaufen(Resource resource, PlayerData player) 
         {
             foreach(Resource resc in rescourcenInLager) 
             {
                 if(resource.Type == resc.Type) 
                 {
                     verkaufteRescourcen.Add(resc);
+                    if (resourcePrices.TryGetValue(resc.Type, out int price))
+                    {
+                        player.money += price;
+                        rescourcenInLager.Remove(resc);
+                    }
                 }
             }
             foreach(Resource resc in verkaufteRescourcen) 

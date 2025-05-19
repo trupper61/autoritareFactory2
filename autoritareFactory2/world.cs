@@ -969,6 +969,8 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
+
+            ShowExportHausRes();
         }
         public void DisplayData()
         {
@@ -1227,6 +1229,11 @@ namespace factordictatorship
             tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes}"); // Shows small PopUp-Window, for UserHelp
             tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
             portPanel.BringToFront();
+        }
+
+        private void ShowExportHausRes() 
+        {
+            
         }
     }
 }
