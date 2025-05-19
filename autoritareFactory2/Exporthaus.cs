@@ -29,6 +29,8 @@ namespace factordictatorship
 
         public void ErkenneBandInNähe(WorldMap wrld, Exporthaus exporthaus) 
         {
+            if (wrld == null)
+                wrld = WorldMap.theWorld;
             int wertRotX = 0;
             int wertRotY = 0;
 
@@ -117,6 +119,33 @@ namespace factordictatorship
                 }
                 band.removedRescources.Clear();
             }
+        }
+        internal Exporthaus() : base()
+        {
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+        }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.AddRange(BitConverter.GetBytes((int)rescourcenInLager.Count));
+            for (int i = 0; i < rescourcenInLager.Count; i++)
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)rescourcenInLager[i].Type));
+            }
+            return bytes;
+        }
+        public static new Exporthaus FromByteArray(byte[] bytes, ref int offset)
+        {
+            Exporthaus newExporthaus = new Exporthaus();
+            int resourceCount = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newExporthaus.rescourcenInLager.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            return newExporthaus;
         }
     }
 }
