@@ -137,11 +137,10 @@ namespace autoritaereFactory.world
             blockState = new GroundResource[chunkSize, chunkSize];
             // you can put more to place more resources!
             GenerateBlobGround(seed - 2, GroundResource.Desert,0.05f, 1, 0,0.5f);
-            GenerateCircleRessource(seed, GroundResource.ColeOre, 4.5f, 16, 1f,0,0.5f,0.25f); // evl Kohle
+            GenerateCircleRessource(seed, GroundResource.ColeOre, 4.5f, 16, 1f,0,0.5f,0.5f); // evl Kohle
             GenerateCircleRessource(seed + 6, GroundResource.LimeStone, 10f, 30, 0.25f,0.25f,0f,0.5f); // evl Kohle
             //GenerateCircleRessource(seed + 6, GroundResource.LimeStone, 13f, 16, 1f,0f,0.75f,0.5f); // evl Kohle
-            GenerateCircleRessource(seed + 4, GroundResource.CopperOre, 4f, 16, 0.5f,0,0.5f,0.25f); // evl Kohle
-            GenerateCircleRessource(seed + 4, GroundResource.CopperOre, 4f, 16, 0.5f,1,0.5f,0.25f); // evl Kohle
+            GenerateCircleRessource(seed + 4, GroundResource.CopperOre, 4f, 16, 0.5f,0,0.5f,0.5f);
             GenerateCircleRessource(seed+2, GroundResource.IronOre, 7f, 40, 0.25f); // evl hochwertiges
             GenerateCircleRessource(seed + 3, GroundResource.CopperOre, 4.5f, 16, 1f, 0, 0.5f, 025f); // Copper Test, Zahlen später ändern!
             // fill with random grass!
