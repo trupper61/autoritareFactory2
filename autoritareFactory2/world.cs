@@ -199,6 +199,18 @@ namespace factordictatorship
                     MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
                 }
             }
+            else if (aktuellerModus == "Lager")
+            {
+                Exporthaus exp = new Exporthaus(worldPoint.X, worldPoint.Y, rotateState, mapWorld);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(exp.PositionX, exp.PositionY, exp.SizeX, exp.SizeY);
+                if (lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(exp);
+                    aktuellerModus = null;
+                }
+                else
+                    MessageBox.Show("Der Platz ist ungpültig. Wählen Sie einen anderen Platz.");
+            }
             else if (aktuellerModus == "Fabricator")
             {
                 Fabrikator fab = new Fabrikator(worldPoint.X, worldPoint.Y, rotateState);
@@ -439,6 +451,15 @@ namespace factordictatorship
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, cb, Color.FromArgb(127, 255, 64, 16));
                     }
+                }
+                else if (aktuellerModus == "Lager")
+                {
+                    Exporthaus exp = new Exporthaus(worldPoint.X, worldPoint.Y, rotateState, mapWorld);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(exp.PositionX, exp.PositionY, exp.SizeX, exp.SizeY);
+                    if (lffb.Count == 0)
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, exp, Color.FromArgb(127, 127, 255, 95));
+                    else
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, exp, Color.FromArgb(127, 255, 64, 16));
                 }
                 else if (aktuellerModus == "Fabricator")
                 {
@@ -756,6 +777,7 @@ namespace factordictatorship
                 "Belt Corner",
                 "Splitter",
                 "Merger",
+                "Lager",
                 "Fabricator",
                 "Finishinator"
             };
