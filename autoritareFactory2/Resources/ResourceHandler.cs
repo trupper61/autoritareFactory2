@@ -36,6 +36,7 @@ namespace factordictatorship.Resources
             {typeof(Splitter).GetHashCode(),LoadImage("building\\splitter.png") },
             {typeof(Merger).GetHashCode(),LoadImage("building\\merger.png") },
             {typeof(Exporthaus).GetHashCode(),LoadImage("building\\merger.png") },
+            {typeof(Finishinator).GetHashCode(),LoadImage("building\\finishinator.png") },
         };
         public static Dictionary<ResourceType, Image> itemSet = new Dictionary<ResourceType, Image>(){
             {ResourceType.IronOre,LoadImage("item\\iron-ore.png") },

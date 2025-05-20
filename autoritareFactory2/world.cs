@@ -251,6 +251,18 @@ namespace factordictatorship
                 else
                     MessageBox.Show("Der PLatz ist ungültig. Wählen Sie einen anderen PLatz.");
             }
+            else if (aktuellerModus == "Finishinator")
+            {
+                Finishinator fin = new Finishinator(worldPoint.X, worldPoint.Y, rotateState);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(fin.PositionX, fin.PositionY, fin.SizeX, fin.SizeY);
+                if (lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(fin);
+                    aktuellerModus = null;
+                }
+                else
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+            }
             else if (aktuellerModus == "Destroy")
             {
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
@@ -454,6 +466,17 @@ namespace factordictatorship
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, meg, Color.FromArgb(127, 127, 255, 95));
                     else
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, meg, Color.FromArgb(127, 255, 64, 16));
+                }
+                else if (aktuellerModus == "Finishinator")
+                {
+                    Finishinator fin = new Finishinator(worldPoint.X, worldPoint.Y, rotateState);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(fin.PositionX, fin.PositionY, fin.SizeX, fin.SizeY);
+                    if (lffb.Count == 0)
+                    {
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fin, Color.FromArgb(127, 127, 255, 95));
+                    }
+                    else
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fin, Color.FromArgb(127, 255, 64, 16));
                 }
                 if (aktuellerModus == "Destroy")
                 {
@@ -733,7 +756,8 @@ namespace factordictatorship
                 "Belt Corner",
                 "Splitter",
                 "Merger",
-                "Fabricator"
+                "Fabricator",
+                "Finishinator"
             };
             int x = 20;
             foreach (var name in buildings)
