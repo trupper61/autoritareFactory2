@@ -26,12 +26,6 @@ namespace factordictatorship.setup
         public int ItemAnzahlMax = 10; //Anzahl an Items, die ein Band maximal halten kann.
         public int ItemAnzahlMoment = 0; //Anzahl an Items, die sich gerade auf dem Band befinden.
         public int BandGeschwindigkeit = 200; //Wie schnell es Items von einem auf das andere Band befördern kann. (Item Pro Sekunde) -> 5 Items pro Sekunde
-        internal Band() : base()
-        {
-            längeInXRichtung = 1;
-            längeInYRichtung = 1;
-            ItemAnzahlMoment = currentRescourceList.Count();
-        }
 
         public int RichtungEingang; //1 -> Eingang Links //2 -> Eingang Oben //3 -> Eingang Rechts // 4 -> Eingang Unten
         public int RichtungAusgang; //1 -> Ausgang Rechts //2 -> Ausgang Unten //3 -> Ausgang Links //4 -> Ausgang Oben
@@ -163,6 +157,12 @@ namespace factordictatorship.setup
         {
             return "Band";
         }
+        internal Band() : base()
+        {
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+            ItemAnzahlMoment = currentRescourceList.Count();
+        }
         public override List<byte> GetAsBytes()
         {
             List<byte> bytes = base.GetAsBytes();
@@ -178,7 +178,7 @@ namespace factordictatorship.setup
             }
             return bytes;
         }
-        public static Band FromByteArray(byte[] bytes, ref int offset)
+        public static new Band FromByteArray(byte[] bytes, ref int offset)
         {
             Band newBand = new Band();
             int resourceCount = BitConverter.ToInt32(bytes, offset);

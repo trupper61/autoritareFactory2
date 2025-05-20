@@ -63,14 +63,14 @@ namespace factordictatorship.setup.BaenderTypes
                     break;
             }
 
-            List<Fabrikgebeude> values = world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
+            List<Fabrikgebeude> values = WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
             CurveBand curveBandNxt;
             foreach (Fabrikgebeude v in values)
             {
                 if (v is Band)
                 {
                     //Damit man die Drehung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
-                    foreach (Band gb in world.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
+                    foreach (Band gb in WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
                     {
                         BandNxt = gb;
                         if (BandNxt.Drehung != band.Drehung) continue; // Wenn Band Drehung nicht gleich ist mit benachbarte BandDrehung, dann nächste loop
@@ -128,6 +128,38 @@ namespace factordictatorship.setup.BaenderTypes
                     band.removedRescources.Add(resources);
                 }
             }
+        }
+        internal CurveBand() : base()
+        {
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+            ItemAnzahlMoment = currentRescourceList.Count();
+        }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.Add((byte)RichtungAusgang);
+            return bytes;
+        }
+        public static new CurveBand FromByteArray(byte[] bytes, ref int offset)
+        {
+            CurveBand newBand = new CurveBand();
+            int resourceCount = BitConverter.ToInt32(bytes, offset + 1);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newBand.removedRescources.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            resourceCount = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newBand.currentRescourceList.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            newBand.RichtungAusgang = bytes[offset++];
+            return newBand;
         }
 
         public void determineTransferCurve(CurveBand band, CurveBand BandNxt) 
