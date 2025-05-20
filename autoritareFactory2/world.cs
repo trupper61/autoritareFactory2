@@ -762,6 +762,18 @@ namespace factordictatorship
             portPanel.MouseMove += Panel_MoseMove;
             portPanel.MouseUp += Panel_MouseUp;
             this.Controls.Add(portPanel);
+            ExporthausInterface = new Panel
+            {
+                Size = new Size(190, 250),
+                Location = new Point((this.ClientSize.Width - 190) / 2, (this.ClientSize.Height - 250) / 2),
+                BackColor = Color.LightYellow,
+                BorderStyle = BorderStyle.FixedSingle,
+                Visible = false
+            };
+            ExporthausInterface.MouseDown += Panel_MouseDown;
+            ExporthausInterface.MouseMove += Panel_MoseMove;
+            ExporthausInterface.MouseUp += Panel_MouseUp;
+            this.Controls.Add(ExporthausInterface);
         }
 
         // BuildPanel Resize Event
