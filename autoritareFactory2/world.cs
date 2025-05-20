@@ -227,6 +227,30 @@ namespace factordictatorship
                     MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
                 }
             }
+            else if (aktuellerModus == "Splitter")
+            {
+                Splitter spl = new Splitter(worldPoint.X, worldPoint.Y, rotateState);
+                List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(spl.PositionX, spl.PositionY, spl.SizeX, spl.SizeY);
+                if (lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(spl);
+                    aktuellerModus = null;
+                }
+                else
+                    MessageBox.Show("Der Platz ist ungültig. Wählen Sie einen anderen Platz.");
+            }
+            else if (aktuellerModus == "Merger")
+            {
+                Merger meg = new Merger(worldPoint.X, worldPoint.Y, rotateState);
+                List <Fabrikgebeude> lffb = mapWorld.GetEntityInBox(meg.PositionX, meg.PositionY, meg.SizeX, meg.SizeY);
+                if (lffb.Count == 0)
+                {
+                    mapWorld.AddEntityAt(meg);
+                    aktuellerModus = null;
+                }
+                else
+                    MessageBox.Show("Der PLatz ist ungültig. Wählen Sie einen anderen PLatz.");
+            }
             else if (aktuellerModus == "Destroy")
             {
                 List<Fabrikgebeude> fab = mapWorld.GetEntityInPos(worldPoint.X, worldPoint.Y);
@@ -412,6 +436,24 @@ namespace factordictatorship
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fab, Color.FromArgb(127, 127, 255, 95));
                     else
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, fab, Color.FromArgb(127, 255, 64, 16));
+                }
+                else if (aktuellerModus == "Splitter")
+                {
+                    Splitter spl = new Splitter(worldPoint.X, worldPoint.Y, rotateState);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(spl.PositionX, spl.PositionY, spl.SizeX, spl.SizeY);
+                    if (lffb.Count == 0)
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, spl, Color.FromArgb(127, 127, 255, 95));
+                    else
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, spl, Color.FromArgb(127, 255, 64, 16));
+                }
+                else if (aktuellerModus == "Merger")
+                {
+                    Merger meg = new Merger(worldPoint.X, worldPoint.Y, rotateState);
+                    List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(meg.PositionX, meg.PositionY, meg.SizeX, meg.SizeY);
+                    if (lffb.Count == 0)
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, meg, Color.FromArgb(127, 127, 255, 95));
+                    else
+                        wlrdDrawer.DrawPlacableBuilding(e, worldPoint, meg, Color.FromArgb(127, 255, 64, 16));
                 }
                 if (aktuellerModus == "Destroy")
                 {
@@ -689,6 +731,8 @@ namespace factordictatorship
                 "Constructor",
                 "Belt",
                 "Belt Corner",
+                "Splitter",
+                "Merger",
                 "Fabricator"
             };
             int x = 20;
