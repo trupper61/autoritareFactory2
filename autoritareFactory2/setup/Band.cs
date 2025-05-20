@@ -50,7 +50,7 @@ namespace factordictatorship.setup
             ItemAnzahlMoment = currentRescourceList.Count();
             UpdateRescourceList();
         }
-        public void ErkenneRescourcen()
+        public virtual void ErkenneRescourcen()
         {
             if (currentRescourceList != null && ItemAnzahlMoment < ItemAnzahlMax)
             {
@@ -72,7 +72,7 @@ namespace factordictatorship.setup
             }
         }
 
-        public void RescourceKommtAufBand(Resource r)
+        public virtual void RescourceKommtAufBand(Resource r)
         {
             currentRescourceList.Add(r);
             ItemAnzahlMoment++;

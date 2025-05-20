@@ -73,6 +73,7 @@ namespace factordictatorship
         public Point beltEnd;
         public Panel konInterface;
         public Panel banInterface;
+        public Panel ExporthausInterface;
         public Panel inventoryPanel;
         public Miner aktuellerMiner = null;
         public Konstrucktor aktuellerKon = null;
@@ -259,7 +260,10 @@ namespace factordictatorship
                     {
                         ShowMinerInterface(f as Miner);
                     }
-
+                    if(f is Exporthaus) 
+                    {
+                        ShowExportInterface(f as Exporthaus);
+                    }
                 }
             }
         }
@@ -882,34 +886,39 @@ namespace factordictatorship
 
             foreach (Resource resc in rescourcen)
             {
-                Label resBand = new Label();
+                if(ban.RetWantedRescource(resc.Type, ban) != "0")
+                {
+                    Label resBand = new Label();
+
+                    switch (resc.Type)
+                    {
+                        case ResourceType.IronOre:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
+                            break;
+                        case ResourceType.IronPlate:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
+                            break;
+                        case ResourceType.IronStick:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
+                            break;
+                        case ResourceType.IronIngot:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
+                            break;
+                        default:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
+                            break;
+                    }
+                    resBand.Location = new Point(10, y);
+                    resBand.AutoSize = true;
+
+                    banInterface.Controls.Add(resBand);
+                    y += 40;
+                }
                 //if(resc.Type == ResourceType.IronOre) 
                 //{
                 //    resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
                 //}
-                switch (resc.Type)
-                {
-                    case ResourceType.IronOre:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
-                        break;
-                    case ResourceType.IronPlate:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
-                        break;
-                    case ResourceType.IronStick:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
-                        break;
-                    case ResourceType.IronIngot:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
-                        break;
-                    default:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
-                        break;
-                }
-                resBand.Location = new Point(10, y);
-                resBand.AutoSize = true;
-
-                banInterface.Controls.Add(resBand);
-                y += 40;
+                
             }
 
             banInterface.Controls.Add(name);
@@ -926,6 +935,42 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
+        }
+
+        public void ShowExportInterface(Exporthaus exp) 
+        {
+            ExporthausInterface.Visible = true;
+            ExporthausInterface.Controls.Clear();
+
+            Label name = new Label();
+            name.Text = exp.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+
+            int y = 50;
+            int maxRight = name.Right;
+
+            foreach (Resource resc in rescourcen)
+            {
+                
+            }
+
+            ExporthausInterface.Controls.Add(name);
+            ExporthausInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            ExporthausInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => banInterface.Visible = false;
+            banInterface.Controls.Add(closeBtn);
+
+            ShowExportHausRes(exp, ExporthausInterface);
         }
         public void DisplayData()
         {
@@ -1190,6 +1235,77 @@ namespace factordictatorship
             tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes}"); // Shows small PopUp-Window, for UserHelp
             tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
             portPanel.BringToFront();
+        }
+
+        private void ShowExportHausRes(Exporthaus exporthaus, Panel panel) 
+        {
+            int slotsPerRow = 3;
+            int usedSlots = exporthaus.inventories.Count;
+            int slotsize = 45;
+            int padding = 8;
+            int x = 10;
+            int y = 40;
+            int column = 0;
+
+            foreach (var inv in exporthaus.inventories)
+            {
+                PictureBox resourceBox = new PictureBox
+                {
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(0, 0),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = inv.Items.Count() > 0 ? Color.LightGreen : Color.LightBlue
+                };
+                resourceBox.Image = ReturnResourceImage(inv.Type);
+                resourceBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                Label countLabel = new Label
+                {
+                    Text = inv.Items.Count.ToString(),
+                    AutoSize = false,
+                    Size = new Size(slotsize, 20),
+                    TextAlign = ContentAlignment.TopCenter,
+                    Location = new Point(0, slotsize)
+                };
+                panel.Controls.Add(resourceBox);
+                panel.Controls.Add(countLabel);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+
+            }
+            int remainingSlots = exporthaus.slotsAvail - usedSlots;
+            for (int i = 0; i < remainingSlots; i++)
+            {
+                PictureBox pb = new PictureBox
+                {
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(x, y),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.LightBlue
+                };
+                panel.Controls.Add(pb);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+            }
         }
     }
 }
