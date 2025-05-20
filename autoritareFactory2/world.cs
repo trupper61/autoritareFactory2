@@ -263,9 +263,18 @@ namespace factordictatorship
                 }
             }
         }
+        bool rotateButton = false;
         public void RefreshLoop(object sender, EventArgs e)
         {
             this.Invalidate(DisplayRectangle);
+            if ((IsKeyPressed(Keys.R) ||IsKeyPressed(Keys.T)) && !rotateButton)
+            {
+                if (IsKeyPressed(Keys.T)) { rotateState += 2; }
+                rotateState %= 4;
+                rotateState++;
+                rotateButton = true;
+            }
+            rotateButton = IsKeyPressed(Keys.R) || IsKeyPressed(Keys.T);
             if (konInterface.Visible && aktuellerMiner != null && resourceCountLabel != null)
             {
                 resourceCountLabel.Text = $"Gesammelt: {aktuellerMiner.Recurse.Count} / {aktuellerMiner.MaxAnzalRecurse}";
@@ -1193,6 +1202,3 @@ namespace factordictatorship
         }
     }
 }
-
-
-
