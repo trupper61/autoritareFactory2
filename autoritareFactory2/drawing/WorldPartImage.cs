@@ -20,10 +20,10 @@ namespace factordictatorship.drawing
             chunkX = WorldPosX;
             chunkY = WorldPosY;
             chRef = WorldMap.theWorld.GetSpecificChunk(chunkX, chunkY);
-            map = new Bitmap(ResourceHandler.imageSize * Chunk.chunkSize, ResourceHandler.imageSize * Chunk.chunkSize);
+            map = new Bitmap(ResourceHandler.imageSize * Chunk.chunkSize, ResourceHandler.imageSize * Chunk.chunkSize,System.Drawing.Imaging.PixelFormat.Format16bppRgb565);
             // does this do anything?
-            map2 = new Bitmap(ResourceHandler.imageSize * Chunk.chunkSize / 2, ResourceHandler.imageSize * Chunk.chunkSize / 2);
-            map3 = new Bitmap(ResourceHandler.imageSize * Chunk.chunkSize / 4, ResourceHandler.imageSize * Chunk.chunkSize / 4);
+            map2 = new Bitmap(ResourceHandler.imageSize * Chunk.chunkSize / 2, ResourceHandler.imageSize * Chunk.chunkSize / 2, System.Drawing.Imaging.PixelFormat.Format16bppRgb565);
+            map3 = new Bitmap(ResourceHandler.imageSize * Chunk.chunkSize / 4, ResourceHandler.imageSize * Chunk.chunkSize / 4, System.Drawing.Imaging.PixelFormat.Format16bppRgb565);
             ReGenerate();
             markeRemove = false;
         }
