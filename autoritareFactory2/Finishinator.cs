@@ -11,7 +11,7 @@ using System.Windows.Forms;
 
 namespace factordictatorship
 {
-    internal class Finishinator : Fabrikgebeude
+    public class Finishinator : Fabrikgebeude
     {
         private int levle = 1;
         public int Levle { get { return levle; } }

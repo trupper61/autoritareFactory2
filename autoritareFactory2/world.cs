@@ -12,8 +12,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Printing;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
@@ -80,6 +82,7 @@ namespace factordictatorship
         public Label resourceCountLabel = null;
         public Label resourceCountLabelKon = null;
         public Fabrikator aktuellerFab = null;
+        public Finishinator aktuellerFin = null;
         public Point dragPanelPoint;
         public Panel dragPanel;
         public Panel portPanel;
@@ -302,7 +305,7 @@ namespace factordictatorship
                     {
                         ShowKonInterface(f as Konstrucktor);
                     }
-                    if (f is Band)
+                    else if (f is Band)
                     {
                         ShowBandInterface(f as Band);
                     }
@@ -310,13 +313,17 @@ namespace factordictatorship
                     {
                         ShowMinerInterface(f as Miner);
                     }
-                    if(f is Exporthaus) 
+                    else if(f is Exporthaus) 
                     {
                         ShowExportInterface(f as Exporthaus);
                     }
-                    if(f is Fabrikator)
+                    else if(f is Fabrikator)
                     {
                         ShowFabrikatorInterface(f as Fabrikator);
+                    }
+                    else if(f is Finishinator)
+                    {
+                        ShowFinishinatorInterface(f as Finishinator);
                     }
                 }
             }
@@ -814,7 +821,6 @@ namespace factordictatorship
         }
         public void ShowKonInterface(Konstrucktor kon)
         {
-            konInterface.Visible = true;
             konInterface.Controls.Clear();
             aktuellerKon = kon;
             ToolTip ttf = new ToolTip();
@@ -915,10 +921,10 @@ namespace factordictatorship
             konInterface.Size = new Size(270, totalHeight);
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
             //Button closeBtn = new NoFocusButton;
+            konInterface.Visible = true;
         }
         public void ShowMinerInterface(Miner miner)
         {
-            konInterface.Visible = true;
             konInterface.Controls.Clear();
             aktuellerMiner = miner;
             konInterface.AutoSize = false;
@@ -986,6 +992,7 @@ namespace factordictatorship
             closeBtn.BringToFront();
           //  konInterface.Size = new Size(270, Math.Max(y + 10, 150));
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+            konInterface.Visible = true;
         }
 
         public void ShowBandInterface(Band ban)
@@ -1267,7 +1274,6 @@ namespace factordictatorship
         private void ShowKonstruktorPorts()
         {
             portPanel.Controls.Clear();
-            portPanel.Visible = true;
             ResourceType inRes = aktuellerKon.TypBenotigteRecurse1;
             ResourceType outRes = aktuellerKon.TypErgebnissRecurse1;
             Label inTxt = new Label
@@ -1352,6 +1358,7 @@ namespace factordictatorship
             tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes}"); // Shows small PopUp-Window, for UserHelp
             tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
             portPanel.BringToFront();
+            portPanel.Visible = true;
         }
 
         private void ShowExportHausRes(Exporthaus exporthaus, Panel panel) 
@@ -1426,7 +1433,6 @@ namespace factordictatorship
         }
         public void ShowFabrikatorInterface(Fabrikator fab)
         {
-            konInterface.Visible = true;
             konInterface.Controls.Clear();
             aktuellerFab = fab;
             ToolTip ttf = new ToolTip();
@@ -1532,11 +1538,11 @@ namespace factordictatorship
             int totalHeight = rezeptPanel.Bottom + 20;
             konInterface.Size = new Size(270, totalHeight);
             konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+            konInterface.Visible = true;
         }
         private void ShowFabrikatorPorts()
         {
             portPanel.Controls.Clear();
-            portPanel.Visible = true;
             ResourceType inRes1 = aktuellerFab.TypBenotigteRecurse1;
             ResourceType inRes2 = aktuellerFab.TypBenotigteRecurse2;
             ResourceType outRes = aktuellerFab.TypErgebnissRecurse1;
@@ -1657,6 +1663,98 @@ namespace factordictatorship
             tt.SetToolTip(inPb2, $"Klick zum Entnehmen von {inRes2}");
             tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
             portPanel.BringToFront();
+            portPanel.Visible = true;
+        }
+        public void ShowFinishinatorInterface(Finishinator fin)
+        {
+            konInterface.Controls.Clear();
+            konInterface.Size = new Size(600, 400);
+            konInterface.Location = new Point(100, 100);
+            aktuellerFin = fin;
+            int spacingY = 50;
+            int y = 40;
+            int centerX = portPanel.Width / 2;
+
+            Label name = new Label
+            {
+                Text = "Finishinator",
+                Font = new Font("Arial", 12, FontStyle.Bold),
+                Location = new Point(10, 10),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(name);
+
+            List<(ResourceType typ, int benötigt, int aktuell)> resList = new List<(ResourceType, int, int)>
+            {
+                (aktuellerFin.TypBenotigteRecurse1, aktuellerFin.NötigeMengenBenotigteRecurse1, aktuellerFin.AktuelleAnzahlAbgegebeneResource1),
+                (aktuellerFin.TypBenotigteRecurse2, aktuellerFin.NötigeMengenBenotigteRecurse2, aktuellerFin.AktuelleAnzahlAbgegebeneResource2),
+                (aktuellerFin.TypBenotigteRecurse3, aktuellerFin.NötigeMengenBenotigteRecurse3, aktuellerFin.AktuelleAnzahlAbgegebeneResource3),
+                (aktuellerFin.TypBenotigteRecurse4, aktuellerFin.NötigeMengenBenotigteRecurse4, aktuellerFin.AktuelleAnzahlAbgegebeneResource4),
+                (aktuellerFin.TypBenotigteRecurse5, aktuellerFin.NötigeMengenBenotigteRecurse5, aktuellerFin.AktuelleAnzahlAbgegebeneResource5)
+            };
+            for(int i = 0; i < resList.Count; i++)
+            {
+                var (typ, benöigt, aktuell) = resList[i];
+                PictureBox icon = new PictureBox
+                {
+                    Size = new Size(40, 40),
+                    Location = new Point(centerX - 120, y),
+                    BackColor = Color.White,
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Image = ReturnResourceImage(typ)
+                };
+                konInterface.Controls.Add(icon);
+                Label lb = new Label
+                {
+                    AutoSize = true,
+                    Location = new Point(centerX - 60, icon.Top + 10),
+                    Text = $"{typ}: {aktuell} / {benöigt}"
+                };
+                konInterface.Controls.Add(lb);
+                ProgressBar pb = new ProgressBar
+                {
+                    Width = 150,
+                    Height = 20,
+                    Location = new Point(centerX + 40, icon.Top + 10),
+                    Maximum = benöigt,
+                    Value = Math.Min(aktuell, benöigt)
+                };
+                konInterface.Controls.Add(pb);
+                y = y + spacingY;
+            }
+            if (resList.All(r => r.aktuell >= r.benötigt))
+            {
+                Button levelUP = new Button
+                {
+                    Text = "Stufenaufstieg",
+                    Size = new Size(150, 40),
+                    Location = new Point(centerX - 75, resList.Count * 65 + 40),
+                    BackColor = Color.Gold,
+                    Font = new Font("Arial", 10, FontStyle.Bold)
+                };
+                levelUP.Click += (s, e) =>
+                {
+                    aktuellerFin.SteigeInDerStufeAuf();
+                    ShowFinishinatorInterface(fin);
+                };
+                konInterface.Controls.Add(levelUP);
+            }
+            Button closeBtn = new Button
+            {
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                Text = "X",
+                ForeColor = Color.White,
+                BackColor = Color.Red
+            };
+            closeBtn.Click += (s, e) =>
+            {
+                konInterface.Visible = false;
+                konInterface.Size = new Size(250, 300);
+                konInterface.Location = new Point(50, 50);
+            };
+            konInterface.Controls.Add(closeBtn);
+            konInterface.Visible = true;
         }
     }
 }
