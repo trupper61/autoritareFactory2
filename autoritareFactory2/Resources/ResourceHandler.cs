@@ -32,10 +32,28 @@ namespace factordictatorship.Resources
             {typeof(Konstrucktor).GetHashCode(),LoadImage("building\\factory.png") },
             {typeof(Miner).GetHashCode(),LoadImage("building\\miner.png") },
             {typeof(Fabrikator).GetHashCode(),LoadImage("building\\fabricator.png") },
-            {typeof(CurveBand).GetHashCode(),LoadImage("building\\beltCorner.png") }
+            {typeof(CurveBand).GetHashCode(),LoadImage("building\\beltCorner.png") },
+            {typeof(Splitter).GetHashCode(),LoadImage("building\\splitter.png") },
+            {typeof(Merger).GetHashCode(),LoadImage("building\\merger.png") },
+            {typeof(Exporthaus).GetHashCode(),LoadImage("building\\merger.png") },
         };
         public static Dictionary<ResourceType, Image> itemSet = new Dictionary<ResourceType, Image>(){
             {ResourceType.IronOre,LoadImage("item\\iron-ore.png") },
+            {ResourceType.Concrete,LoadImage("item\\concrete.png") },
+            {ResourceType.limestone,LoadImage("item\\limeasItem.png") },
+            {ResourceType.Cable,LoadImage("item\\CopperCable.png") },
+            {ResourceType.CopperWire,LoadImage("item\\CopperWire.png") },
+            {ResourceType.CopperIngot,LoadImage("item\\CopperIngot.png") },
+            {ResourceType.CopperOre,LoadImage("item\\CopperOre.png") },
+            {ResourceType.IronIngot,LoadImage("item\\ironBarAsItem.png") },
+            {ResourceType.IronPlate,LoadImage("item\\IronPlateAsItem.png") },
+            {ResourceType.IronStick,LoadImage("item\\IronRodAsItem.png") },
+            {ResourceType.Motor,LoadImage("item\\Motor.png") },
+            {ResourceType.Rotor,LoadImage("item\\Rotor.png") },
+            {ResourceType.Stator,LoadImage("item\\Stator.png") },
+            {ResourceType.Screw,LoadImage("item\\screw.png") },
+            {ResourceType.SteelIngot,LoadImage("item\\StealIngotAsItem.png") },
+            {ResourceType.SteelRod,LoadImage("item\\StealRodAsItem.png") },
         };
         public const int imageSize = 32;
         private static Image LoadImage(string path)

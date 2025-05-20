@@ -82,5 +82,32 @@ namespace factordictatorship
         {
             return PositionY - Convert.ToInt32(Math.Cos(drehung * (Math.PI / 2))) * VX + Convert.ToInt32(Math.Sin(drehung * (Math.PI / 2))) * VY;
         }
+        internal Splitter() : base()
+        {
+            längeInXRichtung = 1;
+            längeInYRichtung = 1;
+        }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.AddRange(BitConverter.GetBytes((int)listResource.Count));
+            for (int i = 0; i < listResource.Count; i++)
+            {
+                bytes.AddRange(BitConverter.GetBytes((int)listResource[i].Type));
+            }
+            return bytes;
+        }
+        public static new Splitter FromByteArray(byte[] bytes, ref int offset)
+        {
+            Splitter newSplitter = new Splitter();
+            int resourceCount = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            for (int i = 0; i < resourceCount; i++)
+            {
+                newSplitter.listResource.Add(new Resource((ResourceType)BitConverter.ToInt32(bytes, offset)));
+                offset += 4;
+            }
+            return newSplitter;
+        }
     }
 }

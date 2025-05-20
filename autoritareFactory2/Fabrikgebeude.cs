@@ -1,5 +1,6 @@
 ﻿using autoritaereFactory.setup;
 using factordictatorship.setup;
+using factordictatorship.setup.BaenderTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -66,10 +67,26 @@ namespace factordictatorship
             Fabrikgebeude newFbu = null;
             if (classHash == typeof(Band).GetHashCode())
                 newFbu = Band.FromByteArray(bytes, ref offset);
+            else if (classHash == typeof(CurveBand).GetHashCode())
+                newFbu = CurveBand.FromByteArray(bytes, ref offset);
             else if (classHash == typeof(Konstrucktor).GetHashCode())
                 newFbu = Konstrucktor.FromByteArray(bytes, ref offset);
             else if (classHash == typeof(Miner).GetHashCode())
                 newFbu = Miner.FromByteArray(bytes, ref offset);
+            else if (classHash == typeof(Merger).GetHashCode())
+                newFbu = Merger.FromByteArray(bytes, ref offset);
+            else if (classHash == typeof(Splitter).GetHashCode())
+                newFbu = Splitter.FromByteArray(bytes, ref offset);
+            else if (classHash == typeof(Exporthaus).GetHashCode())
+                newFbu = Exporthaus.FromByteArray(bytes, ref offset);
+
+            else if (classHash == typeof(Fabrikator).GetHashCode())
+                newFbu = Fabrikator.FromByteArray(bytes, ref offset);
+            else if (classHash == typeof(Finishinator).GetHashCode())
+                newFbu = Finishinator.FromByteArray(bytes, ref offset);
+            else {
+                throw new Exception("Could not load fabrikgebäude!");
+            }
             newFbu.gebeudeID = gebId;
             newFbu.positionX = positionX;
             newFbu.positionY = positionY;

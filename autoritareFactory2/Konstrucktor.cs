@@ -12,7 +12,7 @@ namespace factordictatorship
     public class Konstrucktor : Fabrikgebeude
     {
         private ResourceType typBenotigteRecurse1;
-        private int benutzesRezept;
+        private int benutzesRezept = -1;
         public int BenutzesRezept { get { return benutzesRezept; } }
         public ResourceType TypBenotigteRecurse1 { get { return typBenotigteRecurse1; } }
         private List<Resource> benotigteRecurse1 = new List<Resource>();//Liste mit der ersten für die Produktion nötige Recurse 
@@ -33,12 +33,6 @@ namespace factordictatorship
         public int Produktionsdauer { get { return produktionsdauer; } }
         private int verbleibendeProduktionsdauer;//verbleibende dauer des Produktionsprozesses in millisekunden
         public int VerbleibendeProduktionsdauer { get { return verbleibendeProduktionsdauer; } }
-        internal Konstrucktor() : base()
-        {
-            benutzesRezept = -1;
-            längeInXRichtung = 2;
-            längeInYRichtung = 1;
-        }
         public Konstrucktor(int positionX, int positionY, int drehung) : base(positionX, positionY,drehung)
         {
             benutzesRezept = -1;
@@ -165,13 +159,19 @@ namespace factordictatorship
         {
             return "Konstruktor";
         }
+        internal Konstrucktor() : base()
+        {
+            benutzesRezept = -1;
+            längeInXRichtung = 2;
+            längeInYRichtung = 1;
+        }
         public override List<byte> GetAsBytes()
         {
             List<byte> bytes = base.GetAsBytes();
             bytes.AddRange(BitConverter.GetBytes((int)benutzesRezept));
             return bytes;
         }
-        public static Konstrucktor FromByteArray(byte[] bytes, ref int offset)
+        public static new Konstrucktor FromByteArray(byte[] bytes, ref int offset)
         {
             Konstrucktor newKonstrucktor = new Konstrucktor();
             int benutzesRezept = BitConverter.ToInt32(bytes, offset);

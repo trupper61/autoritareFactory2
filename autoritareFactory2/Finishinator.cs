@@ -159,6 +159,39 @@ namespace factordictatorship
                 }
             }
         }
+        internal Finishinator() : base()
+        {
+            längeInXRichtung = 8;
+            längeInYRichtung = 8;
+
+            typBenotigteRecurse1 = ResourceType.Screw;
+            nötigeMengenBenotigteRecurse1 = 1000;
+
+            typBenotigteRecurse2 = ResourceType.Cable;
+            nötigeMengenBenotigteRecurse2 = 300;
+
+            typBenotigteRecurse3 = ResourceType.CopperWire;
+            nötigeMengenBenotigteRecurse3 = 800;
+
+            typBenotigteRecurse4 = ResourceType.IronPlate;
+            nötigeMengenBenotigteRecurse4 = 200;
+
+            typBenotigteRecurse5 = ResourceType.Concrete;
+            nötigeMengenBenotigteRecurse5 = 500;
+        }
+        public override List<byte> GetAsBytes()
+        {
+            List<byte> bytes = base.GetAsBytes();
+            bytes.AddRange(BitConverter.GetBytes((int)levle));
+            return bytes;
+        }
+        public static new Finishinator FromByteArray(byte[] bytes, ref int offset)
+        {
+            Finishinator newFinishinator = new Finishinator();
+            newFinishinator.levle = BitConverter.ToInt32(bytes, offset);
+            offset += 4;
+            return newFinishinator;
+        }
         public override string ToString()
         {
             return "Finishinator";
