@@ -73,15 +73,18 @@ namespace factordictatorship
         public Point beltEnd;
         public Panel konInterface;
         public Panel banInterface;
+        public Panel ExporthausInterface;
         public Panel inventoryPanel;
         public Miner aktuellerMiner = null;
         public Konstrucktor aktuellerKon = null;
         public Label resourceCountLabel = null;
         public Label resourceCountLabelKon = null;
+        public Fabrikator aktuellerFab = null;
         public Point dragPanelPoint;
         public Panel dragPanel;
         public Panel portPanel;
-        public Label inCount;
+        public Label inCount1;
+        public Label inCount2;
         public Label outCount;
 
         public world()
@@ -259,7 +262,14 @@ namespace factordictatorship
                     {
                         ShowMinerInterface(f as Miner);
                     }
-
+                    if(f is Exporthaus) 
+                    {
+                        ShowExportInterface(f as Exporthaus);
+                    }
+                    if(f is Fabrikator)
+                    {
+                        ShowFabrikatorInterface(f as Fabrikator);
+                    }
                 }
             }
         }
@@ -286,8 +296,18 @@ namespace factordictatorship
             }
             if (portPanel != null && portPanel.Visible)
             {
-                inCount.Text = $"Anzahl: {aktuellerKon.BenotigteRecurse1.Count()}";
-                outCount.Text = $"Anzahl: {aktuellerKon.ErgebnissRecurse1.Count()}";
+                if (aktuellerKon != null)
+                {
+                    inCount1.Text = $"Anzahl: {aktuellerKon.BenotigteRecurse1.Count()}";
+                    outCount.Text = $"Anzahl: {aktuellerKon.ErgebnissRecurse1.Count()}";
+                }
+                else if (aktuellerFab != null)
+                {
+                    inCount1.Text = $"Anzahl: {aktuellerFab.BenotigteRecurse1.Count()}";
+                    inCount2.Text = $"Anzahl: {aktuellerFab.BenotigteRecurse2.Count()}";
+                    outCount.Text = $"Anzahl: {aktuellerFab.ErgebnissRecurse1.Count()}";
+                }
+
             }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
@@ -707,6 +727,7 @@ namespace factordictatorship
             konInterface.Visible = true;
             konInterface.Controls.Clear();
             aktuellerKon = kon;
+            ToolTip ttf = new ToolTip();
 
             int margin = 10;
             int y = margin;
@@ -763,7 +784,7 @@ namespace factordictatorship
             {
                 Button rezeptBtn = new Button
                 {
-                    Text = rezept.RezeptName + $" ({rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenErgebnissRecursen[0]} {rezept.ErgebnissRecursen[0]})",
+                    Text = rezept.RezeptName,
                     Size = new Size(220, 30),
                     Location = new Point(10, rezeptY),
                     BackColor = (aktuellerKon.BenutzesRezept == rezept.rezeptIndex) ? Color.LightGreen : SystemColors.Control
@@ -775,6 +796,7 @@ namespace factordictatorship
                     if (portPanel != null && portPanel.Visible)
                         ShowKonstruktorPorts();
                 };
+                ttf.SetToolTip(rezeptBtn, $"{rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]} → {rezept.MengenBenotigteRecurse[0]} {rezept.ErgebnissRecursen[0]}");
                 rezeptPanel.Controls.Add(rezeptBtn);
                 rezeptY += 35;
 
@@ -891,34 +913,39 @@ namespace factordictatorship
 
             foreach (Resource resc in rescourcen)
             {
-                Label resBand = new Label();
+                if(ban.RetWantedRescource(resc.Type, ban) != "0")
+                {
+                    Label resBand = new Label();
+
+                    switch (resc.Type)
+                    {
+                        case ResourceType.IronOre:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
+                            break;
+                        case ResourceType.IronPlate:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
+                            break;
+                        case ResourceType.IronStick:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
+                            break;
+                        case ResourceType.IronIngot:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
+                            break;
+                        default:
+                            resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
+                            break;
+                    }
+                    resBand.Location = new Point(10, y);
+                    resBand.AutoSize = true;
+
+                    banInterface.Controls.Add(resBand);
+                    y += 40;
+                }
                 //if(resc.Type == ResourceType.IronOre) 
                 //{
                 //    resBand.Text = resc.Type.ToString() + $" {ban.anzahlEisen}";
                 //}
-                switch (resc.Type)
-                {
-                    case ResourceType.IronOre:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronOre, ban)}";
-                        break;
-                    case ResourceType.IronPlate:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronPlate, ban)}";
-                        break;
-                    case ResourceType.IronStick:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronStick, ban)}";
-                        break;
-                    case ResourceType.IronIngot:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(ResourceType.IronIngot, ban)}";
-                        break;
-                    default:
-                        resBand.Text = resc.Type.ToString() + $" {ban.RetWantedRescource(resc.Type, ban)}";
-                        break;
-                }
-                resBand.Location = new Point(10, y);
-                resBand.AutoSize = true;
-
-                banInterface.Controls.Add(resBand);
-                y += 40;
+                
             }
 
             banInterface.Controls.Add(name);
@@ -935,6 +962,42 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
+        }
+
+        public void ShowExportInterface(Exporthaus exp) 
+        {
+            ExporthausInterface.Visible = true;
+            ExporthausInterface.Controls.Clear();
+
+            Label name = new Label();
+            name.Text = exp.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+
+            int y = 50;
+            int maxRight = name.Right;
+
+            foreach (Resource resc in rescourcen)
+            {
+                
+            }
+
+            ExporthausInterface.Controls.Add(name);
+            ExporthausInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            ExporthausInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => banInterface.Visible = false;
+            banInterface.Controls.Add(closeBtn);
+
+            ShowExportHausRes(exp, ExporthausInterface);
         }
         public void DisplayData()
         {
@@ -1144,13 +1207,13 @@ namespace factordictatorship
                     ShowInventory();
             };
             portPanel.Controls.Add(inPb);
-            inCount = new Label
+            inCount1 = new Label
             {
                 AutoSize = true,
                 Location = new Point(inPb.Left, inPb.Bottom + 5),
                 Text = $"Anzahl: {aktuellerKon.BenotigteRecurse1.Count()}"
             };
-            portPanel.Controls.Add(inCount);
+            portPanel.Controls.Add(inCount1);
             Label outTxt = new Label
             {
                 AutoSize = true,
@@ -1197,6 +1260,311 @@ namespace factordictatorship
             portPanel.Controls.Add(closeBtn);
             ToolTip tt = new ToolTip();
             tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes}"); // Shows small PopUp-Window, for UserHelp
+            tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
+            portPanel.BringToFront();
+        }
+
+        private void ShowExportHausRes(Exporthaus exporthaus, Panel panel) 
+        {
+            int slotsPerRow = 3;
+            int usedSlots = exporthaus.inventories.Count;
+            int slotsize = 45;
+            int padding = 8;
+            int x = 10;
+            int y = 40;
+            int column = 0;
+
+            foreach (var inv in exporthaus.inventories)
+            {
+                PictureBox resourceBox = new PictureBox
+                {
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(0, 0),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = inv.Items.Count() > 0 ? Color.LightGreen : Color.LightBlue
+                };
+                resourceBox.Image = ReturnResourceImage(inv.Type);
+                resourceBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                Label countLabel = new Label
+                {
+                    Text = inv.Items.Count.ToString(),
+                    AutoSize = false,
+                    Size = new Size(slotsize, 20),
+                    TextAlign = ContentAlignment.TopCenter,
+                    Location = new Point(0, slotsize)
+                };
+                panel.Controls.Add(resourceBox);
+                panel.Controls.Add(countLabel);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+
+            }
+            int remainingSlots = exporthaus.slotsAvail - usedSlots;
+            for (int i = 0; i < remainingSlots; i++)
+            {
+                PictureBox pb = new PictureBox
+                {
+                    Size = new Size(slotsize, slotsize),
+                    Location = new Point(x, y),
+                    BorderStyle = BorderStyle.FixedSingle,
+                    BackColor = Color.LightBlue
+                };
+                panel.Controls.Add(pb);
+
+                column++;
+                if (column >= slotsPerRow)
+                {
+                    column = 0;
+                    x = 10;
+                    y += slotsize + 30;
+                }
+                else
+                {
+                    x += slotsize + padding;
+                }
+            }
+        }
+        public void ShowFabrikatorInterface(Fabrikator fab)
+        {
+            konInterface.Visible = true;
+            konInterface.Controls.Clear();
+            aktuellerFab = fab;
+            ToolTip ttf = new ToolTip();
+
+            int margin = 10;
+            int y = margin;
+
+            Label name = new Label
+            {
+                Text = "Fabrikator",
+                Font = new Font("Arial", 12, FontStyle.Bold),
+                Location = new Point(margin, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(name);
+            y += 30;
+
+            if (fab.BenutzesRezept != -1)
+            {
+                Button portBtn = new Button
+                {
+                    Text = $"Siehe Ports",
+                    Location = new Point(margin, y),
+                    Size = new Size(100, 25)
+                };
+                portBtn.Click += (s, e) => ShowFabrikatorPorts();
+                konInterface.Controls.Add(portBtn);
+
+                int perMinute = (fab.MengenErgebnissRecursen1 * 60000) / fab.Produktionsdauer;
+                y += 35;
+
+                Label productionInfo = new Label
+                {
+                    Text = $"Produziert: {perMinute}x {fab.TypErgebnissRecurse1} pro Minute",
+                    Location = new Point(margin, y),
+                    AutoSize = false,
+                    Size = new Size(270 - 2 * margin, 30),
+                    Font = new Font("Arial", 8, FontStyle.Italic)
+                };
+                konInterface.Controls.Add(productionInfo);
+            }
+
+            y += 40;
+            Label rezepteLbl = new Label
+            {
+                Text = "Rezepte:",
+                Location = new Point(margin, y),
+                AutoSize = true
+            };
+            konInterface.Controls.Add(rezepteLbl);
+            y += 25;
+
+            Panel rezeptPanel = new Panel
+            {
+                Location = new Point(margin, y),
+                Size = new Size(250, 200),
+                AutoScroll = true,
+                BorderStyle = BorderStyle.FixedSingle
+            };
+
+            int rezeptY = 10;
+            foreach (Rezepte rezept in rezepte.Where(r => r.GebeudeTyp == zugehörigesGebeude.Fabrikator))
+            {
+                Button rezeptBtn = new Button
+                {
+                    Text = $"{rezept.RezeptName}",
+                    Size = new Size(220, 30),
+                    Location = new Point(10, rezeptY),
+                    BackColor = (fab.BenutzesRezept == rezept.rezeptIndex) ? Color.LightGreen : SystemColors.Control,
+                };
+                rezeptBtn.Click += (s, e) =>
+                {
+                    fab.SpeichereRezept(rezept);
+                    ShowFabrikatorInterface(fab);
+                    if (portPanel != null && portPanel.Visible)
+                        ShowFabrikatorPorts();
+                };
+                ttf.SetToolTip(rezeptBtn, $"{rezept.MengenBenotigteRecurse[0]} {rezept.BenotigteRecursen[0]}, {rezept.MengenBenotigteRecurse[1]} {rezept.BenotigteRecursen[1]} → {rezept.MengenBenotigteRecurse[0]} {rezept.ErgebnissRecursen[0]}");
+                rezeptPanel.Controls.Add(rezeptBtn);
+                rezeptY += 35;
+            }
+
+            konInterface.Controls.Add(rezeptPanel);
+
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(konInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) =>
+            {
+                konInterface.Visible = false;
+                aktuellerFab = null;
+                if (portPanel != null)
+                    portPanel.Visible = false;
+            };
+            konInterface.Controls.Add(closeBtn);
+            closeBtn.BringToFront();
+
+            int totalHeight = rezeptPanel.Bottom + 20;
+            konInterface.Size = new Size(270, totalHeight);
+            konInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
+        }
+        private void ShowFabrikatorPorts()
+        {
+            portPanel.Controls.Clear();
+            portPanel.Visible = true;
+            ResourceType inRes1 = aktuellerFab.TypBenotigteRecurse1;
+            ResourceType inRes2 = aktuellerFab.TypBenotigteRecurse2;
+            ResourceType outRes = aktuellerFab.TypErgebnissRecurse1;
+            Label inTxt1 = new Label
+            {
+                AutoSize = true,
+                Text = "Incomming Port:",
+                Font = new Font("Arial", 8, FontStyle.Bold),
+                Location = new Point(portPanel.Width / 5 - 30, 40)
+            };
+            portPanel.Controls.Add(inTxt1);
+            PictureBox inPb = new PictureBox
+            {
+                Size = new Size(45, 45),
+                Location = new Point(portPanel.Width / 5 - 22, 60),
+                BackColor = Color.LightGreen,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Image = ReturnResourceImage(inRes1)
+            };
+            inPb.Click += (s, e) =>
+            {
+                foreach (var res in aktuellerFab.BenotigteRecurse1.ToList())
+                {
+                    player.AddResource(res);
+                    aktuellerFab.BenotigteRecurse1.Remove(res);
+                }
+                if (inventoryPanel.Visible)
+                    ShowInventory();
+            };
+            portPanel.Controls.Add(inPb);
+            inCount1 = new Label
+            {
+                AutoSize = true,
+                Location = new Point(inPb.Left, inPb.Bottom + 5),
+                Text = $"Anzahl: {aktuellerFab.BenotigteRecurse1.Count()}"
+            };
+            portPanel.Controls.Add(inCount1);
+            Label inTxt2 = new Label
+            {
+                AutoSize = true,
+                Text = "Incomming Port 2:",
+                Font = new Font("Arial", 8, FontStyle.Bold),
+                Location = new Point(2*portPanel.Width / 5 - 30, 40)
+            };
+            portPanel.Controls.Add(inTxt2);
+            PictureBox inPb2 = new PictureBox
+            {
+                Size = new Size(45, 45),
+                Location = new Point(2*portPanel.Width / 5 - 22, 60),
+                BackColor = Color.LightGreen,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Image = ReturnResourceImage(inRes2)
+            };
+            inPb2.Click += (s, e) =>
+            {
+                foreach (var res in aktuellerFab.BenotigteRecurse2.ToList())
+                {
+                    player.AddResource(res);
+                    aktuellerFab.BenotigteRecurse2.Remove(res);
+                }
+                if (inventoryPanel.Visible)
+                    ShowInventory();
+            };
+            portPanel.Controls.Add(inPb2);
+            inCount2 = new Label
+            {
+                AutoSize = true,
+                Location = new Point(inPb2.Left, inPb2.Bottom + 5),
+                Text = $"Anzahl: {aktuellerFab.BenotigteRecurse2.Count()}"
+            };
+            portPanel.Controls.Add(inCount2);
+            Label outTxt = new Label
+            {
+                AutoSize = true,
+                Text = "Outgoing Port:",
+                Font = new Font("Arial", 8, FontStyle.Bold),
+                Location = new Point(3*portPanel.Width/5 - 30, 40)
+            };
+            portPanel.Controls.Add(outTxt);
+            PictureBox outPb = new PictureBox
+            {
+                Size = new Size(45, 45),
+                Location = new Point(3*portPanel.Width/5 - 22, 60),
+                BackColor = Color.LightSteelBlue,
+                SizeMode = PictureBoxSizeMode.StretchImage,
+                Image = ReturnResourceImage(outRes)
+            };
+            outPb.Click += (s, e) =>
+            {
+                foreach (var res in aktuellerFab.ErgebnissRecurse1.ToList())
+                {
+                    player.AddResource(res);
+                    aktuellerFab.ErgebnissRecurse1.Remove(res);
+                }
+                if (inventoryPanel.Visible)
+                    ShowInventory();
+            };
+            portPanel.Controls.Add(outPb);
+            outCount = new Label
+            {
+                AutoSize = true,
+                Location = new Point(outPb.Left, outPb.Bottom + 5),
+                Text = $"Anzahl: {aktuellerFab.ErgebnissRecurse1.Count()}"
+            };
+            portPanel.Controls.Add(outCount);
+            Button closeBtn = new Button
+            {
+                Size = new Size(30, 30),
+                Location = new Point(portPanel.Width - 35, 5),
+                Text = "X",
+                ForeColor = Color.White,
+                BackColor = Color.Red
+            };
+            closeBtn.Click += (s, e) => portPanel.Visible = false;
+            portPanel.Controls.Add(closeBtn);
+            ToolTip tt = new ToolTip();
+            tt.SetToolTip(inPb, $"Klick zum Entnehmen von {inRes1}"); // Shows small PopUp-Window, for UserHelp
+            tt.SetToolTip(inPb2, $"Klick zum Entnehmen von {inRes2}");
             tt.SetToolTip(outPb, $"Klick zum Entnehmen von {outRes}");
             portPanel.BringToFront();
         }

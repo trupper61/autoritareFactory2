@@ -57,6 +57,8 @@ namespace factordictatorship
             mengenBenotigteRecurse.Add(anzahlbenotigteRecursen2);
             ergebnissRecursen.Add(ergebnissRecurse1);
             mengenErgebnissRecursen.Add(anzahlergebnissRecursen);
+
+            rezeptIndex = rezeptIndexer++;
         }
     }
 }

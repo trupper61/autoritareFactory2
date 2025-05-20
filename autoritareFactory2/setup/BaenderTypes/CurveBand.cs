@@ -27,6 +27,16 @@ namespace factordictatorship.setup.BaenderTypes
             UpdateRescourceList();
         }
 
+        public override void ErkenneRescourcen()
+        {
+            base.ErkenneRescourcen();
+        }
+
+        public override void RescourceKommtAufBand(Resource r)
+        {
+            base.RescourceKommtAufBand(r);
+        }
+
         public override void InNaechsteBand(Band band, WorldMap world)
         {
             base.InNaechsteBand(band, world);
