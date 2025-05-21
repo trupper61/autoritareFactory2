@@ -1,8 +1,11 @@
 ﻿using autoritaereFactory;
 using autoritaereFactory.world;
+using factordictatorship.Resources;
+
 //using factordictatorship.rotation;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,6 +19,8 @@ namespace factordictatorship.setup.BaenderTypes
         public int RichtungAusgang; //1 -> Ausgang Rechts //2 -> Ausgang Unten //3 -> Ausgang Links //4 -> Ausgang Oben
         public int RichtungEingang; // Darf nicht selbe und nicht verkehrt herum wie Ausgang sein! Sollte ebenfalls die Richtung sein!.
         public bool Modus; // Richtungsmodus
+        public Image Textur { get; set; }
+        public Image neueTextur = ResourceHandler.LoadImage("building\\beltCornerLeft.png");
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
         public CurveBand(int richtung, int itemAnzahlMoment, int positionX, int positionY, int richtungAusgang, WorldMap world, bool modus)
             : base(richtung, itemAnzahlMoment, positionX, positionY, world)
@@ -23,6 +28,7 @@ namespace factordictatorship.setup.BaenderTypes
             RichtungAusgang = richtungAusgang;
             RichtungEingang = richtung;
             Modus = modus;
+            Textur = ResourceHandler.buildingSet[typeof(CurveBand).GetHashCode()];
         }
         public override void Iteration()
         {
@@ -86,6 +92,7 @@ namespace factordictatorship.setup.BaenderTypes
             }
             else 
             {
+                this.Textur = neueTextur;
                 moduswurdeBedient = true;
                 switch (band.RichtungAusgang)
                 {

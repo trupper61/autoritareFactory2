@@ -19,6 +19,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -308,21 +309,6 @@ namespace factordictatorship
                     else if (f is Band)
                     {
                         ShowBandInterface(f as Band);
-                        if (f is CurveBand)
-                        {
-                            CurveBand curve = (CurveBand)f;
-
-                            if (curve.Modus == true)
-                            {
-                                curve.Modus = false;
-                                return;
-                            }
-                            if (curve.Modus == false)
-                            {
-                                curve.Modus = true;
-                                return;
-                            }
-                        }
                     }
                     else if (f is Miner)
                     {
@@ -1088,6 +1074,21 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
+
+            if(ban is CurveBand) 
+            {
+                CurveBand curveBand = (CurveBand)ban;
+                Button rotBtn = new Button
+                {
+                    Text = "Rotate",
+                    Size = new Size(60, 30),
+                    Location = new Point(konInterface.Width / 2, 5),
+                    BackColor = Color.Red,
+                    ForeColor = Color.White
+                };
+                banInterface.Controls.Add(rotBtn);
+                rotBtn.Click += (s, e) => CurveBandVerhalten(curveBand);
+            }
         }
 
         public void ShowExportInterface(Exporthaus exp) 
@@ -1784,6 +1785,20 @@ namespace factordictatorship
             };
             konInterface.Controls.Add(closeBtn);
             konInterface.Visible = true;
+        }
+
+        public void CurveBandVerhalten(CurveBand band) 
+        {
+            if (band.Modus == true)
+            {
+                band.Modus = false;
+                return;
+            }
+            if (band.Modus == false)
+            {
+                band.Modus = true;
+                return;
+            }
         }
     }
 }
