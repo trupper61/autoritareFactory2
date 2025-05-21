@@ -20,8 +20,8 @@ namespace factordictatorship
         public Exporthaus(int positionX, int positionY, int drehung, WorldMap wrld) 
             : base(positionX, positionY, drehung)
         {
-            längeInXRichtung = 1;
-            längeInYRichtung = 1;
+            längeInXRichtung = 2;
+            längeInYRichtung = 2;
             this.wrld = wrld;
             slotsAvail = 6;
         }
@@ -177,8 +177,8 @@ namespace factordictatorship
             }
         internal Exporthaus() : base()
         {
-            längeInXRichtung = 1;
-            längeInYRichtung = 1;
+            längeInXRichtung = 2;
+            längeInYRichtung = 2;
         }
         public override List<byte> GetAsBytes()
         {

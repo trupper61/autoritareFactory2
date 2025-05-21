@@ -26,6 +26,9 @@ namespace factordictatorship.Resources
             { GroundResource.IronOre, LoadImage("ground\\iron.png") },
             { GroundResource.CopperOre, LoadImage("ground\\CopperOre.png") },
             { GroundResource.LimeStone, LoadImage("ground\\LimeStone.png") },
+            { GroundResource.LimeStone2, LoadImage("ground\\LimeStone(2).png") },
+            { GroundResource.LimeStone3, LoadImage("ground\\LimeStone(3).png") },
+            { GroundResource.LimeStone4, LoadImage("ground\\LimeStone(4).png") },
         };
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("building\\belt.png") },
@@ -56,8 +59,8 @@ namespace factordictatorship.Resources
             {ResourceType.SteelIngot,LoadImage("item\\StealIngotAsItem.png") },
             {ResourceType.SteelRod,LoadImage("item\\StealRodAsItem.png") },
         };
-        public const int imageSize = 32;
-        private static Image LoadImage(string path)
+        public const int imageSize = 44;
+        public static Image LoadImage(string path)
         {
             path = "Resources\\" + path;
             for (int i = 0; i < 3; i++)

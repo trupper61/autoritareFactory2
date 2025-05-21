@@ -161,7 +161,11 @@ namespace factordictatorship
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
                 case GroundResource.ColeOre: return autoritaereFactory.ResourceType.ColeOre;
                 case GroundResource.CopperOre: return autoritaereFactory.ResourceType.CopperOre;
-                case GroundResource.LimeStone: return autoritaereFactory.ResourceType.limestone;
+                case GroundResource.LimeStone4:
+                case GroundResource.LimeStone3:
+                case GroundResource.LimeStone2:
+                case GroundResource.LimeStone:
+                    return autoritaereFactory.ResourceType.limestone;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -596,8 +600,13 @@ namespace factordictatorship
         {
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
+            toolStrip.MinimumSize= new Size(2000, 50);
+
             ToolStripButton menuBtn = new ToolStripButton("Menu");
+            menuBtn.Image = ResourceHandler.LoadImage("menu\\MenuIcon.png");
+            toolStrip.ImageScalingSize = new Size ( 40, 40 );
             menuBtn.Click += (s, e) => ToogleMenuPanel();
+            menuBtn.AutoSize = true;
             toolStrip.Items.Add(menuBtn);
 
             ToolStripButton buildBtn = new ToolStripButton("Build");

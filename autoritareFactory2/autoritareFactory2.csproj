@@ -122,6 +122,8 @@
     <None Include="Resources\building\miner.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\item\BuildModeIcon.png" />
+    <Content Include="Resources\menu\MenuIcon.png" />
     <None Include="Resources\CopperWire.png" />
     <Content Include="Resources\building\beltCorner.png" />
     <Content Include="Resources\building\fabricator.png" />
@@ -137,6 +139,9 @@
     <Content Include="Resources\ground\Grassland3.png" />
     <Content Include="Resources\ground\IndustrialWasteland2.png" />
     <Content Include="Resources\ground\IndustrialWasteland.png" />
+    <Content Include="Resources\ground\LimeStone%283%29.png" />
+    <Content Include="Resources\ground\LimeStone%284%29.png" />
+    <Content Include="Resources\ground\LimeStone%282%29.png" />
     <Content Include="Resources\ground\LimeStone.png" />
     <None Include="Resources\money.png" />
   </ItemGroup>
