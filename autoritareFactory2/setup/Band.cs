@@ -47,7 +47,6 @@ namespace factordictatorship.setup
         {
             InNaechsteBand(this, wrld);
             ItemAnzahlMoment = currentRescourceList.Count();
-            UpdateRescourceList();
         }
         public virtual void ErkenneRescourcen()
         {
@@ -76,11 +75,7 @@ namespace factordictatorship.setup
             currentRescourceList.Add(r);
             ItemAnzahlMoment++;
         }
-        public void UpdateRescourceList()
-        {
-            //currentRescourceList = resource;
-        }
-        public Resource NimmRescourceVomBand(int stelleInResourcedieGenommenWerdenSoll)//von Markus ich brauche den zukrifsrecht um auch (List<Resource> resource) zu ändern
+        public Resource NimmRescourceVomBand(int stelleInResourcedieGenommenWerdenSoll)
         {
             Resource r = currentRescourceList[stelleInResourcedieGenommenWerdenSoll];
             currentRescourceList.RemoveAt(stelleInResourcedieGenommenWerdenSoll);
@@ -89,8 +84,6 @@ namespace factordictatorship.setup
         public virtual void InNaechsteBand(Band band, WorldMap world)
         {
             Band BandNxt;
-            //Schaue alle benachbarten tiles an. Schaue wo ein Band ist. Wenn Band ist nehme die Richtung dieses Bandes. Wenn Bandrichtung gleich ist wie momentaner Band,
-            //Transfer rescourcen.
             int wertRotX = 0;
             int wertRotY = 0;
 
@@ -121,12 +114,6 @@ namespace factordictatorship.setup
                     {
                         BandNxt = (Band)v;
                         determineTransfer(band, BandNxt);
-                        //Damit man die Richtung des Bandes nehmen kann, muss man zunächst das Gebäude von der Liste holen.
-                        foreach (Band gb in WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY))
-                        {
-                            //BandNxt = gb;
-                            //if (BandNxt.Richtung != band.Richtung) continue; // Wenn Band Richtung nicht gleich ist mit benachbarte Bandrichtung, dann nächste loop
-                        }
                     }
                 }
             }
@@ -141,7 +128,6 @@ namespace factordictatorship.setup
                     BandNxt.ErkenneRescourcen();
                     
                     band.removedRescources.Add(resources);
-                    //band.ItemAnzahlMoment--;
                 }
             }
             foreach(Resource resources in band.removedRescources) 

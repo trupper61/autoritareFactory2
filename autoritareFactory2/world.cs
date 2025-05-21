@@ -230,7 +230,7 @@ namespace factordictatorship
             }
             else if (aktuellerModus == "Belt Corner")
             {
-                CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld, false); // What rotation status?
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
                 if (lffb.Count == 0)
                 {
@@ -308,11 +308,21 @@ namespace factordictatorship
                     else if (f is Band)
                     {
                         ShowBandInterface(f as Band);
-                    }
-                    else if(f is CurveBand)
-                    {
-                        CurveBand curve = (CurveBand) f;
-                        curve.Modus = false;
+                        if (f is CurveBand)
+                        {
+                            CurveBand curve = (CurveBand)f;
+
+                            if (curve.Modus == true)
+                            {
+                                curve.Modus = false;
+                                return;
+                            }
+                            if (curve.Modus == false)
+                            {
+                                curve.Modus = true;
+                                return;
+                            }
+                        }
                     }
                     else if (f is Miner)
                     {
@@ -454,7 +464,7 @@ namespace factordictatorship
                 }
                 else if (aktuellerModus == "Belt Corner")
                 {
-                    CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                    CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld, false); // What rotation status?
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
                     if (lffb.Count == 0)
                     {
