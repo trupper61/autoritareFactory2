@@ -148,19 +148,19 @@ namespace factordictatorship
                     Band band = (Band)entitys[0];
                     if (band != null && band.GibRichtungAusgang() == drehung)
                     {
-                        while (nehmendeRecursenListe.Count < maxRecursen && band.currentRescourceList.Count > 0)
+                        if (nehmendeRecursenListe.Count < maxRecursen && band.currentRescourceList.Count > 0)
                         {
-                            for (int i = 0; i < band.resource.Count; i++)
+                            for (int i = 0; i < band.currentRescourceList.Count; i++)
                             {
-                                if (band.resource[i].Type == gewolteRecurse)
+                                if (band.currentRescourceList[i].Type == gewolteRecurse)
                                 {
                                     nehmendeRecursenListe.Add(band.NimmRescourceVomBand(i));
                                     break;
                                 }
-                                if (i == band.resource.Count - 1)
-                                {
-                                    return;
-                                }
+                                //if (i == band.resource.Count - 1)
+                                //{
+                                //    return;
+                                //}
                             }
                         }
                     }

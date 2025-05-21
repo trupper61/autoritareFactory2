@@ -371,7 +371,9 @@ namespace factordictatorship
             float deltaMs = (testTime - lastTimeTick) / 1000f;
             lastTimeTick = testTime;
             // draw the world!
+            mapWorld.mut.WaitOne();
             wlrdDrawer.Update(e, deltaMs);
+            mapWorld.mut.ReleaseMutex();
             // preview
             if (Focused)
             {

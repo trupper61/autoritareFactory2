@@ -129,14 +129,14 @@ namespace factordictatorship
         {
             if (aktuelleAnzahlAbgegebeneResource < nötigeMengenBenotigteRecurse)
             {
-                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos(verschiebungXAchse, verschiebungYAchse);
+                List<Fabrikgebeude> entitys = WorldMap.theWorld.GetEntityInPos( PositionX + verschiebungXAchse, PositionY + verschiebungYAchse);
                 if (entitys.Count == 1)
                 {
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null && band.GibRichtungAusgang() == drehung)
-                    {
+                    //if (band != null && band.GibRichtungAusgang() == drehung)
+                    //{
                         while (aktuelleAnzahlAbgegebeneResource < nötigeMengenBenotigteRecurse && band.currentRescourceList.Count > 0)
                         {
                             for (int i = 0; i < band.currentRescourceList.Count; i++)
@@ -153,7 +153,7 @@ namespace factordictatorship
                                 }
                             }
                         }
-                    }
+                    //}
                 }
             }
         }

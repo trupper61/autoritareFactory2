@@ -21,15 +21,15 @@ namespace factordictatorship
         }
         public override void Iteration()
         {
-            for (int i = 0; i < 4; i++)
-            {
+            //for (int i = 0; i < 4; i++)
+            //{
                 nimmVomBand(listResource, 0, 1, maxAnzalRecurse1);//Eingang: unten, links, und oben. Ausgang: Rechts
                 nimmVomBand(listResource, -1, 0, maxAnzalRecurse1);
                 nimmVomBand(listResource, 0, -1, maxAnzalRecurse1);
                 legAufBand(listResource, 1, 0);
                 legAufBand(listResource, 1, 0);
                 legAufBand(listResource, 1, 0);
-            }
+            //}
         }
         private void legAufBand(List<Resource> gebendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {

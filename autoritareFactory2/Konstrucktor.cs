@@ -130,7 +130,7 @@ namespace factordictatorship
                             {
                                 if (band.currentRescourceList[i].Type == gewolteRecurse)
                                 {
-                                    nehmendeRecursenListe.Add(band.NimmRescourceVomBand(i));
+                                    nehmendeRecursenListe.Add(band.NimmRescourceVomBand(i)); 
                                     break;
                                 }
                                 if (i == band.currentRescourceList.Count - 1)

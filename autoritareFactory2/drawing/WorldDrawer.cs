@@ -131,8 +131,9 @@ namespace factordictatorship.drawing
             }
             foreach(WorldPartImage wpi in chunkPictures)
             {
-                foreach(Fabrikgebeude fbu in wpi.chRef.buildings)
+                for(int fbuInd = 0; fbuInd < wpi.chRef.buildings.Count;fbuInd++)
                 {
+                    Fabrikgebeude fbu = wpi.chRef.buildings[fbuInd];
                     Image drawImg = ResourceHandler.buildingSet[fbu.GetType().GetHashCode() + fbu.Drehung - 1];
                     //Rectangle pos = new Rectangle(TranslateWorld2Screen(new Point(fbu.PositionX, fbu.PositionY)), drawImg.Size);
                     Rectangle pos = new Rectangle(

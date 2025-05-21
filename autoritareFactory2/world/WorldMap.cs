@@ -17,6 +17,7 @@ namespace autoritaereFactory.world
 {
     public class WorldMap : IDisposable
     {
+        public Mutex mut;
         public long tickTimer = 0;
         Thread iteratorThread;
         bool shouldStopThread = false;
@@ -27,12 +28,14 @@ namespace autoritaereFactory.world
         public int chunkXcount, chunkYcount;
         private WorldMap()
         {
+            mut = new Mutex();
             theWorld = this;
             chunkList = new List<Chunk>();
             iteratorThread = new Thread(IterateAll) { Name = "World-Worker-Thread" };
         }
         public WorldMap(int sizeX, int sizeY)
         {
+            mut = new Mutex();
             worldName = DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
             theWorld = this;
             chunkXcount = sizeX;
@@ -81,8 +84,9 @@ namespace autoritaereFactory.world
                 if (ch.x < chunkX || ch.y < chunkY) continue;
                 if (ch.x > chunkXe || ch.y > chunkYe) continue;
 
-                foreach (Fabrikgebeude building in ch.buildings)
+                for (int bInd = 0; bInd < ch.buildings.Count;bInd++)
                 {
+                    Fabrikgebeude building = ch.buildings[bInd];
                     if (building.PositionX > endX) continue;
                     if (building.PositionY > endY) continue;
                     if (building.PositionX + building.SizeX <= startX) continue;
@@ -192,19 +196,23 @@ namespace autoritaereFactory.world
         {
             lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             const int timerDelay = 100; // in ms
+            mut.WaitOne();
             while (!shouldStopThread)
             {
                 tickTimer++;
                 for (int chIndex = 0; chIndex < chunkList.Count;chIndex++)
                 {
                     Chunk ch = chunkList[chIndex];
-                    foreach (Fabrikgebeude bd in ch.buildings)
+                    for(int bInd = 0;bInd < ch.buildings.Count;bInd++)
                     {
+                        Fabrikgebeude bd = ch.buildings[bInd];
                         bd.Iteration();
                     }
                 }
                 lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+                mut.ReleaseMutex();
                 Thread.Sleep(timerDelay - (int)(lastTimeTick % timerDelay));
+                mut.WaitOne();
             }
         }
         public List<Chunk> GetChuckBox(int posX, int posY, int sizeX, int sizeY)
