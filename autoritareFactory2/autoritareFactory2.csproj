@@ -122,6 +122,8 @@
     <None Include="Resources\building\miner.png" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\ground\Desert.png" />
+    <Content Include="Resources\ground\Desert2.png" />
     <Content Include="Resources\item\BuildModeIcon.png" />
     <Content Include="Resources\menu\MenuIcon.png" />
     <None Include="Resources\CopperWire.png" />
