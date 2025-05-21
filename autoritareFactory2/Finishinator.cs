@@ -137,7 +137,6 @@ namespace factordictatorship
                     Band band = (Band)entitys[0];
                     if (band != null && band.GibRichtungAusgang() == drehung)
                     {
-                        band.ErkenneRescourcen();
                         while (aktuelleAnzahlAbgegebeneResource < nötigeMengenBenotigteRecurse && band.currentRescourceList.Count > 0)
                         {
                             for (int i = 0; i < band.currentRescourceList.Count; i++)
@@ -153,7 +152,6 @@ namespace factordictatorship
                                     return;
                                 }
                             }
-                            band.ErkenneRescourcen();
                         }
                     }
                 }
