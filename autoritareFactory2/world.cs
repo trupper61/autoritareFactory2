@@ -309,6 +309,11 @@ namespace factordictatorship
                     {
                         ShowBandInterface(f as Band);
                     }
+                    else if(f is CurveBand)
+                    {
+                        CurveBand curve = (CurveBand) f;
+                        curve.Modus = false;
+                    }
                     else if (f is Miner)
                     {
                         ShowMinerInterface(f as Miner);

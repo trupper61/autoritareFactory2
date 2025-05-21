@@ -41,7 +41,6 @@ namespace factordictatorship.setup
             längeInXRichtung = 1;
             längeInYRichtung = 1;
             this.wrld = wrld;
-
             
         }
         public override void Iteration()

@@ -14,6 +14,7 @@ namespace factordictatorship.setup.BaenderTypes
     {
         public int RichtungAusgang; //1 -> Ausgang Rechts //2 -> Ausgang Unten //3 -> Ausgang Links //4 -> Ausgang Oben
         public int RichtungEingang; // Darf nicht selbe und nicht verkehrt herum wie Ausgang sein! Sollte ebenfalls die Richtung sein!.
+        public bool Modus; // Richtungsmodus
         private System.Windows.Forms.Timer cooldownTimer = new System.Windows.Forms.Timer();
         public CurveBand(int richtung, int itemAnzahlMoment, int positionX, int positionY, int richtungAusgang, WorldMap world)
             : base(richtung, itemAnzahlMoment, positionX, positionY, world)
@@ -46,21 +47,41 @@ namespace factordictatorship.setup.BaenderTypes
 
             int wertRotX = 0;
             int wertRotY = 0;
-
-            switch (band.RichtungAusgang)
+            if(!Modus) 
             {
-                case 1:
-                    wertRotX = 1;
-                    break;
-                case 2:
-                    wertRotY = 1;
-                    break;
-                case 3:
-                    wertRotX = -1;
-                    break;
-                case 4:
-                    wertRotY = -1;
-                    break;
+                switch (band.RichtungAusgang)
+                {
+                    case 1:
+                        wertRotX = 1;
+                        break;
+                    case 2:
+                        wertRotY = 1;
+                        break;
+                    case 3:
+                        wertRotX = -1;
+                        break;
+                    case 4:
+                        wertRotY = -1;
+                        break;
+                }
+            }
+            else 
+            {
+                switch (band.RichtungAusgang)
+                {
+                    case 1:
+                        wertRotX = -1;
+                        break;
+                    case 2:
+                        wertRotY = -1;
+                        break;
+                    case 3:
+                        wertRotX = 1;
+                        break;
+                    case 4:
+                        wertRotY = 1;
+                        break;
+                }
             }
 
             List<Fabrikgebeude> values = WorldMap.theWorld.GetEntityInPos(band.PositionX + wertRotX, band.PositionY + wertRotY);
@@ -128,12 +149,19 @@ namespace factordictatorship.setup.BaenderTypes
                     band.removedRescources.Add(resources);
                 }
             }
+            foreach (Resource resources in band.removedRescources)
+            {
+                band.currentRescourceList.Remove(resources);
+                ItemAnzahlMoment = currentRescourceList.Count();
+            }
+            band.removedRescources.Clear();
         }
         internal CurveBand() : base()
         {
             längeInXRichtung = 1;
             längeInYRichtung = 1;
             ItemAnzahlMoment = currentRescourceList.Count();
+            Modus = false;
         }
         public override List<byte> GetAsBytes()
         {
