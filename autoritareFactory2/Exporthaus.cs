@@ -142,6 +142,7 @@ namespace factordictatorship
                 {
                     band.removedRescources.Add(resources);
                     exp.rescourcenInLager.Add(resources);
+                    exp.AddResource(resources);
                 }
                 foreach (Resource resources in band.removedRescources)
                 {
@@ -203,6 +204,21 @@ namespace factordictatorship
                 offset += 4;
             }
             return newExporthaus;
+        }
+
+        public void AddResource(Resource resource)
+        {
+            Inventory inv = inventories.Where(i => i.Type == resource.Type && i.Items.Count < i.maxStack).FirstOrDefault();
+            if (inv != null)
+            {
+                inv.Add(resource);
+            }
+            else if (inventories.Count() < slotsAvail)
+            {
+                inv = new Inventory(resource.Type, Inventory.MAX_STACK); // 500 is max Stack
+                inv.Add(resource);
+                inventories.Add(inv);
+            }
         }
     }
 }
