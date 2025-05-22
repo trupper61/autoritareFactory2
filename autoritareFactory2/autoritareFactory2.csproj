@@ -139,6 +139,7 @@
     <Content Include="Resources\item\StealBeamWithConcrete.png" />
     <Content Include="Resources\menu\BuildModeIcon.png" />
     <Content Include="Resources\menu\Destroy.png" />
+    <Content Include="Resources\menu\GoldCoin.png" />
     <Content Include="Resources\menu\Inventory.png" />
     <Content Include="Resources\menu\MenuIcon.png" />
     <Content Include="Resources\menu\Rotate.png" />

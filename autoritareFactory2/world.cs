@@ -692,7 +692,9 @@ namespace factordictatorship
             {
                 AutoSize = true,
                 Dock = DockStyle.Right,
-                Text = $"Gold: {player.money}"
+                Text = $"Gold: {player.money}",
+                Image = ResourceHandler.LoadImage("menu\\GoldCoin.png")
+
             };
             toolStrip.Items.Add(moneyLb);
             Controls.Add(toolStrip);
