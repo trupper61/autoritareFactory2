@@ -162,7 +162,11 @@ namespace factordictatorship
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
                 case GroundResource.ColeOre: return autoritaereFactory.ResourceType.ColeOre;
                 case GroundResource.CopperOre: return autoritaereFactory.ResourceType.CopperOre;
-                case GroundResource.LimeStone: return autoritaereFactory.ResourceType.limestone;
+                case GroundResource.LimeStone4:
+                case GroundResource.LimeStone3:
+                case GroundResource.LimeStone2:
+                case GroundResource.LimeStone:
+                    return autoritaereFactory.ResourceType.limestone;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -597,11 +601,18 @@ namespace factordictatorship
         {
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
+            toolStrip.MinimumSize= new Size(2000, 50);
+
             ToolStripButton menuBtn = new ToolStripButton("Menu");
+            menuBtn.Image = ResourceHandler.LoadImage("menu\\MenuIcon.png");
+            toolStrip.ImageScalingSize = new Size ( 40, 40 );
             menuBtn.Click += (s, e) => ToogleMenuPanel();
+            menuBtn.AutoSize = true;
             toolStrip.Items.Add(menuBtn);
 
             ToolStripButton buildBtn = new ToolStripButton("Build");
+            buildBtn.AutoSize = true;
+            buildBtn.Image = ResourceHandler.LoadImage("menu\\BuildModeIcon.png");
             buildBtn.Click += (s, e) =>
             {
                 if (!buildPanel.Visible)
@@ -618,9 +629,13 @@ namespace factordictatorship
             toolStrip.Items.Add(buildBtn);
 
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
+            destroyBtn.Image = ResourceHandler.LoadImage("menu\\Destroy.png");
+            destroyBtn.AutoSize = true;
             destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus == null || !aktuellerModus.Equals("Destroy")) ? "Destroy" : "";
             toolStrip.Items.Add(destroyBtn);
             ToolStripButton rotateBtn = new ToolStripButton("Rotate");
+            rotateBtn.AutoSize = true;
+            rotateBtn.Image = ResourceHandler.LoadImage("menu\\Rotate.png");
             rotateBtn.Click += (s, e) =>
             {
                 rotateState %= 4;
@@ -629,6 +644,8 @@ namespace factordictatorship
             toolStrip.Items.Add(rotateBtn);
 
             ToolStripButton inventoryBtn = new ToolStripButton("Inventory");
+            inventoryBtn.AutoSize = true;
+            inventoryBtn.Image = ResourceHandler.LoadImage("menu\\Inventory.png");
             inventoryBtn.Click += (s, e) => ShowInventory();
             toolStrip.Items.Add(inventoryBtn);
             Controls.Add(toolStrip);

@@ -132,6 +132,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\home\homeImage.png" />
+    <Content Include="Resources\ground\Desert.png" />
+    <Content Include="Resources\ground\Desert2.png" />
+    <Content Include="Resources\item\BuildModeIcon.png" />
+    <Content Include="Resources\menu\BuildModeIcon.png" />
+    <Content Include="Resources\menu\Destroy.png" />
+    <Content Include="Resources\menu\Inventory.png" />
+    <Content Include="Resources\menu\MenuIcon.png" />
+    <Content Include="Resources\menu\Rotate.png" />
     <None Include="Resources\CopperWire.png" />
     <Content Include="Resources\building\beltCorner.png" />
     <Content Include="Resources\building\fabricator.png" />
@@ -147,6 +155,9 @@
     <Content Include="Resources\ground\Grassland3.png" />
     <Content Include="Resources\ground\IndustrialWasteland2.png" />
     <Content Include="Resources\ground\IndustrialWasteland.png" />
+    <Content Include="Resources\ground\LimeStone%283%29.png" />
+    <Content Include="Resources\ground\LimeStone%284%29.png" />
+    <Content Include="Resources\ground\LimeStone%282%29.png" />
     <Content Include="Resources\ground\LimeStone.png" />
     <None Include="Resources\money.png" />
   </ItemGroup>

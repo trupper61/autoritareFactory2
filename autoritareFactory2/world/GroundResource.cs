@@ -24,8 +24,12 @@ namespace autoritaereFactory.setup
         IronOre,
         ColeOre,
         CopperOre,
+       
         LimeStone,
-
+        LimeStone2,
+        LimeStone3,
+        LimeStone4,
+        LimeStoneUpperBound,
         // always on the end!
         UpperBound
     }
