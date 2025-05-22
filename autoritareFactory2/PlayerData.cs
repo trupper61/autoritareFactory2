@@ -25,7 +25,7 @@ namespace factordictatorship
         }
         public void AddResource(Resource resource)
         {
-            Inventory inv = inventories.Where(i => i.Type == resource.Type && i.Items.Count < i.maxStack).FirstOrDefault();
+            Inventory inv = inventories.Where(i =>  i.Type == resource.Type && i.Items.Count < i.maxStack).FirstOrDefault();
             if (inv != null)
             {
                 inv.Add(resource);
