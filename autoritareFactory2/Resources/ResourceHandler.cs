@@ -45,6 +45,7 @@ namespace factordictatorship.Resources
             {ResourceType.IronOre,LoadImage("item\\iron-ore.png") },
             {ResourceType.Concrete,LoadImage("item\\concrete.png") },
             {ResourceType.limestone,LoadImage("item\\limeasItem.png") },
+            {ResourceType.ColeOre,LoadImage("item\\CoalAsItem.png") },
             {ResourceType.Cable,LoadImage("item\\CopperCable.png") },
             {ResourceType.CopperWire,LoadImage("item\\CopperWire.png") },
             {ResourceType.CopperIngot,LoadImage("item\\CopperIngot.png") },

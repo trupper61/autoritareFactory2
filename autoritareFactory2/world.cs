@@ -97,6 +97,7 @@ namespace factordictatorship
         private List<Label> finishResLabels = new List<Label>();
         public ProgressBar pb;
         public Label percentLabel;
+        public ToolStripLabel moneyLb;
 
         public world()
         {
@@ -685,7 +686,13 @@ namespace factordictatorship
             ToolStripButton tutorialBtn = new ToolStripButton("Tutorial");
             tutorialBtn.Click += (s, e) => ToogleTutorialPanel();//TutorialPanel
             toolStrip.Items.Add(tutorialBtn);
-
+            moneyLb = new ToolStripLabel
+            {
+                AutoSize = true,
+                Dock = DockStyle.Right,
+                Text = $"Gold: {player.money}"
+            };
+            toolStrip.Items.Add(moneyLb);
             Controls.Add(toolStrip);
             buildPanel = new Panel
             {
@@ -1484,6 +1491,16 @@ namespace factordictatorship
                     BackColor = inv.Items.Count > 0 ? Color.LightGreen : Color.LightBlue,
                     SizeMode = PictureBoxSizeMode.StretchImage,
                     Image = ReturnResourceImage(inv.Type)
+                };
+                resourceBox.Click += (s, e) =>
+                {
+                    if (inv.Items.Count > 0)
+                    {
+                        Resource res = inv.Items.First();
+                        exporthaus.Verkaufen(res, player);
+                        moneyLb.Text = $"Gold: {player.money}";
+                        ShowExportInterface(exporthaus);
+                    }
                 };
 
                 Label countLabel = new Label
