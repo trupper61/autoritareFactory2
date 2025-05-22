@@ -60,6 +60,7 @@ namespace factordictatorship.Resources
             {ResourceType.SteelIngot,LoadImage("item\\StealIngotAsItem.png") },
             {ResourceType.SteelRod,LoadImage("item\\StealRodAsItem.png") },
             {ResourceType.SteelBeam,LoadImage("item\\StealBeam.png") },
+            {ResourceType.SteelConcreteBeam,LoadImage("item\\StealBeamWithConcrete.png") },
         };
         public const int imageSize = 44;
         public static Image LoadImage(string path)
