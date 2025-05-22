@@ -68,16 +68,16 @@ namespace factordictatorship
                 switch(i) 
                 {
                     case 1:
-                        wertRotX = 1;
+                        wertRotX = 2;
                         break;
                     case 2:
-                        wertRotY = 1;
+                        wertRotY = 2;
                         break;
                     case 3:
                         wertRotX = -1;
                         break;
                     case 4:
-                        wertRotY -= 1;
+                        wertRotY = -1;
                         break;
 
                 }
@@ -95,7 +95,7 @@ namespace factordictatorship
                                     nimmVomBand(wrld, wertRotX, values, this);
                                 }
                                 break;
-                            case 1:
+                            case 2:
                                 if (v.drehung == 3)
                                 {
                                     nimmVomBand(wrld, wertRotX, values, this);
@@ -105,13 +105,13 @@ namespace factordictatorship
                         switch(wertRotY) 
                         {
                             case -1:
-                                if (v.drehung == 4)
+                                if (v.drehung == 2)
                                 {
                                     nimmVomBand(wrld, wertRotY, values, this);
                                 }
                                 break;
-                            case 1:
-                                if (v.drehung == 2)
+                            case 2:
+                                if (v.drehung == 4)
                                 {
                                     nimmVomBand(wrld, wertRotY, values, this);
                                 }
