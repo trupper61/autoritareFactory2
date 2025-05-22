@@ -66,7 +66,10 @@ namespace factordictatorship
             offset += 17;
             Fabrikgebeude newFbu = null;
             if (classHash == typeof(Band).GetHashCode())
+            {
                 newFbu = Band.FromByteArray(bytes, ref offset);
+                ((Band)newFbu).Richtung = drehung;
+            }
             else if (classHash == typeof(CurveBand).GetHashCode())
                 newFbu = CurveBand.FromByteArray(bytes, ref offset);
             else if (classHash == typeof(Konstrucktor).GetHashCode())
@@ -84,7 +87,8 @@ namespace factordictatorship
                 newFbu = Fabrikator.FromByteArray(bytes, ref offset);
             else if (classHash == typeof(Finishinator).GetHashCode())
                 newFbu = Finishinator.FromByteArray(bytes, ref offset);
-            else {
+            else
+            {
                 throw new Exception("Could not load fabrikgebäude!");
             }
             newFbu.gebeudeID = gebId;

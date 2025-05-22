@@ -103,6 +103,11 @@ namespace factordictatorship
             levle++;
             if (levle == 2)
             {
+                aktuelleAnzahlAbgegebeneResource1 = 0;
+                aktuelleAnzahlAbgegebeneResource2 = 0;
+                aktuelleAnzahlAbgegebeneResource3 = 0;
+                aktuelleAnzahlAbgegebeneResource4 = 0;
+                aktuelleAnzahlAbgegebeneResource5 = 0;
                 typBenotigteRecurse1 = ResourceType.Motor;
                 nötigeMengenBenotigteRecurse1 = 100;
 
