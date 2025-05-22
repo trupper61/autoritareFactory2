@@ -196,9 +196,9 @@ namespace autoritaereFactory.world
         {
             lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
             const int timerDelay = 100; // in ms
-            mut.WaitOne();
             while (!shouldStopThread)
             {
+                mut.WaitOne();
                 tickTimer++;
                 for (int chIndex = 0; chIndex < chunkList.Count;chIndex++)
                 {
@@ -212,7 +212,6 @@ namespace autoritaereFactory.world
                 lastTimeTick = DateTimeOffset.Now.ToUnixTimeMilliseconds();
                 mut.ReleaseMutex();
                 Thread.Sleep(timerDelay - (int)(lastTimeTick % timerDelay));
-                mut.WaitOne();
             }
         }
         public List<Chunk> GetChuckBox(int posX, int posY, int sizeX, int sizeY)
