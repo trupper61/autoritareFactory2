@@ -141,7 +141,8 @@ namespace factordictatorship
                 foreach (Resource resources in band.currentRescourceList)
                 {
                     band.removedRescources.Add(resources);
-                    exp.rescourcenInLager.Add(resources);
+                    exp.verkaufteRescourcen.Add(resources);
+                    //exp.rescourcenInLager.Add(resources);
                     exp.AddResource(resources);
                 }
                 foreach (Resource resources in band.removedRescources)
@@ -150,6 +151,8 @@ namespace factordictatorship
                     band.ItemAnzahlMoment = band.currentRescourceList.Count();
                 }
                 band.removedRescources.Clear();
+                exp.rescourcenInLager = exp.verkaufteRescourcen;
+                verkaufteRescourcen.Clear();
             }
         }
 
@@ -158,18 +161,28 @@ namespace factordictatorship
             return "Exporthaus";
         }
 
-        public void Verkaufen(Resource resource, PlayerData player) 
+        public void Verkaufen(Resource resource, PlayerData player, Exporthaus exp) 
         {
-            foreach(Resource resc in rescourcenInLager) 
+            List<Resource> toRemove = new List<Resource>();
+            foreach(Inventory inv in exp.inventories) 
             {
-                if(resource.Type == resc.Type) 
+                if(inv.Type == resource.Type) 
                 {
-                    verkaufteRescourcen.Add(resc);
-                    if (resourcePrices.TryGetValue(resc.Type, out int price))
+                    foreach(Resource res in inv.Items) 
                     {
-                        player.money += price;
-                        rescourcenInLager.Remove(resc);
+                        verkaufteRescourcen.Add(res);
+                        if (resourcePrices.TryGetValue(inv.Type, out int price))
+                        {
+                            player.money += price;
+                            rescourcenInLager.Remove(res);
+                            toRemove.Add(res);
+                        }
                     }
+
+                }
+                foreach(Resource res in toRemove)
+                {
+                    inv.Items.Remove(res);
                 }
             }
             foreach(Resource resc in verkaufteRescourcen) 

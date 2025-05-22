@@ -1499,7 +1499,7 @@ namespace factordictatorship
                     if (inv.Items.Count > 0)
                     {
                         Resource res = inv.Items.First();
-                        exporthaus.Verkaufen(res, player);
+                        exporthaus.Verkaufen(res, player, exporthaus);
                         moneyLb.Text = $"Gold: {player.money}";
                         ShowExportInterface(exporthaus);
                     }
