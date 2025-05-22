@@ -42,6 +42,10 @@ namespace factordictatorship
         public Panel buildPanel;
         public Panel menuPanel;
         public int rotateState = 1;
+        public Panel tutorialPanel;
+        public Rezepte Eisenbarren = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000);
+        public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
+        public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
         public PlayerData player = new PlayerData(0);
         public static Rezepte[] rezepte =
         {
@@ -648,6 +652,10 @@ namespace factordictatorship
             inventoryBtn.Image = ResourceHandler.LoadImage("menu\\Inventory.png");
             inventoryBtn.Click += (s, e) => ShowInventory();
             toolStrip.Items.Add(inventoryBtn);
+            ToolStripButton tutorialBtn = new ToolStripButton("Tutorial");
+            tutorialBtn.Click += (s, e) => ToogleTutorialPanel();//TutorialPanel
+            toolStrip.Items.Add(tutorialBtn);
+
             Controls.Add(toolStrip);
             buildPanel = new Panel
             {
@@ -670,6 +678,15 @@ namespace factordictatorship
                 Visible = false
             };
             Button backBtn = new NoFocusButton
+            tutorialPanel = new Panel 
+            {
+                Size = new Size(200, 170),
+                Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75),
+                BackColor = Color.Aquamarine,
+                Visible = false
+
+            };
+            Button backBtn = new Button
             {
                 Text = "Back To Game",
                 Size = new Size(180, 30),
@@ -849,6 +866,18 @@ namespace factordictatorship
             else
             {
                 menuPanel.Visible = true;
+            }
+        }
+        private void ToogleTutorialPanel()
+        {
+            if (tutorialPanel.Visible)
+            {
+                tutorialPanel.Visible = false;
+                this.Focus();
+            }
+            else
+            {
+                tutorialPanel.Visible = true;
             }
         }
         public void ShowKonInterface(Konstrucktor kon)
