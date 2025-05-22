@@ -57,7 +57,7 @@ namespace factordictatorship.Resources
             {ResourceType.SteelRod,LoadImage("item\\StealRodAsItem.png") },
         };
         public const int imageSize = 32;
-        private static Image LoadImage(string path)
+        public static Image LoadImage(string path)
         {
             path = "Resources\\" + path;
             for (int i = 0; i < 3; i++)

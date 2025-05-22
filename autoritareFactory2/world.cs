@@ -19,6 +19,7 @@ using System.Net.Http.Headers;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Security.AccessControl;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -230,7 +231,7 @@ namespace factordictatorship
             }
             else if (aktuellerModus == "Belt Corner")
             {
-                CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld, false); // What rotation status?
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
                 if (lffb.Count == 0)
                 {
@@ -449,7 +450,7 @@ namespace factordictatorship
                 }
                 else if (aktuellerModus == "Belt Corner")
                 {
-                    CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld); // What rotation status?
+                    CurveBand cb = new CurveBand(rotateState, 0, worldPoint.X, worldPoint.Y, (rotateState % 4) + 1, mapWorld, false); // What rotation status?
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(cb.PositionX, cb.PositionY, cb.SizeX, cb.SizeY);
                     if (lffb.Count == 0)
                     {
@@ -1073,6 +1074,21 @@ namespace factordictatorship
             };
             closeBtn.Click += (s, e) => banInterface.Visible = false;
             banInterface.Controls.Add(closeBtn);
+
+            if(ban is CurveBand) 
+            {
+                CurveBand curveBand = (CurveBand)ban;
+                Button rotBtn = new Button
+                {
+                    Text = "Rotate",
+                    Size = new Size(60, 30),
+                    Location = new Point(konInterface.Width / 2, 5),
+                    BackColor = Color.Red,
+                    ForeColor = Color.White
+                };
+                banInterface.Controls.Add(rotBtn);
+                rotBtn.Click += (s, e) => CurveBandVerhalten(curveBand);
+            }
         }
 
         public void ShowExportInterface(Exporthaus exp) 
@@ -1769,6 +1785,20 @@ namespace factordictatorship
             };
             konInterface.Controls.Add(closeBtn);
             konInterface.Visible = true;
+        }
+
+        public void CurveBandVerhalten(CurveBand band) 
+        {
+            if (band.Modus == true)
+            {
+                band.Modus = false;
+                return;
+            }
+            if (band.Modus == false)
+            {
+                band.Modus = true;
+                return;
+            }
         }
     }
 }
