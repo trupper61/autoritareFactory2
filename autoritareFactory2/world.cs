@@ -102,7 +102,6 @@ namespace factordictatorship
         public world()
         {
             InitializeComponent();
-            DisplayData();
             InitUI();
             mapWorld = new WorldMap(16, 16);
             for (int wrdX = 0; wrdX < mapWorld.chunkXcount; wrdX++)
@@ -1179,11 +1178,6 @@ namespace factordictatorship
             }
         }
 
-        
-        public void DisplayData()
-        {
-            moneyAmount.Text = player.displayData();
-        }
         public void ShowInventory()
         {
             inventoryPanel.Visible = true;
