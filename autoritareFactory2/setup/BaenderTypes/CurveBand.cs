@@ -162,7 +162,7 @@ namespace factordictatorship.setup.BaenderTypes
         public static new CurveBand FromByteArray(byte[] bytes, ref int offset)
         {
             CurveBand newBand = new CurveBand();
-            int resourceCount = BitConverter.ToInt32(bytes, offset + 1);
+            int resourceCount = BitConverter.ToInt32(bytes, offset);
             offset += 4;
             for (int i = 0; i < resourceCount; i++)
             {

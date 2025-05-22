@@ -665,7 +665,11 @@ namespace factordictatorship
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
             destroyBtn.Image = ResourceHandler.LoadImage("menu\\Destroy.png");
             destroyBtn.AutoSize = true;
-            destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus == null || !aktuellerModus.Equals("Destroy")) ? "Destroy" : "";
+            destroyBtn.Click += (s, e) =>
+            {
+                aktuellerModus = (aktuellerModus == null || !aktuellerModus.Equals("Destroy")) ? "Destroy" : "";
+                this.Focus();
+            };
             toolStrip.Items.Add(destroyBtn);
             ToolStripButton rotateBtn = new ToolStripButton("Rotate");
             rotateBtn.AutoSize = true;
@@ -1863,7 +1867,7 @@ namespace factordictatorship
             };
             konInterface.Controls.Add(percentLabel);
             y += spacingY;
-
+            
                 Button levelUP = new Button
                 {
                     Text = "Stufenaufstieg",
@@ -1879,7 +1883,6 @@ namespace factordictatorship
                     ShowFinishinatorInterface(fin);
                 };
                 konInterface.Controls.Add(levelUP);
-            
             Button closeBtn = new Button
             {
                 Size = new Size(30, 30),
