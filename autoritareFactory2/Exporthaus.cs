@@ -63,7 +63,7 @@ namespace factordictatorship
             int wertRotX = 0;
             int wertRotY = 0;
 
-            for(int i = 0; i == 4; i++) 
+            for(int i = 0; i <= 4; i++) 
             {
                 switch(i) 
                 {
@@ -119,9 +119,11 @@ namespace factordictatorship
                         }
                     }
                 }
+                wertRotX = 0;
+                wertRotY = 0;
             }
-
             
+
         }
 
         private void nimmVomBand(WorldMap wrld, int Pos, List<Fabrikgebeude> gebauede, Exporthaus exp) 
