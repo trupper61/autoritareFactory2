@@ -72,22 +72,23 @@ namespace factordictatorship
         }
         public override void Iteration()
         {
-            nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource1, typBenotigteRecurse1, nötigeMengenBenotigteRecurse1);
-            nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource2, typBenotigteRecurse2, nötigeMengenBenotigteRecurse2);
-            nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource3, typBenotigteRecurse3, nötigeMengenBenotigteRecurse3);
-            nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource4, typBenotigteRecurse4, nötigeMengenBenotigteRecurse4);
-            nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource5, typBenotigteRecurse5, nötigeMengenBenotigteRecurse5);
+            aktuelleAnzahlAbgegebeneResource1 = nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource1, typBenotigteRecurse1, nötigeMengenBenotigteRecurse1);
+            aktuelleAnzahlAbgegebeneResource2 = nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource2, typBenotigteRecurse2, nötigeMengenBenotigteRecurse2);
+            aktuelleAnzahlAbgegebeneResource3 = nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource3, typBenotigteRecurse3, nötigeMengenBenotigteRecurse3);
+            aktuelleAnzahlAbgegebeneResource4 = nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource4, typBenotigteRecurse4, nötigeMengenBenotigteRecurse4);
+            aktuelleAnzahlAbgegebeneResource5 = nimmVonAllenBändern(aktuelleAnzahlAbgegebeneResource5, typBenotigteRecurse5, nötigeMengenBenotigteRecurse5);
             TesteAufstiegserlaubniss();
         }
-        private void nimmVonAllenBändern(int aktuelleAnzahlAbgegebeneResource, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse)
+        private int nimmVonAllenBändern(int aktuelleAnzahlAbgegebeneResource, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse)
         {
             for (int i = 0; i < 8; i++)
             {
-                nimmVomBand(aktuelleAnzahlAbgegebeneResource, -1, i, gewolteRecurse, nötigeMengenBenotigteRecurse);
-                nimmVomBand(aktuelleAnzahlAbgegebeneResource, 8, i, gewolteRecurse, nötigeMengenBenotigteRecurse);
-                nimmVomBand(aktuelleAnzahlAbgegebeneResource, i, -1, gewolteRecurse, nötigeMengenBenotigteRecurse);
-                nimmVomBand(aktuelleAnzahlAbgegebeneResource, i, 8, gewolteRecurse, nötigeMengenBenotigteRecurse);
+                aktuelleAnzahlAbgegebeneResource = nimmVomBand(aktuelleAnzahlAbgegebeneResource, -1, i, gewolteRecurse, nötigeMengenBenotigteRecurse, 1);
+                aktuelleAnzahlAbgegebeneResource = nimmVomBand(aktuelleAnzahlAbgegebeneResource, 8, i, gewolteRecurse, nötigeMengenBenotigteRecurse, 3);
+                aktuelleAnzahlAbgegebeneResource = nimmVomBand(aktuelleAnzahlAbgegebeneResource, i, -1, gewolteRecurse, nötigeMengenBenotigteRecurse, 2);
+                aktuelleAnzahlAbgegebeneResource = nimmVomBand(aktuelleAnzahlAbgegebeneResource, i, 8, gewolteRecurse, nötigeMengenBenotigteRecurse, 4);
             }
+            return aktuelleAnzahlAbgegebeneResource;
         }
         private void TesteAufstiegserlaubniss()
         {
@@ -125,7 +126,7 @@ namespace factordictatorship
                 // should throw new error?
             }
         }
-        private void nimmVomBand(int aktuelleAnzahlAbgegebeneResource, int verschiebungXAchse, int verschiebungYAchse, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
+        private int nimmVomBand(int aktuelleAnzahlAbgegebeneResource, int verschiebungXAchse, int verschiebungYAchse, ResourceType gewolteRecurse, int nötigeMengenBenotigteRecurse, int extradrehung)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {
             if (aktuelleAnzahlAbgegebeneResource < nötigeMengenBenotigteRecurse)
             {
@@ -133,10 +134,10 @@ namespace factordictatorship
                 if (entitys.Count == 1)
                 {
                     if (entitys[0].GetType() != typeof(Band))
-                        return;
+                        return aktuelleAnzahlAbgegebeneResource;
                     Band band = (Band)entitys[0];
-                    //if (band != null && band.GibRichtungAusgang() == drehung)
-                    //{
+                    if (band != null && band.GibRichtungAusgang() == extradrehung)
+                    {
                         while (aktuelleAnzahlAbgegebeneResource < nötigeMengenBenotigteRecurse && band.currentRescourceList.Count > 0)
                         {
                             for (int i = 0; i < band.currentRescourceList.Count; i++)
@@ -149,13 +150,14 @@ namespace factordictatorship
                                 }
                                 if (i == band.currentRescourceList.Count - 1)
                                 {
-                                    return;
+                                    return aktuelleAnzahlAbgegebeneResource;
                                 }
                             }
                         }
-                    //}
+                    }
                 }
             }
+            return aktuelleAnzahlAbgegebeneResource;
         }
         internal Finishinator() : base()
         {
