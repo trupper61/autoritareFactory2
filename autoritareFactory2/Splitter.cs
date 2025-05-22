@@ -14,6 +14,7 @@ namespace factordictatorship
         public List<Resource> ListResource { get { return listResource; } }
         private int maxAnzalRecurse1 = 20;
         public int MaxAnzalRecurse1 { get { return maxAnzalRecurse1; } }
+        private int Rechenwert = 0;
         public Splitter(int positionX, int positionY, int drehung) : base(positionX, positionY, drehung)
         {
             längeInXRichtung = 1;
@@ -21,17 +22,36 @@ namespace factordictatorship
         }
         public override void Iteration()
         {
-            for (int i = 0; i < 4; i++)
-            {
-                nimmVomBand(listResource, -1, 0, maxAnzalRecurse1);//Eingang: Links. Ausgang Oben, Rechts und Unten
-                nimmVomBand(listResource, -1, 0, maxAnzalRecurse1);
-                nimmVomBand(listResource, -1, 0, maxAnzalRecurse1);
-                legAufBand(listResource, 0, -1);
-                legAufBand(listResource, 1, 0);
-                legAufBand(listResource, 0, 1);
+            for (int i = 0; i < 3; i++)
+             {
+                nimmVomBand(listResource, -1, 0, maxAnzalRecurse1, 0);//Eingang: Links. Ausgang Oben, Rechts und Unten
+                nimmVomBand(listResource, -1, 0, maxAnzalRecurse1, 0);
+                nimmVomBand(listResource, -1, 0, maxAnzalRecurse1, 0);
+                /*legAufBand(listResource, 0, -1, 3);
+                legAufBand(listResource, 1, 0, 0);
+                legAufBand(listResource, 0, 1, 1);*/
+                Verteile();
+                Verteile();
+                Verteile();
             }
         }
-        private void legAufBand(List<Resource> gebendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
+        private void Verteile()
+        {
+            Rechenwert = (Rechenwert + 1) % 3;
+            if(Rechenwert == 0)
+            {
+                legAufBand(listResource, 0, -1, 3);
+            }
+            if(Rechenwert == 1)
+            {
+                legAufBand(listResource, 1, 0, 0);
+            }
+            if (Rechenwert == 2)
+            {
+                legAufBand(listResource, 0, 1, 1);
+            }
+        }
+        private void legAufBand(List<Resource> gebendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse, int extradrehung)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {
             if (gebendeRecursenListe.Count > 0)
             {
@@ -41,7 +61,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null && band.GibRichtungEingang() == drehung)
+                    if (band != null && band.GibRichtungEingang() == ((drehung + extradrehung) % 5))
                     {
                         if (band.currentRescourceList.Count < band.ItemAnzahlMax && gebendeRecursenListe.Count > 0)
                         {
@@ -52,7 +72,7 @@ namespace factordictatorship
                 }
             }
         }
-        private void nimmVomBand(List<Resource> nehmendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse, int maxRecursen)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
+        private void nimmVomBand(List<Resource> nehmendeRecursenListe, int verschiebungXAchse, int verschiebungYAchse, int maxRecursen, int extradrehung)//verschiebungXAchse und verschiebungYAchse bezihen sich auf die verschiebung von dem punkt aus der durch positionX/Y beschrieben wird
         {
             if (nehmendeRecursenListe.Count < maxRecursen)
             {
@@ -62,7 +82,7 @@ namespace factordictatorship
                     if (entitys[0].GetType() != typeof(Band))
                         return;
                     Band band = (Band)entitys[0];
-                    if (band != null && band.GibRichtungAusgang() == drehung)
+                    if (band != null && band.GibRichtungAusgang() == ((drehung + extradrehung) % 5))
                     {
                         if (nehmendeRecursenListe.Count < maxRecursen && band.currentRescourceList.Count > 0)
                         {

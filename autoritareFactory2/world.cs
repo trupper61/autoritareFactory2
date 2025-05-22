@@ -42,6 +42,10 @@ namespace factordictatorship
         public Panel buildPanel;
         public Panel menuPanel;
         public int rotateState = 1;
+        public Panel tutorialPanel;
+        public Rezepte Eisenbarren = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronOre, 1, "Eisenbarren", autoritaereFactory.ResourceType.IronIngot, 1, 1000);
+        public Rezepte Eisenstange = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 1, "Eisenstange", autoritaereFactory.ResourceType.IronStick, 1, 800);
+        public Rezepte Eisenplatte = new Rezepte(zugehörigesGebeude.Konstrucktor, autoritaereFactory.ResourceType.IronIngot, 3, "Eisenstange", autoritaereFactory.ResourceType.IronPlate, 2, 1500);
         public PlayerData player = new PlayerData(0);
         public static Rezepte[] rezepte =
         {
@@ -90,6 +94,10 @@ namespace factordictatorship
         public Label inCount1;
         public Label inCount2;
         public Label outCount;
+        private List<Label> finishResLabels = new List<Label>();
+        public ProgressBar pb;
+        public Label percentLabel;
+        public ToolStripLabel moneyLb;
 
         public world()
         {
@@ -162,7 +170,11 @@ namespace factordictatorship
                 case GroundResource.IronOre: return autoritaereFactory.ResourceType.IronOre;
                 case GroundResource.ColeOre: return autoritaereFactory.ResourceType.ColeOre;
                 case GroundResource.CopperOre: return autoritaereFactory.ResourceType.CopperOre;
-                case GroundResource.LimeStone: return autoritaereFactory.ResourceType.limestone;
+                case GroundResource.LimeStone4:
+                case GroundResource.LimeStone3:
+                case GroundResource.LimeStone2:
+                case GroundResource.LimeStone:
+                    return autoritaereFactory.ResourceType.limestone;
                 default: return (autoritaereFactory.ResourceType)(-1);
             }
         }
@@ -193,7 +205,7 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
+                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStoneUpperBound))
                 {
                     mapWorld.AddEntityAt(miner);
                     aktuellerModus = null;
@@ -363,7 +375,34 @@ namespace factordictatorship
                     inCount2.Text = $"Anzahl: {aktuellerFab.BenotigteRecurse2.Count()}";
                     outCount.Text = $"Anzahl: {aktuellerFab.ErgebnissRecurse1.Count()}";
                 }
+            }
+            if (konInterface.Visible && aktuellerFin != null)
+            {
+                var resList = new List<(ResourceType typ, int benötigt, int aktuell)>
+                {
+                    (aktuellerFin.TypBenotigteRecurse1, aktuellerFin.NötigeMengenBenotigteRecurse1, aktuellerFin.AktuelleAnzahlAbgegebeneResource1),
+                    (aktuellerFin.TypBenotigteRecurse2, aktuellerFin.NötigeMengenBenotigteRecurse2, aktuellerFin.AktuelleAnzahlAbgegebeneResource2),
+                    (aktuellerFin.TypBenotigteRecurse3, aktuellerFin.NötigeMengenBenotigteRecurse3, aktuellerFin.AktuelleAnzahlAbgegebeneResource3),
+                    (aktuellerFin.TypBenotigteRecurse4, aktuellerFin.NötigeMengenBenotigteRecurse4, aktuellerFin.AktuelleAnzahlAbgegebeneResource4),
+                    (aktuellerFin.TypBenotigteRecurse5, aktuellerFin.NötigeMengenBenotigteRecurse5, aktuellerFin.AktuelleAnzahlAbgegebeneResource5)
+                };
+                int aktuellGesamt = 0;
+                int benötigtGesamt = 0;
+                for (int i = 0; i < resList.Count; i++)
+                {
+                    var (typ, benötigt, aktuell) = resList[i];
+                    benötigtGesamt += benötigt;
+                    aktuellGesamt += Math.Min(aktuell, benötigt);
 
+                    if (i < finishResLabels.Count)
+                    {
+                        finishResLabels[i].Text = $"{typ}: {aktuell} / {benötigt}";
+                    }
+                }
+
+                pb.Maximum = benötigtGesamt > 0 ? benötigtGesamt : 1;
+                pb.Value = Math.Min(aktuellGesamt, pb.Maximum);
+                percentLabel.Text = $"Gesamtfortschritt: {(int)((double)aktuellGesamt / pb.Maximum * 100)}%";
             }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
@@ -399,7 +438,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
+                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStoneUpperBound))
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
@@ -597,11 +636,18 @@ namespace factordictatorship
         {
             ToolStrip toolStrip = new ToolStrip();
             toolStrip.Dock = DockStyle.Top;
+            toolStrip.MinimumSize= new Size(2000, 50);
+
             ToolStripButton menuBtn = new ToolStripButton("Menu");
+            menuBtn.Image = ResourceHandler.LoadImage("menu\\MenuIcon.png");
+            toolStrip.ImageScalingSize = new Size ( 40, 40 );
             menuBtn.Click += (s, e) => ToogleMenuPanel();
+            menuBtn.AutoSize = true;
             toolStrip.Items.Add(menuBtn);
 
             ToolStripButton buildBtn = new ToolStripButton("Build");
+            buildBtn.AutoSize = true;
+            buildBtn.Image = ResourceHandler.LoadImage("menu\\BuildModeIcon.png");
             buildBtn.Click += (s, e) =>
             {
                 if (!buildPanel.Visible)
@@ -618,9 +664,13 @@ namespace factordictatorship
             toolStrip.Items.Add(buildBtn);
 
             ToolStripButton destroyBtn = new ToolStripButton("Destroy");
+            destroyBtn.Image = ResourceHandler.LoadImage("menu\\Destroy.png");
+            destroyBtn.AutoSize = true;
             destroyBtn.Click += (s, e) => aktuellerModus = (aktuellerModus == null || !aktuellerModus.Equals("Destroy")) ? "Destroy" : "";
             toolStrip.Items.Add(destroyBtn);
             ToolStripButton rotateBtn = new ToolStripButton("Rotate");
+            rotateBtn.AutoSize = true;
+            rotateBtn.Image = ResourceHandler.LoadImage("menu\\Rotate.png");
             rotateBtn.Click += (s, e) =>
             {
                 rotateState %= 4;
@@ -629,8 +679,20 @@ namespace factordictatorship
             toolStrip.Items.Add(rotateBtn);
 
             ToolStripButton inventoryBtn = new ToolStripButton("Inventory");
+            inventoryBtn.AutoSize = true;
+            inventoryBtn.Image = ResourceHandler.LoadImage("menu\\Inventory.png");
             inventoryBtn.Click += (s, e) => ShowInventory();
             toolStrip.Items.Add(inventoryBtn);
+            ToolStripButton tutorialBtn = new ToolStripButton("Tutorial");
+            tutorialBtn.Click += (s, e) => ToogleTutorialPanel();//TutorialPanel
+            toolStrip.Items.Add(tutorialBtn);
+            moneyLb = new ToolStripLabel
+            {
+                AutoSize = true,
+                Dock = DockStyle.Right,
+                Text = $"Gold: {player.money}"
+            };
+            toolStrip.Items.Add(moneyLb);
             Controls.Add(toolStrip);
             buildPanel = new Panel
             {
@@ -652,7 +714,17 @@ namespace factordictatorship
                 BackColor = Color.LightGray,
                 Visible = false
             };
+            
+            tutorialPanel = new Panel 
+            {
+                Size = new Size(200, 170),
+                Location = new Point(this.Width / 2 - 100, this.Height / 2 - 75),
+                BackColor = Color.Aquamarine,
+                Visible = false
+
+            };
             Button backBtn = new NoFocusButton
+            //Button backBtn = new Button
             {
                 Text = "Back To Game",
                 Size = new Size(180, 30),
@@ -832,6 +904,18 @@ namespace factordictatorship
             else
             {
                 menuPanel.Visible = true;
+            }
+        }
+        private void ToogleTutorialPanel()
+        {
+            if (tutorialPanel.Visible)
+            {
+                tutorialPanel.Visible = false;
+                this.Focus();
+            }
+            else
+            {
+                tutorialPanel.Visible = true;
             }
         }
         public void ShowKonInterface(Konstrucktor kon)
@@ -1091,41 +1175,7 @@ namespace factordictatorship
             }
         }
 
-        public void ShowExportInterface(Exporthaus exp) 
-        {
-            ExporthausInterface.Visible = true;
-            ExporthausInterface.Controls.Clear();
-
-            Label name = new Label();
-            name.Text = exp.ToString();
-            name.Location = new Point(10, 10);
-            name.AutoSize = true;
-
-            int y = 50;
-            int maxRight = name.Right;
-
-            foreach (Resource resc in rescourcen)
-            {
-                
-            }
-
-            ExporthausInterface.Controls.Add(name);
-            ExporthausInterface.Size = new Size(275, Math.Max(y + 10, 150));
-            ExporthausInterface.Location = new Point((this.ClientSize.Width - konInterface.Width) / 2, (this.ClientSize.Height - konInterface.Height) / 2);
-
-            Button closeBtn = new Button
-            {
-                Text = "X",
-                Size = new Size(30, 30),
-                Location = new Point(konInterface.Width - 35, 5),
-                BackColor = Color.Red,
-                ForeColor = Color.White
-            };
-            closeBtn.Click += (s, e) => banInterface.Visible = false;
-            banInterface.Controls.Add(closeBtn);
-
-            ShowExportHausRes(exp, ExporthausInterface);
-        }
+        
         public void DisplayData()
         {
             moneyAmount.Text = player.displayData();
@@ -1390,36 +1440,81 @@ namespace factordictatorship
             portPanel.BringToFront();
             portPanel.Visible = true;
         }
+        public void ShowExportInterface(Exporthaus exp)
+        {
+            ExporthausInterface.Visible = true;
+            ExporthausInterface.Controls.Clear();
 
-        private void ShowExportHausRes(Exporthaus exporthaus, Panel panel) 
+            Label name = new Label();
+            name.Text = exp.ToString();
+            name.Location = new Point(10, 10);
+            name.AutoSize = true;
+            name.Font = new Font("Arial", 12, FontStyle.Bold);
+
+            ExporthausInterface.Controls.Add(name);
+
+            int y = 50;
+
+            ShowExportHausRes(exp, ExporthausInterface, ref y);
+
+            ExporthausInterface.Size = new Size(275, Math.Max(y + 10, 150));
+            ExporthausInterface.Location = new Point(
+                (this.ClientSize.Width - ExporthausInterface.Width) / 2,
+                (this.ClientSize.Height - ExporthausInterface.Height) / 2);
+
+            Button closeBtn = new Button
+            {
+                Text = "X",
+                Size = new Size(30, 30),
+                Location = new Point(ExporthausInterface.Width - 35, 5),
+                BackColor = Color.Red,
+                ForeColor = Color.White
+            };
+            closeBtn.Click += (s, e) => ExporthausInterface.Visible = false;
+            ExporthausInterface.Controls.Add(closeBtn);
+        }
+        private void ShowExportHausRes(Exporthaus exporthaus, Panel panel, ref int y)
         {
             int slotsPerRow = 3;
             int usedSlots = exporthaus.inventories.Count;
-            int slotsize = 45;
+            int slotSize = 45;
             int padding = 8;
             int x = 10;
-            int y = 40;
             int column = 0;
 
             foreach (var inv in exporthaus.inventories)
             {
                 PictureBox resourceBox = new PictureBox
                 {
-                    Size = new Size(slotsize, slotsize),
-                    Location = new Point(0, 0),
+                    Size = new Size(slotSize, slotSize),
                     BorderStyle = BorderStyle.FixedSingle,
-                    BackColor = inv.Items.Count() > 0 ? Color.LightGreen : Color.LightBlue
+                    BackColor = inv.Items.Count > 0 ? Color.LightGreen : Color.LightBlue,
+                    SizeMode = PictureBoxSizeMode.StretchImage,
+                    Image = ReturnResourceImage(inv.Type)
                 };
-                resourceBox.Image = ReturnResourceImage(inv.Type);
-                resourceBox.SizeMode = PictureBoxSizeMode.StretchImage;
+                resourceBox.Click += (s, e) =>
+                {
+                    if (inv.Items.Count > 0)
+                    {
+                        Resource res = inv.Items.First();
+                        exporthaus.Verkaufen(res, player);
+                        moneyLb.Text = $"Gold: {player.money}";
+                        ShowExportInterface(exporthaus);
+                    }
+                };
+
                 Label countLabel = new Label
                 {
                     Text = inv.Items.Count.ToString(),
                     AutoSize = false,
-                    Size = new Size(slotsize, 20),
-                    TextAlign = ContentAlignment.TopCenter,
-                    Location = new Point(0, slotsize)
+                    Size = new Size(slotSize, 20),
+                    TextAlign = ContentAlignment.TopCenter
                 };
+
+                // Position setzen
+                resourceBox.Location = new Point(x, y);
+                countLabel.Location = new Point(x, y + slotSize);
+
                 panel.Controls.Add(resourceBox);
                 panel.Controls.Add(countLabel);
 
@@ -1428,36 +1523,37 @@ namespace factordictatorship
                 {
                     column = 0;
                     x = 10;
-                    y += slotsize + 30;
+                    y += slotSize + 30;
                 }
                 else
                 {
-                    x += slotsize + padding;
+                    x += slotSize + padding;
                 }
-
             }
+
+            // Leere Slots auffüllen
             int remainingSlots = exporthaus.slotsAvail - usedSlots;
             for (int i = 0; i < remainingSlots; i++)
             {
-                PictureBox pb = new PictureBox
+                PictureBox emptySlot = new PictureBox
                 {
-                    Size = new Size(slotsize, slotsize),
-                    Location = new Point(x, y),
+                    Size = new Size(slotSize, slotSize),
                     BorderStyle = BorderStyle.FixedSingle,
-                    BackColor = Color.LightBlue
+                    BackColor = Color.LightBlue,
+                    Location = new Point(x, y)
                 };
-                panel.Controls.Add(pb);
+                panel.Controls.Add(emptySlot);
 
                 column++;
                 if (column >= slotsPerRow)
                 {
                     column = 0;
                     x = 10;
-                    y += slotsize + 30;
+                    y += slotSize + 30;
                 }
                 else
                 {
-                    x += slotsize + padding;
+                    x += slotSize + padding;
                 }
             }
         }
@@ -1722,9 +1818,15 @@ namespace factordictatorship
                 (aktuellerFin.TypBenotigteRecurse4, aktuellerFin.NötigeMengenBenotigteRecurse4, aktuellerFin.AktuelleAnzahlAbgegebeneResource4),
                 (aktuellerFin.TypBenotigteRecurse5, aktuellerFin.NötigeMengenBenotigteRecurse5, aktuellerFin.AktuelleAnzahlAbgegebeneResource5)
             };
-            for(int i = 0; i < resList.Count; i++)
+
+            int benötigtGesamt = 0;
+            int aktuellGesamt = 0;
+            finishResLabels.Clear();
+            for (int i = 0; i < resList.Count; i++)
             {
                 var (typ, benöigt, aktuell) = resList[i];
+                benötigtGesamt += resList[i].benötigt;
+                aktuellGesamt += Math.Min(resList[i].aktuell, resList[i].benötigt);
                 PictureBox icon = new PictureBox
                 {
                     Size = new Size(40, 40),
@@ -1734,33 +1836,44 @@ namespace factordictatorship
                     Image = ReturnResourceImage(typ)
                 };
                 konInterface.Controls.Add(icon);
-                Label lb = new Label
+                Label finishLb = new Label
                 {
                     AutoSize = true,
                     Location = new Point(centerX - 60, icon.Top + 10),
                     Text = $"{typ}: {aktuell} / {benöigt}"
                 };
-                konInterface.Controls.Add(lb);
-                ProgressBar pb = new ProgressBar
-                {
-                    Width = 150,
-                    Height = 20,
-                    Location = new Point(centerX + 40, icon.Top + 10),
-                    Maximum = benöigt,
-                    Value = Math.Min(aktuell, benöigt)
-                };
-                konInterface.Controls.Add(pb);
+                konInterface.Controls.Add(finishLb);
+                finishResLabels.Add(finishLb);
                 y = y + spacingY;
             }
-            if (resList.All(r => r.aktuell >= r.benötigt))
+            pb = new ProgressBar
             {
+                Width = 200,
+                Height = 20,
+                Location = new Point(centerX - 100, y),
+                Maximum = benötigtGesamt > 0 ? benötigtGesamt : 1,
+                Value = aktuellGesamt
+            };
+            konInterface.Controls.Add(pb);
+            y += spacingY;
+
+            percentLabel = new Label
+            {
+                Text = $"Gesamtfortschritt: {(int)((double)aktuellGesamt / benötigtGesamt * 100)}%",
+                AutoSize = true,
+                Location = new Point(centerX - 50, y)
+            };
+            konInterface.Controls.Add(percentLabel);
+            y += spacingY;
+
                 Button levelUP = new Button
                 {
                     Text = "Stufenaufstieg",
                     Size = new Size(150, 40),
                     Location = new Point(centerX - 75, resList.Count * 65 + 40),
                     BackColor = Color.Gold,
-                    Font = new Font("Arial", 10, FontStyle.Bold)
+                    Font = new Font("Arial", 10, FontStyle.Bold),
+                    Visible = resList.All(r => r.aktuell >= r.benötigt) ? true : false
                 };
                 levelUP.Click += (s, e) =>
                 {
@@ -1768,7 +1881,7 @@ namespace factordictatorship
                     ShowFinishinatorInterface(fin);
                 };
                 konInterface.Controls.Add(levelUP);
-            }
+            
             Button closeBtn = new Button
             {
                 Size = new Size(30, 30),

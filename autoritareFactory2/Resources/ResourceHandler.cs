@@ -20,12 +20,15 @@ namespace factordictatorship.Resources
             { GroundResource.Grass1 , LoadImage("ground\\Grassland1.png") },
             { GroundResource.Grass2 , LoadImage("ground\\Grassland2.png") },
             { GroundResource.Grass3 , LoadImage("ground\\Grassland3.png") },
-            { GroundResource.Desert , LoadImage("ground\\IndustrialWasteland.png") },
-            { GroundResource.Desert2, LoadImage("ground\\IndustrialWasteland2.png") },
+            { GroundResource.Desert , LoadImage("ground\\Desert.png") },
+            { GroundResource.Desert2, LoadImage("ground\\Desert2.png") },
             { GroundResource.ColeOre, LoadImage("ground\\ColeOre.png") },
             { GroundResource.IronOre, LoadImage("ground\\iron.png") },
             { GroundResource.CopperOre, LoadImage("ground\\CopperOre.png") },
             { GroundResource.LimeStone, LoadImage("ground\\LimeStone.png") },
+            { GroundResource.LimeStone2, LoadImage("ground\\LimeStone(2).png") },
+            { GroundResource.LimeStone3, LoadImage("ground\\LimeStone(3).png") },
+            { GroundResource.LimeStone4, LoadImage("ground\\LimeStone(4).png") },
         };
         public static Dictionary<int, Image> buildingSet = new Dictionary<int, Image>(){
             {typeof(Band).GetHashCode(),LoadImage("building\\belt.png") },
@@ -42,6 +45,7 @@ namespace factordictatorship.Resources
             {ResourceType.IronOre,LoadImage("item\\iron-ore.png") },
             {ResourceType.Concrete,LoadImage("item\\concrete.png") },
             {ResourceType.limestone,LoadImage("item\\limeasItem.png") },
+            {ResourceType.ColeOre,LoadImage("item\\CoalAsItem.png") },
             {ResourceType.Cable,LoadImage("item\\CopperCable.png") },
             {ResourceType.CopperWire,LoadImage("item\\CopperWire.png") },
             {ResourceType.CopperIngot,LoadImage("item\\CopperIngot.png") },
@@ -56,7 +60,7 @@ namespace factordictatorship.Resources
             {ResourceType.SteelIngot,LoadImage("item\\StealIngotAsItem.png") },
             {ResourceType.SteelRod,LoadImage("item\\StealRodAsItem.png") },
         };
-        public const int imageSize = 32;
+        public const int imageSize = 44;
         public static Image LoadImage(string path)
         {
             path = "Resources\\" + path;
