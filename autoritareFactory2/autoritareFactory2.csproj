@@ -140,6 +140,7 @@
     <Content Include="Resources\menu\Inventory.png" />
     <Content Include="Resources\menu\MenuIcon.png" />
     <Content Include="Resources\menu\Rotate.png" />
+    <Content Include="Resources\menu\tutorial.png" />
     <None Include="Resources\CopperWire.png" />
     <Content Include="Resources\building\beltCorner.png" />
     <Content Include="Resources\building\fabricator.png" />

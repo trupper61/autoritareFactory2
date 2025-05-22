@@ -684,6 +684,8 @@ namespace factordictatorship
             inventoryBtn.Click += (s, e) => ShowInventory();
             toolStrip.Items.Add(inventoryBtn);
             ToolStripButton tutorialBtn = new ToolStripButton("Tutorial");
+            tutorialBtn.AutoSize = true;
+            tutorialBtn.Image = ResourceHandler.LoadImage("menu\\tutorial.png");
             tutorialBtn.Click += (s, e) => ToogleTutorialPanel();//TutorialPanel
             toolStrip.Items.Add(tutorialBtn);
             moneyLb = new ToolStripLabel
