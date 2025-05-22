@@ -94,6 +94,9 @@ namespace factordictatorship
         public Label inCount1;
         public Label inCount2;
         public Label outCount;
+        private List<Label> finishResLabels = new List<Label>();
+        public ProgressBar pb;
+        public Label percentLabel;
 
         public world()
         {
@@ -201,7 +204,7 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
+                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStoneUpperBound))
                 {
                     mapWorld.AddEntityAt(miner);
                     aktuellerModus = null;
@@ -371,7 +374,34 @@ namespace factordictatorship
                     inCount2.Text = $"Anzahl: {aktuellerFab.BenotigteRecurse2.Count()}";
                     outCount.Text = $"Anzahl: {aktuellerFab.ErgebnissRecurse1.Count()}";
                 }
+            }
+            if (konInterface.Visible && aktuellerFin != null)
+            {
+                var resList = new List<(ResourceType typ, int benötigt, int aktuell)>
+                {
+                    (aktuellerFin.TypBenotigteRecurse1, aktuellerFin.NötigeMengenBenotigteRecurse1, aktuellerFin.AktuelleAnzahlAbgegebeneResource1),
+                    (aktuellerFin.TypBenotigteRecurse2, aktuellerFin.NötigeMengenBenotigteRecurse2, aktuellerFin.AktuelleAnzahlAbgegebeneResource2),
+                    (aktuellerFin.TypBenotigteRecurse3, aktuellerFin.NötigeMengenBenotigteRecurse3, aktuellerFin.AktuelleAnzahlAbgegebeneResource3),
+                    (aktuellerFin.TypBenotigteRecurse4, aktuellerFin.NötigeMengenBenotigteRecurse4, aktuellerFin.AktuelleAnzahlAbgegebeneResource4),
+                    (aktuellerFin.TypBenotigteRecurse5, aktuellerFin.NötigeMengenBenotigteRecurse5, aktuellerFin.AktuelleAnzahlAbgegebeneResource5)
+                };
+                int aktuellGesamt = 0;
+                int benötigtGesamt = 0;
+                for (int i = 0; i < resList.Count; i++)
+                {
+                    var (typ, benötigt, aktuell) = resList[i];
+                    benötigtGesamt += benötigt;
+                    aktuellGesamt += Math.Min(aktuell, benötigt);
 
+                    if (i < finishResLabels.Count)
+                    {
+                        finishResLabels[i].Text = $"{typ}: {aktuell} / {benötigt}";
+                    }
+                }
+
+                pb.Maximum = benötigtGesamt > 0 ? benötigtGesamt : 1;
+                pb.Value = Math.Min(aktuellGesamt, pb.Maximum);
+                percentLabel.Text = $"Gesamtfortschritt: {(int)((double)aktuellGesamt / pb.Maximum * 100)}%";
             }
         }
         public void PaintHandler(object sender, PaintEventArgs e)
@@ -407,7 +437,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre))
+                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStoneUpperBound))
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
@@ -1771,9 +1801,15 @@ namespace factordictatorship
                 (aktuellerFin.TypBenotigteRecurse4, aktuellerFin.NötigeMengenBenotigteRecurse4, aktuellerFin.AktuelleAnzahlAbgegebeneResource4),
                 (aktuellerFin.TypBenotigteRecurse5, aktuellerFin.NötigeMengenBenotigteRecurse5, aktuellerFin.AktuelleAnzahlAbgegebeneResource5)
             };
-            for(int i = 0; i < resList.Count; i++)
+
+            int benötigtGesamt = 0;
+            int aktuellGesamt = 0;
+            finishResLabels.Clear();
+            for (int i = 0; i < resList.Count; i++)
             {
                 var (typ, benöigt, aktuell) = resList[i];
+                benötigtGesamt += resList[i].benötigt;
+                aktuellGesamt += Math.Min(resList[i].aktuell, resList[i].benötigt);
                 PictureBox icon = new PictureBox
                 {
                     Size = new Size(40, 40),
@@ -1783,33 +1819,44 @@ namespace factordictatorship
                     Image = ReturnResourceImage(typ)
                 };
                 konInterface.Controls.Add(icon);
-                Label lb = new Label
+                Label finishLb = new Label
                 {
                     AutoSize = true,
                     Location = new Point(centerX - 60, icon.Top + 10),
                     Text = $"{typ}: {aktuell} / {benöigt}"
                 };
-                konInterface.Controls.Add(lb);
-                ProgressBar pb = new ProgressBar
-                {
-                    Width = 150,
-                    Height = 20,
-                    Location = new Point(centerX + 40, icon.Top + 10),
-                    Maximum = benöigt,
-                    Value = Math.Min(aktuell, benöigt)
-                };
-                konInterface.Controls.Add(pb);
+                konInterface.Controls.Add(finishLb);
+                finishResLabels.Add(finishLb);
                 y = y + spacingY;
             }
-            if (resList.All(r => r.aktuell >= r.benötigt))
+            pb = new ProgressBar
             {
+                Width = 200,
+                Height = 20,
+                Location = new Point(centerX - 100, y),
+                Maximum = benötigtGesamt > 0 ? benötigtGesamt : 1,
+                Value = aktuellGesamt
+            };
+            konInterface.Controls.Add(pb);
+            y += spacingY;
+
+            percentLabel = new Label
+            {
+                Text = $"Gesamtfortschritt: {(int)((double)aktuellGesamt / benötigtGesamt * 100)}%",
+                AutoSize = true,
+                Location = new Point(centerX - 50, y)
+            };
+            konInterface.Controls.Add(percentLabel);
+            y += spacingY;
+
                 Button levelUP = new Button
                 {
                     Text = "Stufenaufstieg",
                     Size = new Size(150, 40),
                     Location = new Point(centerX - 75, resList.Count * 65 + 40),
                     BackColor = Color.Gold,
-                    Font = new Font("Arial", 10, FontStyle.Bold)
+                    Font = new Font("Arial", 10, FontStyle.Bold),
+                    Visible = resList.All(r => r.aktuell >= r.benötigt) ? true : false
                 };
                 levelUP.Click += (s, e) =>
                 {
@@ -1817,7 +1864,7 @@ namespace factordictatorship
                     ShowFinishinatorInterface(fin);
                 };
                 konInterface.Controls.Add(levelUP);
-            }
+            
             Button closeBtn = new Button
             {
                 Size = new Size(30, 30),
