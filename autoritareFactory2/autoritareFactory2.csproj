@@ -135,6 +135,7 @@
     <Content Include="Resources\ground\Desert.png" />
     <Content Include="Resources\ground\Desert2.png" />
     <Content Include="Resources\item\BuildModeIcon.png" />
+    <Content Include="Resources\item\StealBeam.png" />
     <Content Include="Resources\menu\BuildModeIcon.png" />
     <Content Include="Resources\menu\Destroy.png" />
     <Content Include="Resources\menu\Inventory.png" />

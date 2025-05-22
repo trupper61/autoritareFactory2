@@ -205,7 +205,7 @@ namespace factordictatorship
                 // TODO Miner Resource zu GroundResource ändern
                 Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                 List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStoneUpperBound))
+                if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStone || resource == GroundResource.LimeStone2 || resource == GroundResource.LimeStone3 || resource == GroundResource.LimeStone4))
                 {
                     mapWorld.AddEntityAt(miner);
                     aktuellerModus = null;
@@ -438,7 +438,7 @@ namespace factordictatorship
                     // TODO: Miner resource to GroundType!
                     Miner miner = new Miner(worldPoint.X, worldPoint.Y, rotateState, GetResourceFromGround(resource));
                     List<Fabrikgebeude> lffb = mapWorld.GetEntityInBox(miner.PositionX, miner.PositionY, miner.SizeX, miner.SizeY);
-                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStoneUpperBound))
+                    if (lffb.Count == 0 && (resource == GroundResource.IronOre || resource == GroundResource.ColeOre || resource == GroundResource.CopperOre || resource == GroundResource.LimeStone || resource == GroundResource.LimeStone2 || resource == GroundResource.LimeStone3 || resource == GroundResource.LimeStone4))
                     {
                         wlrdDrawer.DrawPlacableBuilding(e, worldPoint, miner, Color.FromArgb(127, 127, 255, 95));
                     }
