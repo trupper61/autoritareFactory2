@@ -94,6 +94,7 @@ namespace factordictatorship.drawing
             }
             // add a new chunk-section
             bool chunkContained;
+            bool delayChunkLoad = false;
             foreach (Chunk chunk in drawChunks)
             {
                 chunkContained = false;
@@ -105,11 +106,13 @@ namespace factordictatorship.drawing
                         chunkContained = true;
                     }
                 }
-                if (!chunkContained)
+                if (!chunkContained && !delayChunkLoad)
                 {
                     // generate new chunks (yes this is expencive)
                     WorldPartImage newWpi = new WorldPartImage(chunk.x, chunk.y);
                     chunkPictures.Add(newWpi);
+                    // almost no impact
+                    delayChunkLoad = true;
                 }
             }
             // draw it!
@@ -121,6 +124,31 @@ namespace factordictatorship.drawing
                     chunkPictures.RemoveAt(chp);
                     continue;
                 }
+                /* -- takes more time than
+                int posX = (int)Math.Round((wpi.chRef.x * Chunk.chunkSize - cameraX) * GetRealScale);
+                int posY = (int)Math.Round((wpi.chRef.y * Chunk.chunkSize - cameraY) * GetRealScale);
+                int cuttingX = Math.Min(mainForms.Width - posX,0);
+                int cuttingY = Math.Min(mainForms.Width - posY,0);
+                grp.DrawImage(
+                    wpi.map,
+                    new Rectangle( // note to self DON'T USE RectangleF
+                        Math.Max(posX, 0),
+                        Math.Max(posY, 0),
+                        Chunk.chunkSize * GetRealScale - cuttingX,
+                        Chunk.chunkSize * GetRealScale - cuttingY
+                        ),
+                    new Rectangle(
+                        -Math.Min(posX, 0),
+                        -Math.Min(posY, 0),
+                        Chunk.chunkSize * GetRealScale - cuttingX,
+                        Chunk.chunkSize * GetRealScale - cuttingY
+                        ),
+                    GraphicsUnit.Pixel
+                    );/*/
+                Image im = wpi.map;
+                // does this do anything?
+                if (scale == 1) im = wpi.map2;
+                else if (scale == 2) im = wpi.map3;
                 grp.DrawImage(
                     wpi.map,
                     new Rectangle( // note to self DON'T USE RectangleF
